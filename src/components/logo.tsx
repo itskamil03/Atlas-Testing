@@ -5,10 +5,11 @@ export const Logo = ({ className, uniColor }: { className?: string; uniColor?: b
     return (
         <Image
             src="/atlas_logo.png"
-            alt="Atlas Logo"
-            width={200}
-            height={80}
-            className={cn('h-20 w-auto', className)}
+            alt="Atlas Fintech"
+            width={120}
+            height={48}
+            className={cn('h-8 w-auto', className)}
+            priority
         />
     )
 }

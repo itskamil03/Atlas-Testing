@@ -1,6 +1,5 @@
 import { Gemini, Replit, MagicUI, VSCodium, MediaWiki, GooglePaLM } from '@/components/logos'
 import { cn } from '@/lib/utils'
-import { LogoIcon } from '@/components/logo'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
@@ -21,15 +20,6 @@ export default function IntegrationsSection() {
                                 <MagicUI />
                             </IntegrationCard>
                         </div>
-                        <div className="mx-auto my-2 flex w-fit justify-center gap-2">
-                            <div className="bg-white relative z-20 rounded-2xl border p-1 dark:bg-background">
-                                <IntegrationCard
-                                    className="shadow-black-950/10 dark:bg-background size-16 border-black/25 shadow-xl dark:border-white/25 dark:shadow-white/10"
-                                    isCenter={true}>
-                                    <LogoIcon />
-                                </IntegrationCard>
-                            </div>
-                        </div>
                         <div
                             role="presentation"
                             className="absolute inset-1/3 bg-[radial-gradient(var(--dots-color)_1px,transparent_1px)] opacity-50 [--dots-color:black] bg-size-[16px_16px] mask-[radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] dark:[--dots-color:white]"></div>
@@ -45,17 +35,6 @@ export default function IntegrationsSection() {
                                 <GooglePaLM />
                             </IntegrationCard>
                         </div>
-                    </div>
-                    <div className="mx-auto mt-12 max-w-lg space-y-6 text-center">
-                        <h2 className="text-balance text-3xl font-semibold md:text-4xl">Connects with Your Trading Platforms</h2>
-                        <p className="text-muted-foreground">Seamlessly integrated with the world's top exchanges and charting tools - signals flow directly to your WhatsApp.</p>
-
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            asChild>
-                            <Link href="#pricing">View Plans</Link>
-                        </Button>
                     </div>
                 </div>
             </div>

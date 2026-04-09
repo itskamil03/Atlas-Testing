@@ -7,12 +7,12 @@ const links = [
         href: '#features',
     },
     {
-        title: 'Pricing',
-        href: '#pricing',
+        title: 'How It Works',
+        href: '#how-it-works',
     },
     {
-        title: 'How It Works',
-        href: '#',
+        title: 'Pricing',
+        href: '#pricing',
     },
     {
         title: 'FAQ',
@@ -119,6 +119,20 @@ export default function FooterSection() {
                         </svg>
                     </Link>
                 </div>
+
+                <div className="bg-muted/50 border-t border-b my-8 py-6 px-4 rounded-lg">
+                    <h3 className="text-sm font-semibold mb-3 text-center">Trading Risk Disclaimer</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                        <strong>Trading involves substantial risk and is not suitable for everyone.</strong> Past performance is not indicative of future results.
+                        The high degree of leverage in trading can work against you as well as for you. Before deciding to trade, you should carefully consider your investment
+                        objectives, level of experience, and risk appetite. The possibility exists that you could sustain a loss of some or all of your initial investment.
+                        You should not invest money that you cannot afford to lose. All trading signals provided by Atlas Fintech are for informational and educational purposes only
+                        and should not be considered financial advice. We do not guarantee the accuracy, completeness, or timeliness of any information or signals.
+                        You are solely responsible for your trading decisions and any resulting losses. Always conduct your own research and consult with a licensed financial advisor
+                        before making any investment decisions. Atlas Fintech and its affiliates are not registered investment advisors or broker-dealers.
+                    </p>
+                </div>
+
                 <span className="text-muted-foreground block text-center text-sm">© 2026 Atlas Fintech Trading Bot, All rights reserved</span>
             </div>
         </footer>

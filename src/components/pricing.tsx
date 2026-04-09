@@ -9,14 +9,14 @@ export default function Pricing() {
             <div className="mx-auto max-w-6xl px-6">
                 <div className="mx-auto max-w-2xl space-y-6 text-center">
                     <h1 className="text-center text-4xl font-semibold lg:text-5xl">Simple Pricing, Powerful Signals</h1>
-                    <p>Choose the plan that fits your trading style. Upgrade or cancel anytime - no lock-in contracts.</p>
+                    <p>This side is currently under development. Pricing is coming soon.</p>
                 </div>
 
                 <div className="mt-8 grid gap-6 md:mt-20 md:grid-cols-3">
                     <Card className="flex flex-col">
                         <CardHeader>
-                            <CardTitle className="font-medium">Starter</CardTitle>
-                            <span className="my-3 block text-2xl font-semibold">₹399 / mo</span>
+                            <CardTitle className="font-medium">Starter Plan</CardTitle>
+                            <span className="my-3 block text-2xl font-semibold">Coming soon</span>
                             <CardDescription className="text-sm">For beginner traders</CardDescription>
                         </CardHeader>
 
@@ -57,8 +57,8 @@ export default function Pricing() {
 
                         <div className="flex flex-col">
                             <CardHeader>
-                                <CardTitle className="font-medium">Pro Trader</CardTitle>
-                                <span className="my-3 block text-2xl font-semibold">₹699 / mo</span>
+                                <CardTitle className="font-medium">Algo Pro Plan</CardTitle>
+                                <span className="my-3 block text-2xl font-semibold">Coming soon</span>
                                 <CardDescription className="text-sm">For serious traders</CardDescription>
                             </CardHeader>
 
@@ -102,8 +102,8 @@ export default function Pricing() {
 
                     <Card className="flex flex-col">
                         <CardHeader>
-                            <CardTitle className="font-medium">Elite</CardTitle>
-                            <span className="my-3 block text-2xl font-semibold">₹999 / mo</span>
+                            <CardTitle className="font-medium">Elite Plan</CardTitle>
+                            <span className="my-3 block text-2xl font-semibold">Coming soon</span>
                             <CardDescription className="text-sm">For professional & fund traders</CardDescription>
                         </CardHeader>
 
