@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import ProgressBar from "@/components/ProgressBar";
+import { HeroHeader } from "@/components/header";
+import FooterSection from "@/components/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,7 +55,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <HeroHeader />
+            <main className="pt-10 md:pt-20">{children}</main>
+            <FooterSection />
+            <ProgressBar/>
           </ThemeProvider>
         </body>
       </html>

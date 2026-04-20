@@ -23,8 +23,12 @@ const links = [
         href: '#',
     },
     {
-        title: 'Terms',
-        href: '#',
+        title: 'Terms & Conditions',
+        href: '/terms-and-conditions',
+    },
+    {
+        title: 'Privacy Policy',
+        href: '/privacy-policy',
     },
 ]
 

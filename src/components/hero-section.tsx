@@ -4,8 +4,40 @@ import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { TextEffect } from '@/components/ui/text-effect'
 import { AnimatedGroup } from '@/components/ui/animated-group'
-import { HeroHeader } from './header'
 import LivePriceTicker from '@/components/live-price-ticker'
+
+const navPages = [
+    {
+        title: 'Features',
+        href: '/features',
+        description: 'Explore the trading engine, analytics, risk controls, and backtesting suite.',
+    },
+    {
+        title: 'Services',
+        href: '/services',
+        description: 'See our algo trading, AI signals, custom builds, and academy offerings.',
+    },
+    {
+        title: 'Academy',
+        href: '/academy',
+        description: 'Learn structured trading, automation workflows, and risk management.',
+    },
+    {
+        title: 'About',
+        href: '/about',
+        description: 'Understand who ATLAS is and how we approach trading technology.',
+    },
+    {
+        title: 'Contact',
+        href: '/contact',
+        description: 'Reach support and business teams for help or partnerships.',
+    },
+    {
+        title: 'Pricing',
+        href: '/pricing',
+        description: 'Review the current and upcoming plans for your trading workflow.',
+    },
+]
 
 const transitionVariants = {
     item: {
@@ -30,8 +62,7 @@ const transitionVariants = {
 export default function HeroSection() {
     return (
         <>
-            <HeroHeader />
-            <div className="pt-16 md:pt-20">
+            <div className="pt-4 md:pt-6">
                 <LivePriceTicker />
             </div>
             <main className="overflow-hidden">
@@ -43,7 +74,7 @@ export default function HeroSection() {
                     <div className="h-320 -translate-y-87.5 absolute left-0 top-0 w-60 -rotate-45 bg-[radial-gradient(50%_50%_at_50%_50%,hsla(0,0%,85%,.04)_0,hsla(0,0%,45%,.02)_80%,transparent_100%)]" />
                 </div>
                 <section>
-                    <div className="relative pt-8 md:pt-14">
+                    <div className="relative pt-2 md:pt-4">
                         <div
                             aria-hidden
                             className="absolute inset-0 -z-10 size-full [background:radial-gradient(125%_125%_at_50%_100%,transparent_0%,var(--color-background)_75%)]"
@@ -108,12 +139,37 @@ export default function HeroSection() {
                                             asChild
                                             size="lg"
                                             className="rounded-xl px-5 text-base">
-                                            <Link href="#pricing">
+                                                <Link href="/pricing">
                                                 <span className="text-nowrap">Start Trading Now</span>
                                             </Link>
                                         </Button>
                                     </div>
                                 </AnimatedGroup>
+
+                                    <div className="mx-auto mt-14 max-w-6xl">
+                                        <div className="mb-6 text-center">
+                                            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">Pages</p>
+                                            <h2 className="mt-3 text-2xl font-semibold md:text-3xl">Open any page directly</h2>
+                                            <p className="mx-auto mt-3 max-w-2xl text-sm text-muted-foreground md:text-base">
+                                                Each card takes you to a dedicated page for that section of the site.
+                                            </p>
+                                        </div>
+
+                                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                                            {navPages.map((item) => (
+                                                <Link
+                                                    key={item.title}
+                                                    href={item.href}
+                                                    className="group rounded-3xl border bg-background/80 p-5 text-left shadow-sm shadow-zinc-950/5 transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg dark:bg-slate-950/70">
+                                                    <div className="flex items-center justify-between gap-4">
+                                                        <h3 className="text-lg font-semibold text-foreground">{item.title}</h3>
+                                                        <ArrowRight className="size-4 text-muted-foreground transition-transform duration-300 group-hover:translate-x-1 group-hover:text-primary" />
+                                                    </div>
+                                                    <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.description}</p>
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </div>
                             </div>
                         </div>
                     </div>

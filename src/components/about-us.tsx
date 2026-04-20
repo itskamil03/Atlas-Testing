@@ -2,7 +2,7 @@ import { Card, CardContent } from '@/components/ui/card'
 
 export default function AboutUs() {
   return (
-    <section id="about" className="py-16 md:py-32">
+    <section id="about" className="py-16 md:py-10">
       <div className="mx-auto max-w-5xl px-6 text-center">
         <h2 className="text-4xl font-semibold lg:text-5xl">About ATLAS</h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">

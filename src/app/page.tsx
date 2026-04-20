@@ -17,7 +17,7 @@ import SectionReveal from "@/components/ui/section-reveal";
 
 export default function Home() {
   return (
-    <div>
+    <div className="">
       <div className="bg-amber-50 dark:bg-amber-950/30 border-b border-amber-200 dark:border-amber-900/50 px-4 py-3">
         <p className="text-center text-sm font-semibold text-amber-900 dark:text-amber-100">
           🚧 This site is currently under construction. We're building something amazing for you!
@@ -63,7 +63,6 @@ export default function Home() {
       <SectionReveal animation="zoom">
         <Pricing />
       </SectionReveal>
-      <FooterSection />
     </div>
   );
 }

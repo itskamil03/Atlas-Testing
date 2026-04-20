@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 
 export default function Features() {
     return (
-        <section id="features" className="bg-white py-16 md:py-32 dark:bg-black">
+        <section id="features" className="bg-white py-16 md:py-10 dark:bg-black">
             <div className="@container mx-auto max-w-5xl px-6">
                 <div className="text-center">
                     <h2 className="text-black text-4xl font-semibold lg:text-5xl dark:text-emerald-300">What ATLAS Does</h2>

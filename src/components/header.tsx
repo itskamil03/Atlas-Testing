@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Logo } from '@/components/logo'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -8,13 +9,14 @@ import { cn } from '@/lib/utils'
 import { ThemeToggleButton } from './ThemeToggleButton'
 import { UserButton, useUser } from '@clerk/nextjs'
 
+
 const menuItems = [
-    { name: 'Features', href: '#features' },
-    { name: 'Services', href: '#services' },
-    { name: 'Academy', href: '#academy' },
-    { name: 'About', href: '#about' },
-    { name: 'Contact', href: '#contact' },
-    { name: 'Pricing', href: '#pricing' },
+    { name: 'Features', href: '/features' },
+    { name: 'Services', href: '/services' },
+    { name: 'Academy', href: '/academy' },
+    { name: 'About', href: '/about' },
+    { name: 'Contact', href: '/contact' },
+    { name: 'Pricing', href: '/pricing' },
 ]
 
 export const HeroHeader = () => {
@@ -24,6 +26,9 @@ export const HeroHeader = () => {
     const [scrollProgress, setScrollProgress] = React.useState(0)
     const lastScrollY = React.useRef(0)
     const { isSignedIn } = useUser()
+    const pathname = usePathname()
+
+    const isActiveLink = (href: string) => pathname === href || pathname.startsWith(`${href}/`)
 
     React.useEffect(() => {
         const handleScroll = () => {
@@ -78,7 +83,13 @@ export const HeroHeader = () => {
                                     <li key={index}>
                                         <Link
                                             href={item.href}
-                                            className="text-muted-foreground hover:text-accent-foreground block duration-150">
+                                            aria-current={isActiveLink(item.href) ? 'page' : undefined}
+                                            className={cn(
+                                                'block duration-150',
+                                                isActiveLink(item.href)
+                                                    ? 'text-primary font-semibold'
+                                                    : 'text-muted-foreground hover:text-accent-foreground'
+                                            )}>
                                             <span>{item.name}</span>
                                         </Link>
                                     </li>
@@ -93,7 +104,13 @@ export const HeroHeader = () => {
                                         <li key={index}>
                                             <Link
                                                 href={item.href}
-                                                className="text-muted-foreground hover:text-accent-foreground block duration-150">
+                                                aria-current={isActiveLink(item.href) ? 'page' : undefined}
+                                                className={cn(
+                                                    'block duration-150',
+                                                    isActiveLink(item.href)
+                                                        ? 'text-primary font-semibold'
+                                                        : 'text-muted-foreground hover:text-accent-foreground'
+                                                )}>
                                                 <span>{item.name}</span>
                                             </Link>
                                         </li>
