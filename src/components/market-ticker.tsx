@@ -15,7 +15,7 @@ export default function MarketTicker() {
     ]
 
     return (
-        <div className="bg-muted/30 border rounded-xl p-4 overflow-hidden">
+        <div className="bg-muted/30 border rounded-xl p-16 overflow-visible">
             <div className="flex items-center justify-between mb-3">
                 <p className="text-sm font-semibold">Live Markets</p>
                 <div className="flex items-center gap-1">

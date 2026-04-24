@@ -116,7 +116,7 @@ export default function PrivacyPolicyPage() {
           </section>
         </div>
       </div>
-      <FooterSection />
+      {/* <FooterSection /> */}
     </>
   )
 }

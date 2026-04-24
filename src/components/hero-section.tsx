@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { TextEffect } from '@/components/ui/text-effect'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import LivePriceTicker from '@/components/live-price-ticker'
+import LineWaves from './LineWaves'
 
 const navPages = [
     {
@@ -65,22 +66,32 @@ export default function HeroSection() {
             <div className="pt-4 md:pt-6">
                 <LivePriceTicker />
             </div>
-            <main className="overflow-hidden">
-                <div
-                    aria-hidden
-                    className="absolute inset-0 isolate hidden opacity-65 contain-strict lg:block">
-                    <div className="w-140 h-320 -translate-y-87.5 absolute left-0 top-0 -rotate-45 rounded-full bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,hsla(0,0%,85%,.08)_0,hsla(0,0%,55%,.02)_50%,hsla(0,0%,45%,0)_80%)]" />
-                    <div className="h-320 absolute left-0 top-0 w-60 -rotate-45 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,hsla(0,0%,85%,.06)_0,hsla(0,0%,45%,.02)_80%,transparent_100%)] [translate:5%_-50%]" />
-                    <div className="h-320 -translate-y-87.5 absolute left-0 top-0 w-60 -rotate-45 bg-[radial-gradient(50%_50%_at_50%_50%,hsla(0,0%,85%,.04)_0,hsla(0,0%,45%,.02)_80%,transparent_100%)]" />
-                </div>
+            <section className="relative overflow-hidden">
                 <section>
-                    <div className="relative pt-2 md:pt-4">
+                    <div className="relative isolate pt-2 md:pt-4">
                         <div
                             aria-hidden
                             className="absolute inset-0 -z-10 size-full [background:radial-gradient(125%_125%_at_50%_100%,transparent_0%,var(--color-background)_75%)]"
                         />
 
-                        <div className="mx-auto max-w-7xl px-6">
+                        <LineWaves
+                            speed={0.28}
+                            innerLineCount={14}
+                            outerLineCount={12}
+                            warpIntensity={1}
+                            rotation={-45}
+                            edgeFadeWidth={0.2}
+                            colorCycleSpeed={1}
+                            brightness={0.55}
+                            color1="#0d9e6e"
+                            color2="#16c47f"
+                            color3="#a7f3d0"
+                            enableMouseInteraction
+                            mouseInfluence={2}
+                            className="opacity-90"
+                        />
+
+                        <div className="relative z-10 mx-auto max-w-7xl px-6">
                             <div className="text-center sm:mx-auto lg:mr-auto lg:mt-0">
                                 <AnimatedGroup variants={transitionVariants}>
                                     <Link
@@ -146,35 +157,35 @@ export default function HeroSection() {
                                     </div>
                                 </AnimatedGroup>
 
-                                    <div className="mx-auto mt-14 max-w-6xl">
-                                        <div className="mb-6 text-center">
-                                            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">Pages</p>
-                                            <h2 className="mt-3 text-2xl font-semibold md:text-3xl">Open any page directly</h2>
-                                            <p className="mx-auto mt-3 max-w-2xl text-sm text-muted-foreground md:text-base">
-                                                Each card takes you to a dedicated page for that section of the site.
-                                            </p>
-                                        </div>
-
-                                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                                            {navPages.map((item) => (
-                                                <Link
-                                                    key={item.title}
-                                                    href={item.href}
-                                                    className="group rounded-3xl border bg-background/80 p-5 text-left shadow-sm shadow-zinc-950/5 transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg dark:bg-slate-950/70">
-                                                    <div className="flex items-center justify-between gap-4">
-                                                        <h3 className="text-lg font-semibold text-foreground">{item.title}</h3>
-                                                        <ArrowRight className="size-4 text-muted-foreground transition-transform duration-300 group-hover:translate-x-1 group-hover:text-primary" />
-                                                    </div>
-                                                    <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.description}</p>
-                                                </Link>
-                                            ))}
-                                        </div>
+                                <div className="mx-auto mt-14 max-w-6xl">
+                                    <div className="mb-6 text-center">
+                                        <p className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">Pages</p>
+                                        <h2 className="mt-3 text-2xl font-semibold md:text-3xl">Open any page directly</h2>
+                                        <p className="mx-auto mt-3 max-w-2xl text-sm text-muted-foreground md:text-base">
+                                            Each card takes you to a dedicated page for that section of the site.
+                                        </p>
                                     </div>
+
+                                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                                        {navPages.map((item) => (
+                                            <Link
+                                                key={item.title}
+                                                href={item.href}
+                                                className="group rounded-3xl border bg-background/80 p-5 text-left shadow-sm shadow-zinc-950/5 transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg dark:bg-slate-950/70">
+                                                <div className="flex items-center justify-between gap-4">
+                                                    <h3 className="text-lg font-semibold text-foreground">{item.title}</h3>
+                                                    <ArrowRight className="size-4 text-muted-foreground transition-transform duration-300 group-hover:translate-x-1 group-hover:text-primary" />
+                                                </div>
+                                                <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.description}</p>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </section>
-            </main>
+            </section>
         </>
     )
 }
