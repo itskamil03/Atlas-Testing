@@ -23,6 +23,6 @@ jobs:
             git pull origin main
 
             cd /home/purushotam/atlas
-            docker compose up -d --build frontend
+            docker compose up -d --build atlas-frontend
 
 
