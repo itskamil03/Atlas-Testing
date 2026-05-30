@@ -47,7 +47,7 @@ export const HeroHeader = () => {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
     return (
-        <header>
+        <header >
             {/* Scroll progress bar */}
             <div className="fixed top-0 left-0 z-50 h-0.75 w-full bg-transparent">
                 <div
@@ -64,8 +64,8 @@ export const HeroHeader = () => {
                             <Link
                                 href="/"
                                 aria-label="home"
-                                className="flex items-center space-x-2">
-                                <Logo />
+                                className="flex items-center">
+                                <Logo className="shrink-0 max-w-35 sm:max-w-40" />
                             </Link>
 
                             <button
@@ -77,7 +77,7 @@ export const HeroHeader = () => {
                             </button>
                         </div>
 
-                        <div className="absolute inset-0 m-auto hidden size-fit lg:block">
+                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden size-fit lg:block">
                             <ul className="flex gap-8 text-sm">
                                 {menuItems.map((item, index) => (
                                     <li key={index}>

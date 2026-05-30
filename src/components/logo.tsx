@@ -1,23 +1,45 @@
+"use client"
+
+import { useEffect, useState } from 'react'
+import { useTheme } from 'next-themes'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 
 export const Logo = ({ className, uniColor }: { className?: string; uniColor?: boolean }) => {
+    const { resolvedTheme, theme } = useTheme()
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    const isDark = (mounted ? resolvedTheme : theme) === 'dark'
+
     return (
         <Image
-            src="/atlas_logo.png"
+            src={isDark ? '/atlasgif.gif' : '/atlas_logo_d.gif'}
             alt="Atlas Fintech"
-            width={120}
-            height={48}
-            className={cn('h-8 w-auto', className)}
+            width={200}
+            height={200}
+            className={cn('h-28 w-auto', className)}
             priority
         />
     )
 }
 
 export const LogoIcon = ({ className }: { className?: string }) => {
+    const { resolvedTheme, theme } = useTheme()
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    const isDark = (mounted ? resolvedTheme : theme) === 'dark'
+
     return (
         <Image
-            src="/atlas_logo.png"
+            src={isDark ? '/atlasgif.gif' : '/atlas_logo_d.gif'}
             alt="Atlas Logo"
             width={40}
             height={40}

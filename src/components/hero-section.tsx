@@ -63,10 +63,10 @@ const transitionVariants = {
 export default function HeroSection() {
     return (
         <>
-            <div className="pt-4 md:pt-6">
+            <div className="pt-4 ">
                 <LivePriceTicker />
             </div>
-            <section className="relative overflow-hidden">
+            <section className="relative overflow-hidden ">
                 <section>
                     <div className="relative isolate pt-2 md:pt-4">
                         <div
@@ -118,7 +118,7 @@ export default function HeroSection() {
                                     speedSegment={0.3}
                                     as="h1"
                                     className="mx-auto mt-8 max-w-4xl text-balance text-5xl max-md:font-semibold md:text-7xl lg:mt-16 xl:text-[5.25rem]">
-                                    AI-Powered Algo Trading for Forex & Crypto Precision, Speed & Consistency
+                                    Institutional-Style Market Research For Modern Traders
                                 </TextEffect>
                                 <TextEffect
                                     per="line"
@@ -127,7 +127,7 @@ export default function HeroSection() {
                                     delay={0.5}
                                     as="p"
                                     className="mx-auto mt-8 max-w-2xl text-balance text-lg">
-                                    ATLAS delivers institutional-grade automation, prop desk precision, predictive analytics, and execution algorithms designed for traders who demand accuracy and consistent performance in global markets.
+                                   "Gold, Forex, Macro & Market Intelligence by ATLAS Research Desk"
                                 </TextEffect>
 
                                 <AnimatedGroup

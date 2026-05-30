@@ -1,5 +1,9 @@
+"use client"
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Activity, Cpu, Globe2, GraduationCap, Settings2 } from 'lucide-react'
+import AOS from 'aos'
+import { useEffect } from 'react'
 
 const services = [
   {
@@ -41,10 +45,25 @@ const services = [
 ]
 
 export default function Services() {
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true,
+      offset: 300,
+    })
+  }, [])
+
   return (
-    <section id="services" className="bg-muted/10 py-16 md:py-10">
+    <section
+      id="services"
+      className="bg-muted/10 py-16 md:py-10"
+      data-aos="fade-right"
+      data-aos-offset="300"
+      data-aos-easing="ease-in-out"
+    >
       <div className="mx-auto max-w-6xl px-6">
-        <div className="text-center">
+        <div className="text-center" data-aos="fade-right" data-aos-delay="50" data-aos-duration="750">
           <h2 className="text-4xl font-semibold lg:text-5xl">Services</h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
             ATLAS provides a full suite of algo trading solutions, AI signal delivery, and custom development for active traders.
@@ -52,10 +71,16 @@ export default function Services() {
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {services.map((service) => {
+          {services.map((service, index) => {
             const Icon = service.icon
             return (
-              <Card key={service.title} className="border">
+              <Card
+                key={service.title}
+                className="border"
+                data-aos="fade-right"
+                data-aos-delay={index * 90}
+                data-aos-duration="750"
+              >
                 <CardHeader>
                   <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-background text-primary shadow-sm">
                     <Icon className="size-6" />
