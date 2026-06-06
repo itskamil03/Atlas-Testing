@@ -14,9 +14,9 @@ const menuItems = [
     { name: 'Features', href: '/features' },
     { name: 'Services', href: '/services' },
     { name: 'Academy', href: '/academy' },
+    { name: 'Pricing', href: '/pricing' },
     { name: 'About', href: '/about' },
     { name: 'Contact', href: '/contact' },
-    { name: 'Pricing', href: '/pricing' },
 ]
 
 export const HeroHeader = () => {
@@ -65,7 +65,7 @@ export const HeroHeader = () => {
                                 href="/"
                                 aria-label="home"
                                 className="flex items-center">
-                                <Logo className="shrink-0 max-w-35 sm:max-w-40" />
+                                <Logo className="shrink-0 max-w-35 sm:max-w-auto sm:h-20 md:h-28 md:max-w-35 " />
                             </Link>
 
                             <button

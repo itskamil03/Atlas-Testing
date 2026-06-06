@@ -26,6 +26,17 @@ export default function Home() {
       <HeroSection />
       {/* <SectionReveal animation="slide-up"> */}
         <Features />
+        <Services />
+        <Academy />
+      <SectionReveal animation="zoom">
+        <Pricing />
+      </SectionReveal>
+      <SectionReveal animation="zoom">
+        <AboutUs />
+      </SectionReveal>
+       <SectionReveal animation="fade">
+        <ContactSection />
+      </SectionReveal>
       {/* </SectionReveal> */}
       {/* <SectionReveal animation="fade">
         <MarketTicker />
@@ -39,11 +50,9 @@ export default function Home() {
       <SectionReveal animation="zoom">
         <Testimonials />
       </SectionReveal>
-      <SectionReveal animation="zoom">
-        <AboutUs />
-      </SectionReveal>
-      <Academy />
-      <Services />
+      
+      
+      
      
         <PerformanceSection />
     
@@ -53,12 +62,8 @@ export default function Home() {
       {/* <SectionReveal animation="fade"> */}
         <StatsSection />
       {/* </SectionReveal> */}
-      <SectionReveal animation="fade">
-        <ContactSection />
-      </SectionReveal>
-      <SectionReveal animation="zoom">
-        <Pricing />
-      </SectionReveal>
+     
+     
     </div>
   );
 }
