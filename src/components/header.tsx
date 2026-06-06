@@ -65,7 +65,7 @@ export const HeroHeader = () => {
                                 href="/"
                                 aria-label="home"
                                 className="flex items-center">
-                                <Logo className="shrink-0 max-w-35 sm:max-w-auto sm:h-20 md:h-28 md:max-w-35 " />
+                                <Logo className="shrink-0 max-w-auto h-20 sm:max-w-auto sm:h-20 md:h-28 md:max-w-35 " />
                             </Link>
 
                             <button

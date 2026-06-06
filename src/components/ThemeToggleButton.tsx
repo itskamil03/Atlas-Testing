@@ -28,7 +28,7 @@ export function ThemeToggleButton() {
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       aria-pressed={isDark}
       className={cn(
-        "group relative inline-flex  w-20 items-center rounded-full border p-1 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "group relative inline-flex w-20  h-auto items-center rounded-full border py-4 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         isDark
           ? "border-slate-700 bg-slate-900 shadow-[inset_0_1px_8px_rgba(255,255,255,0.04)]"
           : "border-emerald-200 bg-emerald-50 shadow-[inset_0_1px_8px_rgba(16,185,129,0.08)]"
