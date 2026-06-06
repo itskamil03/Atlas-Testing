@@ -1,4 +1,4 @@
-name: Deploy frontend
+name: Atlas Frontend CI/CD Pipeline
 
 on:
   push:
@@ -6,11 +6,96 @@ on:
       - main
 
 jobs:
-  deploy:
+  # ================================
+  # JOB 1: SonarQube Code Quality
+  # ================================
+  sonarqube:
+    name: SonarQube Analysis
     runs-on: ubuntu-latest
-
     steps:
-      - name: Deploy frontend service
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: SonarQube Quality Gate Check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+  # ================================
+  # JOB 2: Build & Trivy Scan
+  # ================================
+  build-and-scan:
+    name: Build Image & Trivy Security Scan
+    runs-on: ubuntu-latest
+    needs: sonarqube
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: |
+          docker build -t atlas-frontend:${{ github.sha }} .
+
+      - name: Trivy Security Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: atlas-frontend:${{ github.sha }}
+          format: table
+          exit-code: 0        # 0 = fail mat karo, sirf report karo
+          severity: CRITICAL,HIGH
+          output: trivy-report.txt
+
+      - name: Upload Trivy Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-security-report
+          path: trivy-report.txt
+
+  # ================================
+  # JOB 3: Push to DockerHub
+  # ================================
+  push-to-dockerhub:
+    name: Push Image to DockerHub
+    runs-on: ubuntu-latest
+    needs: build-and-scan
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build & Push Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/atlas-frontend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/atlas-frontend:${{ github.sha }}
+
+  # ================================
+  # JOB 4: Deploy on VPS
+  # ================================
+  deploy:
+    name: Deploy on VPS
+    runs-on: ubuntu-latest
+    needs: push-to-dockerhub
+    steps:
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.HOST }}
@@ -19,10 +104,55 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             set -e
-            cd /home/purushotam/atlas/atlas_frontend
-            git pull origin main
 
-            cd /home/purushotam/atlas
-            docker compose up -d --build atlas-frontend
+            echo "🔄 Pulling latest image..."
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/atlas-frontend:latest
+
+            echo "🛑 Stopping old container..."
+            docker stop atlas-frontend || true
+            docker rm atlas-frontend || true
+
+            echo "🚀 Starting new container..."
+            docker run -d \
+              --name atlas-frontend \
+              --network atlas-network \
+              --restart unless-stopped \
+              -p 127.0.0.1:3011:3000 \
+              --env-file /home/purushotam/atlas/atlas_frontend/.env \
+              -v /home/purushotam/atlas/logs:/app/logs \
+              --health-cmd="curl -f http://localhost:3000 || exit 1" \
+              --health-interval=30s \
+              --health-timeout=10s \
+              --health-retries=3 \
+              ${{ secrets.DOCKERHUB_USERNAME }}/atlas-frontend:latest
+
+            echo "✅ Container started successfully!"
+            docker ps | grep atlas-frontend
+
+  # ================================
+  # JOB 5: OWASP ZAP Security Scan
+  # ================================
+  owasp-zap:
+    name: OWASP ZAP Security Analysis
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Wait for container to be ready
+        run: sleep 30
+
+      - name: OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: "http://${{ secrets.HOST }}:3011"
+          rules_file_name: ".zap/rules.tsv"
+          cmd_options: "-I"        # Issues ko ignore karo, fail mat karo
+          artifact_name: zap-report
+
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: owasp-zap-report
+          path: report_html.html
 
 
