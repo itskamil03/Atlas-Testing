@@ -105,29 +105,16 @@ jobs:
           script: |
             set -e
 
+            cd /home/purushotam/atlas
+
             echo "🔄 Pulling latest image..."
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/atlas-frontend:latest
+            docker compose pull atlas-frontend
 
-            echo "🛑 Stopping old container..."
-            docker stop atlas-frontend || true
-            docker rm atlas-frontend || true
-
-            echo "🚀 Starting new container..."
-            docker run -d \
-              --name atlas-frontend \
-              --network atlas-network \
-              --restart unless-stopped \
-              -p 127.0.0.1:3011:3000 \
-              --env-file /home/purushotam/atlas/atlas_frontend/.env \
-              -v /home/purushotam/atlas/logs:/app/logs \
-              --health-cmd="curl -f http://localhost:3000 || exit 1" \
-              --health-interval=30s \
-              --health-timeout=10s \
-              --health-retries=3 \
-              ${{ secrets.DOCKERHUB_USERNAME }}/atlas-frontend:latest
+            echo "🚀 Restarting container..."
+            docker compose up -d --no-deps --force-recreate atlas-frontend
 
             echo "✅ Container started successfully!"
-            docker ps | grep atlas-frontend
+            docker compose ps atlas-frontend
 
   # ================================
   # JOB 5: OWASP ZAP Security Scan
