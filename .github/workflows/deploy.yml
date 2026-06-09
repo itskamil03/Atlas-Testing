@@ -130,7 +130,7 @@ jobs:
       - name: OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.12.0
         with:
-          target: "http://${{ secrets.HOST }}:3011"
+          target: "https://atlusindia.com"
           rules_file_name: ".zap/rules.tsv"
           cmd_options: "-I"        # Issues ko ignore karo, fail mat karo
           artifact_name: zap-report
