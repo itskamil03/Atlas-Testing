@@ -15,7 +15,22 @@ export function ThemeToggleButton() {
     setMounted(true)
   }, [])
 
-  const isDark = (mounted ? resolvedTheme : theme) === "dark"
+  // Return placeholder during SSR to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <button
+        type="button"
+        aria-label="Toggle theme"
+        className="group relative inline-flex w-20 h-auto items-center rounded-full border py-4 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-emerald-50 border-emerald-200"
+      >
+        <span className="absolute left-0 top-1 w-8 rounded-full translate-x-0 bg-white" />
+        <span className="pointer-events-none absolute inset-y-0 left-0 z-20 flex w-1/2 items-center justify-center" />
+        <span className="pointer-events-none absolute inset-y-0 right-0 z-20 flex w-1/2 items-center justify-center" />
+      </button>
+    )
+  }
+
+  const isDark = resolvedTheme === "dark"
 
   const toggleTheme = () => {
     setTheme(isDark ? "light" : "dark")

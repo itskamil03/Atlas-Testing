@@ -6,14 +6,21 @@ import { cn } from '@/lib/utils'
 import Image from 'next/image'
 
 export const Logo = ({ className, uniColor }: { className?: string; uniColor?: boolean }) => {
-    const { resolvedTheme, theme } = useTheme()
+    const { resolvedTheme } = useTheme()
     const [mounted, setMounted] = useState(false)
 
     useEffect(() => {
         setMounted(true)
     }, [])
 
-    const isDark = (mounted ? resolvedTheme : theme) === 'dark'
+    // Don't render anything on server to prevent hydration mismatch
+    if (!mounted) {
+        return (
+            <div className={cn('h-28 w-auto', className)} style={{ minWidth: 200 }} />
+        )
+    }
+
+    const isDark = resolvedTheme === 'dark'
 
     return (
         <Image
@@ -28,14 +35,20 @@ export const Logo = ({ className, uniColor }: { className?: string; uniColor?: b
 }
 
 export const LogoIcon = ({ className }: { className?: string }) => {
-    const { resolvedTheme, theme } = useTheme()
+    const { resolvedTheme } = useTheme()
     const [mounted, setMounted] = useState(false)
 
     useEffect(() => {
         setMounted(true)
     }, [])
 
-    const isDark = (mounted ? resolvedTheme : theme) === 'dark'
+    if (!mounted) {
+        return (
+            <div className={cn('size-8', className)} />
+        )
+    }
+
+    const isDark = resolvedTheme === 'dark'
 
     return (
         <Image

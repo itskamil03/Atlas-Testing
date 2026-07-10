@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { getToken } from "@clerk/nextjs";
+import { getAccessToken } from "@/lib/auth";
+
+type ProtectedUser = Record<string, unknown>;
 
 export default function ProtectedUsers() {
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<ProtectedUser[]>([]);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
@@ -13,7 +15,11 @@ export default function ProtectedUsers() {
     setError("");
 
     try {
-      const token = await getToken({ template: "integration" });
+      const token = getAccessToken();
+      if (!token) {
+        throw new Error("Missing access token. Please log in first.");
+      }
+
       const res = await fetch("http://localhost:5000/api/users/protected", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -37,7 +43,7 @@ export default function ProtectedUsers() {
 
   return (
     <section className="mx-auto mb-10 max-w-6xl px-6">
-      <h2 className="text-2xl font-semibold">Protected users (Clerk auth API)</h2>
+      <h2 className="text-2xl font-semibold">Protected users</h2>
       <button
         onClick={fetchUsers}
         className="mt-3 rounded-lg bg-primary px-4 py-2 text-primary-foreground"

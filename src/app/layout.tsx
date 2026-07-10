@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import "aos/dist/aos.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import ProgressBar from "@/components/ProgressBar";
-import { HeroHeader } from "@/components/header";
+import LayoutWrapper from "@/components/LayoutWrapper";
 import FooterSection from "@/components/footer";
-import ScrollRestoration from "@/components/scroll-restoration";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,29 +40,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider
-      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-      signInUrl="/login"
-      signUpUrl="/signup"
-    >
-      <html lang="en" suppressHydrationWarning>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <HeroHeader />
-            {/* <ScrollRestoration /> */}
-            <main className="pt-24 sm:pt-28 md:pt-32 lg:pt-36">{children}</main>
-            <FooterSection />
-            <ProgressBar/>
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+          <LayoutWrapper>{children}</LayoutWrapper>
+          <FooterSection />
+          <ProgressBar/>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

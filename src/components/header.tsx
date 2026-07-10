@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button'
 import React from 'react'
 import { cn } from '@/lib/utils'
 import { ThemeToggleButton } from './ThemeToggleButton'
-import { UserButton, useUser } from '@clerk/nextjs'
 
 
 const menuItems = [
@@ -25,7 +24,6 @@ export const HeroHeader = () => {
     const [isHidden, setIsHidden] = React.useState(false)
     const [scrollProgress, setScrollProgress] = React.useState(0)
     const lastScrollY = React.useRef(0)
-    const { isSignedIn } = useUser()
     const pathname = usePathname()
 
     const isActiveLink = (href: string) => pathname === href || pathname.startsWith(`${href}/`)
@@ -118,28 +116,23 @@ export const HeroHeader = () => {
                                 </ul>
                             </div>
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                                {!isSignedIn && (
-                                    <>
-                                        <Button
-                                            asChild
-                                            variant="outline"
-                                            size="sm"
-                                            className={cn(isScrolled && 'lg:hidden')}>
-                                            <Link href="/login">
-                                                <span>Login</span>
-                                            </Link>
-                                        </Button>
-                                        <Button
-                                            asChild
-                                            size="sm"
-                                            className={cn(isScrolled && 'lg:hidden')}>
-                                            <Link href="/signup">
-                                                <span>Sign Up</span>
-                                            </Link>
-                                        </Button>
-                                    </>
-                                )}
-                                {isSignedIn && <UserButton />}
+                                <Button
+                                    asChild
+                                    variant="outline"
+                                    size="sm"
+                                    className={cn(isScrolled && 'lg:hidden')}>
+                                    <Link href="/login">
+                                        <span>Login</span>
+                                    </Link>
+                                </Button>
+                                <Button
+                                    asChild
+                                    size="sm"
+                                    className={cn(isScrolled && 'lg:hidden')}>
+                                    <Link href="/signup">
+                                        <span>Sign Up</span>
+                                    </Link>
+                                </Button>
                                 <ThemeToggleButton/>
                                 <Button
                                     asChild
