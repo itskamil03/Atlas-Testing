@@ -4,7 +4,7 @@ export default function ContactSection() {
       <div className="mx-auto max-w-6xl px-6">
         <div className="text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.35em] text-primary">Contact</p>
-          <h2 className="mt-4 text-4xl font-semibold lg:text-5xl text-slate-950 dark:text-white">Get in Touch</h2>
+          {/* <h2 className="mt-4 text-4xl font-semibold lg:text-5xl text-slate-950 dark:text-white">Get in Touch</h2> */}
           <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600 dark:text-slate-300">
             For support, business inquiries, institutional partnerships, and prop desk access, reach out to our team.
           </p>
