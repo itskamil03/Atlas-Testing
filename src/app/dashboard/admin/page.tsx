@@ -619,8 +619,8 @@ export default function AdminPage() {
               <p className="mt-1 text-sm text-[#B5CAE2]">Unified control panel for strategy publishing, compliance, users, risk, and live operations.</p>
             </div>
             <div className="flex items-center gap-2">
-              <button onClick={() => { if (typeof window !== "undefined") { sessionStorage.setItem("viewMode", "trader"); } router.push("/dashboard"); }} className="rounded-xl border border-[#3B5674] bg-[#102035]/80 px-4 py-2 text-sm text-[#D5E4F7] transition hover:bg-[#16304D]">Trader Dashboard</button>
-              <button onClick={onLogout} className="rounded-xl border border-[#3B5674] bg-[#102035]/80 px-4 py-2 text-sm text-[#D5E4F7] transition hover:bg-[#16304D]">Sign Out</button>
+              <button onClick={() => { if (typeof window !== "undefined") { sessionStorage.setItem("viewMode", "trader"); } router.push("/dashboard"); }} className="rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Trader Dashboard</button>
+              <button onClick={onLogout} className="rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Sign Out</button>
             </div>
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-[#A6BCD6]">
@@ -990,12 +990,12 @@ export default function AdminPage() {
               <h2 className="text-lg font-semibold">Trades Management</h2>
               <div className="flex gap-2">
                 <input value={tradeSearch} onChange={(e) => setTradeSearch(e.target.value)} placeholder="Search symbol/strategy" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm" />
-                <select value={tradeStatusFilter} onChange={(e) => setTradeStatusFilter(e.target.value)} className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm">
-                  <option value="all">All Status</option>
-                  <option value="OPEN">Open</option>
-                  <option value="PENDING">Pending</option>
-                  <option value="CLOSED">Closed</option>
-                  <option value="CANCELLED">Cancelled</option>
+                <select value={tradeStatusFilter} onChange={(e) => setTradeStatusFilter(e.target.value)} className="rounded-lg border border-[#2A3B50] hover:border-[#4ADE80] focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-[#0F1B2B] px-3 py-2 text-sm text-[#ECF5FF] outline-none transition-colors duration-150 cursor-pointer">
+                  <option value="all" className="bg-[#0F1B2B] text-white">All Status</option>
+                  <option value="OPEN" className="bg-[#0F1B2B] text-white">Open</option>
+                  <option value="PENDING" className="bg-[#0F1B2B] text-white">Pending</option>
+                  <option value="CLOSED" className="bg-[#0F1B2B] text-white">Closed</option>
+                  <option value="CANCELLED" className="bg-[#0F1B2B] text-white">Cancelled</option>
                 </select>
                 <button onClick={() => void loadTrades()} className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Apply</button>
                 <button onClick={syncTrades} className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Sync Exchange</button>
@@ -1053,7 +1053,7 @@ export default function AdminPage() {
                 <label className="flex items-center gap-2 text-sm text-[#A8C2DE]"><input type="checkbox" checked={platformSettings.maintenance_mode} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, maintenance_mode: e.target.checked } : prev))} />Maintenance Mode</label>
               </div>
             ) : null}
-            <button onClick={saveSettings} className="mt-4 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#0EA5E9] px-4 py-2 text-sm font-semibold">Save Settings</button>
+             <button onClick={saveSettings} className="mt-4 rounded-xl bg-gradient-to-r from-[#0EA5E9] to-[#10B981] hover:from-[#10B981] hover:to-[#4ADE80] active:scale-95 px-4 py-2 text-sm font-semibold transition-all duration-150">Save Settings</button>
           </section>
         ) : null}
 
@@ -1062,13 +1062,13 @@ export default function AdminPage() {
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-lg font-semibold">Audit & Security Logs</h2>
               <div className="flex gap-2">
-                <select value={auditSeverity} onChange={(e) => setAuditSeverity(e.target.value)} className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm">
-                  <option value="all">All severity</option>
-                  <option value="info">Info</option>
-                  <option value="warning">Warning</option>
-                  <option value="error">Error</option>
+                <select value={auditSeverity} onChange={(e) => setAuditSeverity(e.target.value)} className="rounded-lg border border-[#2A3B50] hover:border-[#4ADE80] focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-[#0F1B2B] px-3 py-2 text-sm text-[#ECF5FF] outline-none transition-colors duration-150 cursor-pointer">
+                  <option value="all" className="bg-[#0F1B2B] text-white">All severity</option>
+                  <option value="info" className="bg-[#0F1B2B] text-white">Info</option>
+                  <option value="warning" className="bg-[#0F1B2B] text-white">Warning</option>
+                  <option value="error" className="bg-[#0F1B2B] text-white">Error</option>
                 </select>
-                <button onClick={() => void loadAudit()} className="rounded-lg border border-[#2E4762] px-3 py-2 text-sm">Filter</button>
+                <button onClick={() => void loadAudit()} className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Filter</button>
               </div>
             </div>
 
