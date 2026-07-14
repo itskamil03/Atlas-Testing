@@ -32,8 +32,9 @@ export default function AcademyPage() {
         api.get<AcademyArticle[]>("/academy/articles"),
         api.get<UserProfile>("/auth/me"),
       ]);
-      if (profileRes.data.role === "admin") {
-        router.replace("/admin");
+      const viewMode = typeof window !== "undefined" ? sessionStorage.getItem("viewMode") : null;
+      if (profileRes.data.role === "admin" && viewMode !== "trader") {
+        router.replace("/dashboard/admin");
         return;
       }
       setArticles(articlesRes.data);

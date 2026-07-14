@@ -5,7 +5,7 @@ import { Check } from 'lucide-react'
 
 export default function Pricing() {
     return (
-        <section id="pricing" className="py-16 md:py-10">
+        <section id="pricing" className="py-16 md:py-10" style={{ zoom: 0.67 }}>
             <div className="mx-auto max-w-6xl px-6">
                 <div className="mx-auto max-w-2xl space-y-6 text-center">
                     <h1 className="text-center text-4xl font-semibold lg:text-5xl">Simple Pricing, Powerful Signals</h1>

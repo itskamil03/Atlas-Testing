@@ -224,12 +224,6 @@ export default function AdminPage() {
     setActiveTab(routeTab);
   }, [searchParams]);
 
-  useEffect(() => {
-    if (pathname.startsWith("/dashboard/admin")) {
-      router.replace(`/admin?${searchParams.toString() || "tab=overview"}`);
-    }
-  }, [pathname, router, searchParams]);
-
   const loadAll = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -239,6 +233,9 @@ export default function AdminPage() {
       if (me.data.role !== "admin") {
         router.replace("/dashboard");
         return;
+      }
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("viewMode", "admin");
       }
       setProfile(me.data);
 
@@ -608,7 +605,7 @@ export default function AdminPage() {
               <p className="mt-1 text-sm text-[#B5CAE2]">Unified control panel for strategy publishing, compliance, users, risk, and live operations.</p>
             </div>
             <div className="flex items-center gap-2">
-              <button onClick={() => router.push("/dashboard")} className="rounded-xl border border-[#3B5674] bg-[#102035]/80 px-4 py-2 text-sm text-[#D5E4F7] transition hover:bg-[#16304D]">Trader Dashboard</button>
+              <button onClick={() => { if (typeof window !== "undefined") { sessionStorage.setItem("viewMode", "trader"); } router.push("/dashboard"); }} className="rounded-xl border border-[#3B5674] bg-[#102035]/80 px-4 py-2 text-sm text-[#D5E4F7] transition hover:bg-[#16304D]">Trader Dashboard</button>
               <button onClick={onLogout} className="rounded-xl border border-[#3B5674] bg-[#102035]/80 px-4 py-2 text-sm text-[#D5E4F7] transition hover:bg-[#16304D]">Sign Out</button>
             </div>
           </div>

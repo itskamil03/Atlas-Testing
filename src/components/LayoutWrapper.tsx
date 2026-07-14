@@ -23,7 +23,7 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
       {isDashboard ? <Header /> : <HeroHeader />}
       
       {/* The actual page content */}
-      <main className={`flex-grow ${isDashboard ? '' : 'pt-24 sm:pt-28 md:pt-32 lg:pt-36'}`}>
+      <main className={`grow ${isDashboard ? '' : 'pt-16 sm:pt-18 md:pt-20 lg:pt-20'}`}>
         {children}
       </main>
 

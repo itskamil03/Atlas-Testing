@@ -1,6 +1,6 @@
 export default function ContactSection() {
   return (
-    <section id="contact" className="py-16 md:py-10 bg-white dark:bg-slate-950/95">
+    <section id="contact" className="py-16 md:py-10 bg-white dark:bg-slate-950/95" style={{ zoom: 0.77 }}>
       <div className="mx-auto max-w-6xl px-6">
         <div className="text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.35em] text-primary">Contact</p>
@@ -16,8 +16,8 @@ export default function ContactSection() {
             <p className="mt-3 text-sm text-slate-700 dark:text-slate-300">
               For product questions, technical help, and account support, email our support team.
             </p>
-            <a
-              href="mailto:support@atlusindia.com"
+            
+             <a href="mailto:support@atlusindia.com"
               className="mt-6 inline-flex rounded-full bg-primary px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-primary/90">
               support@atlusindia.com
             </a>
@@ -28,8 +28,8 @@ export default function ContactSection() {
             <p className="mt-3 text-sm text-slate-700 dark:text-slate-300">
               For partnerships, institutional access, and prop desk discussions, contact our business development team.
             </p>
-            <a
-              href="mailto:business@atlusindia.com"
+            
+              <a href="mailto:business@atlusindia.com"
               className="mt-6 inline-flex rounded-full bg-primary px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-primary/90">
               business@atlusindia.com
             </a>

@@ -60,7 +60,7 @@ export default function Academy() {
   }
 
   return (
-    <section id="academy" className="py-20 md:py-28">
+    <section id="academy" className="py-20 md:py-28" style={{ zoom: 0.70 }}>
       <div className="mx-auto max-w-7xl px-6">
         {/* Header */}
         <motion.div

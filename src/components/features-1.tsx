@@ -85,7 +85,6 @@ const pulseCardVariants = {
 }
 
 // ─── Smooth number spring hook ────────────────────────────────────────────────
-// Keeps the float value animated so market-pulse number changes feel live, not jarring.
 function useSmoothNumber(value: number, stiffness = 80, damping = 18) {
     const mv     = useMotionValue(value)
     const spring = useSpring(mv, { stiffness, damping })
@@ -104,10 +103,9 @@ function PulseCard({ pulse, index, enableMotion }: { pulse: MarketPulse; index: 
                 delay: index * 0.08,
                 ease: [0.25, 0.46, 0.45, 0.94],
             }}
-            // No whileHover y-bob here — it fights the ticker interval and causes jank.
             className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white/90 p-4 text-center text-slate-950 shadow-2xl shadow-slate-900/10 md:max-w-none md:text-left dark:border-white/10 dark:bg-slate-950/80 dark:text-white dark:shadow-black/20 "
         >
-            <div className="flex items-center justify-between text-sm text-slate-600 dark:text-slate-400">
+            <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
                 <span>{pulse.label}</span>
                 <motion.span
                     key={pulse.delta}
@@ -130,10 +128,10 @@ function PulseCard({ pulse, index, enableMotion }: { pulse: MarketPulse; index: 
                     >
                         {pulse.value}
                     </motion.p>
-                    <p className="text-xs uppercase tracking-[0.25em] text-slate-500 dark:text-slate-500">live feed</p>
+                    <p className="text-[10px] uppercase tracking-[0.25em] text-slate-500 dark:text-slate-500">live feed</p>
                 </div>
                 <ArrowUpRight
-                    className={pulse.direction === 'up' ? 'size-5 text-emerald-600 dark:text-emerald-300' : 'size-5 rotate-90 text-rose-600 dark:text-rose-300'}
+                    className={pulse.direction === 'up' ? 'size-4 text-emerald-600 dark:text-emerald-300' : 'size-4 rotate-90 text-rose-600 dark:text-rose-300'}
                     aria-hidden
                 />
             </div>
@@ -149,8 +147,8 @@ function FeatureCard({ item, index, enableMotion }: { item: typeof featureCards[
             variants={cardVariants}
             transition={{
                 duration: 0.6,
-                delay: index * 0.07,          // 70 ms stagger — clearly visible, not sluggish
-                ease: [0.22, 1, 0.36, 1],     // custom cubic-bezier for a springy feel
+                delay: index * 0.07,
+                ease: [0.22, 1, 0.36, 1],
             }}
             whileHover={enableMotion ? {
                 y: -6,
@@ -159,18 +157,17 @@ function FeatureCard({ item, index, enableMotion }: { item: typeof featureCards[
             } : undefined}
         >
             <Card className="group relative h-full overflow-hidden border border-slate-200 bg-white/90 text-slate-950 shadow-2xl shadow-slate-900/10 backdrop-blur-xl transition-colors duration-300 hover:border-emerald-400/30 dark:border-white/10 dark:bg-white/5 dark:text-white dark:shadow-black/20">
-                {/* Hover accent fill */}
                 <div className={`absolute inset-0 bg-linear-to-br ${item.accent} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
 
-                <CardHeader className="relative pb-3 pt-6 text-center md:text-center">
+                <CardHeader className="relative pb-4 pt-8 text-center md:text-center">
                     <CardDecorator animate={enableMotion}>
                         <item.icon className="size-6" aria-hidden />
                     </CardDecorator>
-                    <h3 className="mt-6 text-lg font-medium text-slate-950 dark:text-white">{item.title}</h3>
+                    <h3 className="mt-6 text-xl font-semibold text-slate-950 dark:text-white">{item.title}</h3>
                 </CardHeader>
 
-                <CardContent className="relative pb-6 text-center">
-                    <p className="text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
+                <CardContent className="relative pb-8 px-6 text-center">
+                    <p className="text-base leading-7 text-slate-600 dark:text-slate-300">{item.description}</p>
                 </CardContent>
             </Card>
         </motion.div>
@@ -180,14 +177,12 @@ function FeatureCard({ item, index, enableMotion }: { item: typeof featureCards[
 // ─── Card decorator ───────────────────────────────────────────────────────────
 
 const CardDecorator = ({ children, animate = true }: { children: ReactNode; animate?: boolean }) => (
-    <div className="mask-radial-from-40% mask-radial-to-60% relative mx-auto size-36 [--color-border:color-mix(in_oklab,var(--color-white)12%,transparent)] group-hover:[--color-border:color-mix(in_oklab,var(--color-white)22%,transparent)]">
-        {/* Grid background */}
+    <div className="mask-radial-from-40% mask-radial-to-60% relative mx-auto size-32 [--color-border:color-mix(in_oklab,var(--color-white)12%,transparent)] group-hover:[--color-border:color-mix(in_oklab,var(--color-white)22%,transparent)]">
         <div
             aria-hidden
             className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-size-[24px_24px] opacity-60"
         />
 
-        {/* Rotating glow — pure CSS so it never restarts on re-render */}
         {animate && (
             <div
                 aria-hidden
@@ -195,9 +190,8 @@ const CardDecorator = ({ children, animate = true }: { children: ReactNode; anim
             />
         )}
 
-        {/* Icon container — subtle breathe pulse via CSS */}
         <div
-            className={`bg-white/95 absolute inset-0 m-auto flex size-12 items-center justify-center rounded-2xl border border-slate-200 shadow-lg shadow-slate-900/10 dark:bg-background/95 dark:border-white/10 dark:shadow-emerald-950/20
+            className={`bg-white/95 absolute inset-0 m-auto flex size-14 items-center justify-center rounded-2xl border border-slate-200 shadow-lg shadow-slate-900/10 dark:bg-background/95 dark:border-white/10 dark:shadow-emerald-950/20
             ${animate ? 'animate-[breathe_1.6s_ease-in-out_infinite]' : ''}`}
         >
             {children}
@@ -211,7 +205,6 @@ export default function Features() {
     const [pulses, setPulses] = useState(basePulses)
     const shouldReduceMotion  = useReducedMotion()
 
-    // Detect mobile once on mount — stable, no resize loop needed for animation decisions
     const [isMobile, setIsMobile] = useState(false)
     useEffect(() => {
         setIsMobile(window.matchMedia('(max-width: 767px)').matches)
@@ -219,9 +212,6 @@ export default function Features() {
 
     const enableMotion = !shouldReduceMotion && !isMobile
 
-    // ── InView refs for orchestrated entrance animations ──────────────────────
-    // Each ref triggers its own stagger group. Using `once: true` means the animation
-    // plays exactly once when scrolled into view — no jank from exit/re-enter toggling.
     const headingRef  = useRef<HTMLDivElement>(null)
     const pulsesRef   = useRef<HTMLDivElement>(null)
     const cardsRef    = useRef<HTMLDivElement>(null)
@@ -230,7 +220,6 @@ export default function Features() {
     const pulsesInView  = useInView(pulsesRef,   { once: true, margin: '0px 0px -60px 0px' })
     const cardsInView   = useInView(cardsRef,    { once: true, margin: '0px 0px -40px 0px' })
 
-    // ── Market pulse tick — runs independently of animation state ─────────────
     useEffect(() => {
         const interval = window.setInterval(() => {
             setPulses(current =>
@@ -258,14 +247,13 @@ export default function Features() {
         <section
             id="features"
             className="relative overflow-hidden bg-slate-50 py-20 text-slate-950 md:py-24 dark:bg-slate-950 dark:text-white mt-4"
+            style={{ zoom: 0.67, MozTransform: 'scale(0.67)', MozTransformOrigin: 'top center' } as React.CSSProperties}
         >
-            {/* ── Background gradients — pure CSS, zero JS ── */}
             <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.12),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.08),transparent_28%),linear-gradient(180deg,rgba(248,250,252,0.96),rgba(241,245,249,0.9))] dark:bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.18),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.12),transparent_28%),linear-gradient(180deg,rgba(2,6,23,0.96),rgba(2,6,23,0.82))]"
             />
 
-            {/* ── Floating orbs — CSS keyframes, never restart on state change ── */}
             {enableMotion && (
                 <>
                     <div
@@ -281,7 +269,6 @@ export default function Features() {
 
             <div className="relative @container mx-auto max-w-6xl px-6">
 
-                {/* ── Heading group ── */}
                 <motion.div
                     ref={headingRef}
                     variants={fadeUpVariants}
@@ -290,24 +277,23 @@ export default function Features() {
                     transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
                     className="mx-auto max-w-3xl text-center"
                 >
-                    <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-700 backdrop-blur dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-200">
+                    <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-xs font-medium text-emerald-700 backdrop-blur dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-200">
                         <Activity className="size-4 animate-pulse" aria-hidden />
                         Live market intelligence
                     </div>
-                    <h2 className="text-4xl font-semibold tracking-tight text-slate-950 lg:text-6xl dark:text-white">
+                    <h2 className="text-3xl font-semibold tracking-tight text-slate-950 lg:text-5xl dark:text-white">
                         What ATLAS Does
                     </h2>
-                    <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-600 md:text-lg dark:text-slate-300">
+                    <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-slate-600 md:text-base dark:text-slate-300">
                         A next-generation algorithmic trading platform for Forex, Crypto, and Indices. We combine
                         quantitative models, AI-driven signals, and automated execution with a sleek, real-time
                         market experience.
                     </p>
                 </motion.div>
 
-                {/* ── Market pulse strip ── */}
                 <motion.div
                     ref={pulsesRef}
-                    variants={{ hidden: {}, visible: {} }}   // container — stagger children
+                    variants={{ hidden: {}, visible: {} }}
                     initial="hidden"
                     animate={pulsesInView ? 'visible' : 'hidden'}
                     className="mx-auto mt-10 grid max-w-4xl grid-cols-1 justify-items-center gap-4 rounded-3xl border border-slate-200 bg-white/70 p-4 backdrop-blur-xl md:grid-cols-3 dark:border-white/10 dark:bg-white/5"
@@ -322,13 +308,12 @@ export default function Features() {
                     ))}
                 </motion.div>
 
-                {/* ── Feature cards grid ── */}
                 <motion.div
                     ref={cardsRef}
-                    variants={{ hidden: {}, visible: {} }}   // container — stagger children
+                    variants={{ hidden: {}, visible: {} }}
                     initial="hidden"
                     animate={cardsInView ? 'visible' : 'hidden'}
-                    className="mx-auto mt-6 grid max-w-sm gap-6 *:text-center md:max-w-none md:grid-cols-2 lg:grid-cols-3"
+                    className="mx-auto mt-6 grid max-w-sm gap-8 *:text-center md:max-w-none md:grid-cols-2 lg:grid-cols-3 lg:max-w-6xl"
                 >
                     {featureCards.map((item, i) => (
                         <FeatureCard
@@ -341,7 +326,6 @@ export default function Features() {
                 </motion.div>
             </div>
 
-            {/* ── Global keyframes injected once ── */}
             <style>{`
                 @keyframes floatA {
                     0%, 100% { transform: translate(0,  0);    }

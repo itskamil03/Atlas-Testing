@@ -62,7 +62,7 @@ export default function SubscriptionPage() {
       try {
         const response = await api.get<SubscriptionPlan[]>("/subscriptions/plans", {
           skipAuthRedirect: true,
-        });
+        } as any);
         setPlans(response.data);
       } catch (err: unknown) {
         setError(extractApiErrorMessage(err, "Unable to load live plans. Showing default subscription options."));

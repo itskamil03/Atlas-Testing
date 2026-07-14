@@ -9,7 +9,7 @@ export default function AboutUs() {
   const fadeUp = { hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0 } }
 
   return (
-    <section id="about" className="py-16 md:py-20">
+    <section id="about" className="py-16 md:py-20" style={{ zoom: 0.77 }}>
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial="hidden"
@@ -37,7 +37,7 @@ export default function AboutUs() {
             className="group flex items-center justify-center"
           >
             <div className="relative w-full max-w-md">
-              <div className="pointer-events-auto transform-gpu transition-transform duration-300 will-change-transform aspect-[4/3] w-full rounded-2xl bg-gradient-to-br from-emerald-400/20 via-cyan-200/10 to-sky-400/10 p-6 shadow-lg dark:from-emerald-900/30 dark:via-sky-900/20 dark:to-slate-900/40 group-hover:scale-105">
+              <div className="pointer-events-auto transform-gpu transition-transform duration-300 will-change-transform aspect-4/3 w-full rounded-2xl bg-linear-to-br from-emerald-400/20 via-cyan-200/10 to-sky-400/10 p-6 shadow-lg dark:from-emerald-900/30 dark:via-sky-900/20 dark:to-slate-900/40 group-hover:scale-105">
                 <svg className="absolute -left-12 -top-10 h-48 w-48 opacity-30" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden>
                   <defs>
                     <linearGradient id="g" x1="0" x2="1">

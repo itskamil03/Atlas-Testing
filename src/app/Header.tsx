@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { clearTokens } from "@/lib/auth";
+import { clearTokens, getAccessToken } from "@/lib/auth";
 import { Logo } from "@/components/logo";
 import { ThemeToggleButton } from "@/components/ThemeToggleButton";
+import { api } from "@/lib/api";
+import type { UserProfile } from "@/lib/types";
 
 interface HeaderProps {
   displayName?: string;
@@ -23,15 +25,54 @@ export default function Header({ displayName = "Trader" }: HeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [viewMode, setViewMode] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (getAccessToken()) {
+      api.get<UserProfile>("/auth/me")
+        .then((res) => {
+          if (res.data.role === "admin") {
+            setIsAdmin(true);
+            setViewMode(sessionStorage.getItem("viewMode") ?? "admin");
+          }
+        })
+        .catch(() => {});
+    }
+  }, [pathname]);
 
   const onLogout = () => {
     clearTokens();
     router.push("/login");
   };
 
+  const getNavLinkPath = (name: string, defaultPath: string) => {
+    if (isAdmin && viewMode === "admin") {
+      if (name === "Dashboard") return "/dashboard/admin?tab=overview";
+      if (name === "Strategies") return "/dashboard/admin?tab=strategies";
+      if (name === "Academy") return "/dashboard/admin?tab=academy";
+      if (name === "Notification") return "/dashboard/admin?tab=notifications";
+    }
+    return defaultPath;
+  };
+
+  const isLinkActive = (name: string, defaultPath: string) => {
+    if (isAdmin && viewMode === "admin") {
+      if (pathname !== "/dashboard/admin") return false;
+      const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+      const activeTab = searchParams.get("tab") ?? "overview";
+      if (name === "Dashboard") return activeTab === "overview";
+      if (name === "Strategies") return activeTab === "strategies";
+      if (name === "Academy") return activeTab === "academy";
+      if (name === "Notification") return activeTab === "notifications";
+      return false;
+    }
+    return pathname === defaultPath || pathname.startsWith(`${defaultPath}/`);
+  };
+
   return (
-    <header className="rounded-2xl border border-gray-200 dark:border-[#1B222B] bg-white dark:bg-[#06090E] px-16 py-4  shadow-sm dark:shadow-none">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <header className="w-full border-b border-gray-200 dark:border-[#1B222B] bg-white dark:bg-[#06090E] px-6 py-3 shadow-sm dark:shadow-none">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3">
         {/* Logo Section - Left */}
         <div className="flex items-center">
           <Link
@@ -39,7 +80,7 @@ export default function Header({ displayName = "Trader" }: HeaderProps) {
             aria-label="Dashboard"
             className="flex items-center gap-2 transition-opacity hover:opacity-80"
           >
-            <Logo className="h-16 w-auto" />
+            <Logo className="h-9 w-auto" />
           </Link>
         </div>
 
@@ -48,9 +89,9 @@ export default function Header({ displayName = "Trader" }: HeaderProps) {
           {navLinks.map((link) => (
             <Link
               key={link.path}
-              href={link.path}
+              href={getNavLinkPath(link.name, link.path)}
               className={`transition-colors duration-200 ${
-                pathname === link.path || pathname.startsWith(`${link.path}/`)
+                isLinkActive(link.name, link.path)
                   ? "font-semibold text-gray-900 dark:text-[#F7FAFD]"
                   : "text-gray-500 dark:text-[#8D98A5] hover:text-gray-700 dark:hover:text-[#DEE6EE]"
               }`}
@@ -89,8 +130,23 @@ export default function Header({ displayName = "Trader" }: HeaderProps) {
               <div className="absolute right-0 top-12 z-20 w-56 rounded-xl border border-gray-200 dark:border-[#26303A] bg-white dark:bg-[#0B0F14] p-2 shadow-lg dark:shadow-[0_14px_40px_rgba(0,0,0,0.45)]">
                 <div className="border-b border-gray-100 dark:border-[#1F2833] px-3 py-2">
                   <p className="text-sm font-semibold text-gray-900 dark:text-[#D5DEE8]">{displayName}</p>
-                  <p className="text-xs text-gray-500 dark:text-[#8D98A5]">Trader</p>
+                  <p className="text-xs text-gray-500 dark:text-[#8D98A5]">{isAdmin ? "Admin" : "Trader"}</p>
                 </div>
+                {isAdmin && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowProfileMenu(false);
+                      if (typeof window !== "undefined") {
+                        sessionStorage.setItem("viewMode", "admin");
+                      }
+                      router.push("/dashboard/admin");
+                    }}
+                    className="mt-1 w-full rounded-lg px-3 py-2 text-left text-sm font-bold text-emerald-400 hover:bg-gray-100 dark:hover:bg-[#111822] transition-colors duration-200"
+                  >
+                    Admin Panel
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => {

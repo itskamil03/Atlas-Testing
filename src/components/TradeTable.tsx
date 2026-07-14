@@ -1,10 +1,19 @@
 import type { Trade } from "@/lib/types";
 
+function tradeStatusClass(status: string) {
+  const normalized = status.toUpperCase();
+  if (normalized === "EXECUTED") return "text-[#AEE7B8]";
+  if (normalized === "FAILED") return "text-[#FFB4B4]";
+  if (normalized === "PENDING") return "text-[#F5D98B]";
+  return "text-[#AEB8C5]";
+}
+
 type Props = {
   trades: Trade[];
+  showFailureReason?: boolean;
 };
 
-export function TradeTable({ trades }: Props) {
+export function TradeTable({ trades, showFailureReason = false }: Props) {
   return (
     <section className="overflow-hidden rounded-2xl border border-[#1A1E23] bg-[#0A0D13] p-0">
       <div className="border-b border-[#1E252E] p-6">
@@ -21,6 +30,7 @@ export function TradeTable({ trades }: Props) {
               <th className="px-4 py-3">Price</th>
               <th className="px-4 py-3">PnL</th>
               <th className="px-4 py-3">Status</th>
+              {showFailureReason ? <th className="px-4 py-3">Failure reason</th> : null}
             </tr>
           </thead>
           <tbody>
@@ -32,12 +42,15 @@ export function TradeTable({ trades }: Props) {
                 <td className="px-4 py-3">{trade.quantity}</td>
                 <td className="px-4 py-3">{trade.price}</td>
                 <td className={`px-4 py-3 ${Number(trade.pnl) >= 0 ? "text-[#9BFF00]" : "text-[#FB7185]"}`}>{trade.pnl}</td>
-                <td className="px-4 py-3 text-[#AEB8C5]">{trade.status}</td>
+                <td className={`px-4 py-3 ${tradeStatusClass(trade.status)}`}>{trade.status}</td>
+                {showFailureReason ? (
+                  <td className="px-4 py-3 text-[#93A0AE]">{trade.failure_reason ?? "-"}</td>
+                ) : null}
               </tr>
             ))}
             {trades.length === 0 ? (
               <tr>
-                <td className="px-4 py-8 text-center text-[#708090]" colSpan={7}>
+                <td className="px-4 py-8 text-center text-[#708090]" colSpan={showFailureReason ? 8 : 7}>
                   No trades yet.
                 </td>
               </tr>

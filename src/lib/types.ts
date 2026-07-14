@@ -3,6 +3,8 @@ export type DashboardSummary = {
   cumulative_pnl: string;
   winning_trades: number;
   losing_trades: number;
+  active_auto_strategies?: number;
+  auto_trades_today?: number;
 };
 
 export type UserProfile = {
@@ -37,6 +39,7 @@ export type Trade = {
   leader_trade_id?: number | null;
   stop_loss?: string | null;
   take_profit?: string | null;
+  failure_reason?: string | null;
   created_at: string;
 };
 
@@ -48,6 +51,7 @@ export type BrokerAccount = {
   created_at: string;
   updated_at: string;
   metadata_json: string | null;
+  exchange_user_id?: string | null;
   display_client_id?: string | null;
 };
 
@@ -88,7 +92,7 @@ export type StrategySignalRequest = {
   side: "BUY" | "SELL";
   confidence: number;
   strategy_tag: string;
-  broker: "delta" | "zerodha" | "binance";
+  broker: "delta";
   quantity?: string | null;
   price?: string | null;
   order_type: "MARKET" | "LIMIT";
@@ -103,6 +107,12 @@ export type StrategyCard = {
   is_public: boolean;
   exchange: string;
   risk_level: "low" | "medium" | "high";
+  strategy_type: "RSI" | "EMA_CROSSOVER" | "LONDON_BREAKOUT" | "CUSTOM";
+  parameters: Record<string, string | number> | null;
+  symbol: string | null;
+  timeframe: string;
+  signal_source: "platform_engine" | "creator_webhook";
+  last_backtest_id: number | null;
   logo_url: string | null;
   image_url: string | null;
   tags: string | null;
@@ -116,15 +126,326 @@ export type StrategyCard = {
   academy_slugs: string | null;
   is_featured: boolean;
   created_at: string;
+  is_unlocked?: boolean | null;
+  required_plan?: string | null;
 };
 
-export type SubscriptionPlan = {
-  slug: string;
-  display_name: string;
-  price_inr: string;
-  access_percent: number;
-  mentor_support: boolean;
-  description: string;
+export type StrategyTradeHistoryItem = {
+  id: number;
+  symbol: string;
+  side: string;
+  quantity: string;
+  entry_price: string;
+  exit_price: string | null;
+  status: string;
+  pnl: string;
+  broker: string;
+  strategy_tag: string | null;
+  order_type: string;
+  created_at: string;
+};
+
+export type StrategyAllocationItem = {
+  symbol: string;
+  percentage: string;
+  notional: string;
+  trades: number;
+};
+
+export type StrategyDetailSummary = {
+  live_pnl: string;
+  roi_percent: string;
+  win_rate_percent: string;
+  followers: number;
+  total_trades: number;
+  open_trades: number;
+  closed_trades: number;
+  average_gain: string;
+  average_loss: string;
+  big_win: string;
+  big_loss: string;
+  risk_reward_ratio: string;
+  max_drawdown_percent: string;
+};
+
+export type StrategyDetailSection = {
+  title: string;
+  body: string;
+};
+
+export type StrategyDetailResponse = {
+  strategy: StrategyCard;
+  summary: StrategyDetailSummary;
+  strategic_details: StrategyDetailSection[];
+  trade_history: StrategyTradeHistoryItem[];
+  allocation: StrategyAllocationItem[];
+};
+
+export type StrategyDeployRequest = {
+  multiplier: string | number;
+  max_profit_limit?: string | number | null;
+  max_loss_limit?: string | number | null;
+  copy_current_open_trades: boolean;
+};
+
+export type StrategyDeployResponse = {
+  subscription_id: number;
+  automated_strategy_id: number;
+  status: string;
+  message?: string;
+};
+
+export type StrategyUndeployResponse = {
+  subscription_id: number;
+  automated_strategy_id: number;
+  status: string;
+  message: string;
+};
+
+export type PublicStrategyFilters = {
+  page?: number;
+  page_size?: number;
+  strategy_tag?: string;
+  exchange?: string;
+  risk_level?: string;
+  featured_only?: boolean;
+  search?: string;
+};
+
+export type CreateAutomatedStrategyRequest = {
+  name: string;
+  description?: string | null;
+  strategy_type: "RSI" | "MOVING_AVERAGE" | "BOLLINGER_BANDS";
+  symbol: string;
+  broker: "delta";
+  parameters: Record<string, unknown>;
+  max_trades_per_day: number;
+  max_loss_limit: string | number;
+  max_profit_limit?: string | number | null;
+  multiplier: string | number;
+  capital_allocation_percent: string | number;
+  quantity_per_trade: string | number;
+};
+
+export type UpdateAutomatedStrategyRequest = Partial<CreateAutomatedStrategyRequest>;
+
+export type AutomatedStrategyItem = {
+  id: number;
+  user_id: number;
+  name: string;
+  description: string | null;
+  strategy_type: string;
+  symbol: string;
+  broker: string;
+  parameters: string;
+  is_active: boolean;
+  status: string;
+  strategy_tag: string | null;
+  account_id: number | null;
+  max_trades_per_day: number;
+  max_loss_limit: string;
+  max_profit_limit: string | null;
+  multiplier: string;
+  capital_allocation_percent: string;
+  quantity_per_trade: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type AutomatedStrategyStatus = {
+  id: number;
+  status: string;
+  strategy_tag: string | null;
+  account_id: number | null;
+  subscription_id: number | null;
+};
+
+export type AutoTradingStartRequest = {
+  strategy_id: number;
+  mode: "live";
+  max_position_size: string | number;
+  daily_loss_limit: string | number;
+  max_open_positions: number;
+};
+
+export type AutoTradingStartResponse = {
+  success: boolean;
+  message: string;
+  strategy_id: number;
+  mode: "live";
+};
+
+export type AutoTradingStopResponse = {
+  success: boolean;
+  message: string;
+};
+
+export type AutoTradingStatus = {
+  strategy_id: number;
+  strategy_name: string;
+  status: "running" | "paused" | "stopped" | string;
+  mode: "live" | string;
+  started_at: string;
+  stopped_at: string | null;
+  open_positions: number;
+  today_pnl: string;
+  total_pnl: string;
+  executed_trades: number;
+  daily_loss_limit: string;
+  max_position_size: string;
+  max_open_positions: number;
+};
+
+export type AutoTradingMetricsStatus = {
+  strategy_id: number;
+  status: string;
+  signals_received: number;
+  trades_executed: number;
+  trades_failed: number;
+};
+
+export type AutoTradingDashboard = {
+  signals: number;
+  executed_trades: number;
+  failed_trades: number;
+  active_positions: number;
+  pnl: string | number;
+  win_rate: number;
+};
+
+export type SignalHistoryItem = {
+  id: number;
+  strategy_id: number;
+  strategy_tag: string;
+  symbol: string;
+  side: string;
+  quantity: string;
+  status: string;
+  failure_reason: string | null;
+  created_at: string;
+};
+
+export type SignalHistoryResponse = {
+  items: SignalHistoryItem[];
+  total: number;
+  page: number;
+  page_size: number;
+};
+
+export type AutoTradingStrategySummary = {
+  strategy_id: number;
+  strategy_name: string;
+  status: string;
+  mode: string;
+};
+
+export type AutoTradingStrategiesResponse = {
+  strategies: AutoTradingStrategySummary[];
+};
+
+export type AutoTradingLogItem = {
+  id: number;
+  event_type: "trade" | "lifecycle" | string;
+  signal_type: string | null;
+  symbol: string | null;
+  side: string | null;
+  quantity: string | null;
+  price: string | null;
+  execution_status: string;
+  message: string | null;
+  executed_price: string | null;
+  executed_at: string | null;
+  created_at: string;
+};
+
+export type AutoTradingLogsResponse = {
+  items: AutoTradingLogItem[];
+  total: number;
+  page: number;
+  page_size: number;
+};
+
+export type StrategyOrderItem = {
+  id: number;
+  automated_strategy_id: number;
+  user_id: number;
+  symbol: string;
+  side: string;
+  quantity: string;
+  entry_price: string;
+  exit_price: string | null;
+  status: string;
+  broker_order_id: string;
+  broker: string;
+  pnl: string;
+  pnl_percent: string;
+  filled_quantity: string;
+  signal: string;
+  rsi_value: string | null;
+  created_at: string;
+  filled_at: string | null;
+  closed_at: string | null;
+  is_open?: boolean;
+  mark_price?: string | null;
+  realized_pnl?: string;
+  unrealized_pnl?: string | null;
+  trade_id?: number | null;
+  pnl_type?: "realized" | "unrealized" | "none";
+};
+
+export type StrategyRunItem = {
+  id: number;
+  automated_strategy_id: number;
+  user_id: number;
+  status: string;
+  celery_task_id: string | null;
+  start_time: string;
+  end_time: string | null;
+  pnl: string;
+  trades_executed: number;
+  winning_trades: number;
+  losing_trades: number;
+  total_loss_today: string;
+  error_message: string | null;
+  created_at: string;
+};
+
+export type StrategyStats = {
+  total_trades: number;
+  winning_trades: number;
+  losing_trades: number;
+  win_rate: number;
+  total_pnl: string;
+  total_pnl_percent: number;
+};
+
+export type StrategyHealth = {
+  active_strategies: number;
+  total_running_instances: number;
+  total_pnl_today: string;
+  total_trades_today: number;
+  error_count: number;
+};
+
+export type StrategySignalResponse = {
+  accepted: boolean;
+  message: string;
+  status?: "queued" | "stored" | "executed" | "failed";
+  sessions_queued?: number;
+  signal_history_id?: number | null;
+};
+
+export type RiskSettings = {
+  max_daily_loss: number;
+  max_trades_per_day: number;
+};
+
+export type StrategySignalOtpChallenge = {
+  challenge_id: string;
+  channel: string;
+  recipient_hint: string;
+  expires_in_seconds: number;
+  debug_otp?: string | null;
 };
 
 export type AdminStrategyCreateRequest = {
@@ -133,6 +454,11 @@ export type AdminStrategyCreateRequest = {
   strategy_tag: string;
   exchange: string;
   risk_level: "low" | "medium" | "high";
+  strategy_type: "RSI" | "EMA_CROSSOVER" | "LONDON_BREAKOUT" | "CUSTOM";
+  parameters: Record<string, string | number>;
+  symbol: string | null;
+  timeframe: string;
+  signal_source: "platform_engine" | "creator_webhook";
   logo_url: string | null;
   image_url: string | null;
   tags: string[];
@@ -188,6 +514,8 @@ export type KYCRecord = {
   document_type: string;
   document_id: string;
   notes: string | null;
+  rejection_reason?: string | null;
+  document_url?: string | null;
   created_at: string;
   updated_at: string;
   verified_at: string | null;
@@ -310,9 +638,13 @@ export type AdminUserItem = {
   is_active: boolean;
   kyc_status: "pending" | "approved" | "rejected";
   subscription_status: "active" | "inactive" | "cancelled";
+  plan_name?: string | null;
+  access_percent?: number;
   linked_exchange_accounts: number;
   followers: number;
   wallet_balance: string;
+  max_daily_loss: string;
+  max_trades_per_day: number;
   created_at: string;
 };
 
@@ -366,6 +698,103 @@ export type PlatformSettings = {
 };
 
 export type PlatformSettingsUpdateRequest = Omit<PlatformSettings, "id" | "updated_at">;
+
+export type SubscriptionPlan = {
+  slug: string;
+  display_name: string;
+  price_inr: string;
+  access_percent: number;
+  mentor_support: boolean;
+  description: string;
+};
+
+export type SubscriptionStatus = {
+  has_active_subscription: boolean;
+  plan_name: string | null;
+  plan_display_name: string | null;
+  status: string;
+  access_percent: number;
+  unlocked_strategy_count: number;
+  total_published_strategies: number;
+  mentor_support_enabled: boolean;
+  amount_paid: string;
+  started_at?: string | null;
+};
+
+export type StrategyAccessItem = {
+  strategy_id: number;
+  strategy_tag: string;
+  name: string;
+  is_unlocked: boolean;
+  required_plan: string | null;
+};
+
+export type StrategyAccessSummary = {
+  plan_name: string | null;
+  access_percent: number;
+  unlocked_count: number;
+  locked_count: number;
+  total_published: number;
+  strategies: StrategyAccessItem[];
+};
+
+export type PaymentInitiateRequest = {
+  plan_name: string;
+};
+
+export type PaymentInitiateResponse = {
+  payment_id: number;
+  reference_code: string;
+  plan_name: string;
+  amount_inr: string;
+  upi_vpa: string;
+  upi_payee_name: string;
+  payment_method: string;
+  expires_at: string;
+  instructions: string;
+};
+
+export type PaymentSubmitRequest = {
+  upi_transaction_id: string;
+  payer_upi_id?: string | null;
+  payment_notes?: string | null;
+};
+
+export type SubscriptionPayment = {
+  id: number;
+  user_id: number;
+  plan_name: string;
+  amount_inr: string;
+  currency: string;
+  payment_method: string;
+  status: string;
+  reference_code: string;
+  upi_transaction_id: string | null;
+  payer_upi_id: string | null;
+  payment_notes: string | null;
+  admin_notes: string | null;
+  verified_at: string | null;
+  submitted_at: string | null;
+  expires_at: string | null;
+  created_at: string;
+};
+
+export type MentorSupportRequest = {
+  id: number;
+  user_id: number;
+  subject: string;
+  message: string;
+  status: string;
+  admin_response: string | null;
+  handled_by_user_id: number | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type MentorSupportCreateRequest = {
+  subject: string;
+  message: string;
+};
 
 export type AuditLogItem = {
   id: number;

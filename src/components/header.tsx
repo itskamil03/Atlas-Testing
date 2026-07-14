@@ -21,9 +21,7 @@ const menuItems = [
 export const HeroHeader = () => {
     const [menuState, setMenuState] = React.useState(false)
     const [isScrolled, setIsScrolled] = React.useState(false)
-    const [isHidden, setIsHidden] = React.useState(false)
     const [scrollProgress, setScrollProgress] = React.useState(0)
-    const lastScrollY = React.useRef(0)
     const pathname = usePathname()
 
     const isActiveLink = (href: string) => pathname === href || pathname.startsWith(`${href}/`)
@@ -34,18 +32,12 @@ export const HeroHeader = () => {
             const totalHeight = document.documentElement.scrollHeight - window.innerHeight
             setScrollProgress(totalHeight > 0 ? (currentScrollY / totalHeight) * 100 : 0)
             setIsScrolled(currentScrollY > 50)
-            if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
-                setIsHidden(true)   // scrolling down → hide
-            } else {
-                setIsHidden(false)  // scrolling up → show
-            }
-            lastScrollY.current = currentScrollY
         }
         window.addEventListener('scroll', handleScroll)
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
     return (
-        <header >
+        <header>
             {/* Scroll progress bar */}
             <div className="fixed top-0 left-0 z-50 h-0.75 w-full bg-transparent">
                 <div
@@ -55,15 +47,15 @@ export const HeroHeader = () => {
             </div>
             <nav
                 data-state={menuState && 'active'}
-                className={cn('fixed z-20 w-full px-2 transition-transform duration-300', isHidden && '-translate-y-full')}>
-                <div className={cn('mx-auto mt-2 max-w-6xl px-6 transition-all duration-300 lg:px-12', isScrolled && 'bg-background/50 max-w-4xl rounded-2xl border backdrop-blur-lg lg:px-5')}>
-                    <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
-                        <div className="flex w-full justify-between lg:w-auto">
+                className="fixed z-20 w-full px-1">
+                <div className={cn('mx-auto mt-2 max-w-6xl px-6 transition-colors duration-300 rounded-2xl border lg:px-8', isScrolled ? 'bg-background/80 backdrop-blur-lg' : 'bg-background/40 backdrop-blur-md')}>
+                    <div className="flex flex-wrap items-center justify-between gap-6 py-2.5 lg:gap-0 lg:py-3">
+                        <div className="flex w-full shrink-0 justify-between lg:w-auto">
                             <Link
                                 href="/"
                                 aria-label="home"
                                 className="flex items-center">
-                                <Logo className="shrink-0 max-w-auto h-20 sm:max-w-auto sm:h-20 md:h-28 md:max-w-35 " />
+                                <Logo className="shrink-0 h-9 w-auto sm:h-10" />
                             </Link>
 
                             <button
@@ -75,8 +67,8 @@ export const HeroHeader = () => {
                             </button>
                         </div>
 
-                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden size-fit lg:block">
-                            <ul className="flex gap-8 text-sm">
+                        <div className="hidden lg:flex lg:flex-1 lg:justify-center">
+                            <ul className="flex gap-6 whitespace-nowrap text-sm xl:gap-8">
                                 {menuItems.map((item, index) => (
                                     <li key={index}>
                                         <Link
@@ -95,7 +87,7 @@ export const HeroHeader = () => {
                             </ul>
                         </div>
 
-                        <div className="bg-background in-data-[state=active]:block lg:in-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none dark:shadow-none dark:lg:bg-transparent">
+                        <div className="bg-background in-data-[state=active]:block lg:in-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:shrink-0 lg:flex-1 lg:gap-4 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none xl:gap-6 dark:shadow-none dark:lg:bg-transparent">
                             <div className="lg:hidden">
                                 <ul className="space-y-6 text-base">
                                     {menuItems.map((item, index) => (
@@ -119,26 +111,16 @@ export const HeroHeader = () => {
                                 <Button
                                     asChild
                                     variant="outline"
-                                    size="sm"
-                                    className={cn(isScrolled && 'lg:hidden')}>
+                                    size="sm">
                                     <Link href="/login">
                                         <span>Login</span>
-                                    </Link>
-                                </Button>
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className={cn(isScrolled && 'lg:hidden')}>
-                                    <Link href="/signup">
-                                        <span>Sign Up</span>
                                     </Link>
                                 </Button>
                                 <ThemeToggleButton/>
                                 <Button
                                     asChild
-                                    size="sm"
-                                    className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
-                                    <Link href="#">
+                                    size="sm">
+                                    <Link href="/signup">
                                         <span>Get Started</span>
                                     </Link>
                                 </Button>

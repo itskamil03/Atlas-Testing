@@ -2,8 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Activity, Cpu, Globe2, GraduationCap, Settings2 } from 'lucide-react'
-import AOS from 'aos'
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const services = [
   {
@@ -44,26 +43,43 @@ const services = [
   },
 ]
 
-export default function Services() {
+function useInView() {
+  const ref = useRef<HTMLDivElement>(null)
+  const [inView, setInView] = useState(false)
+
   useEffect(() => {
-    AOS.init({
-      duration: 800,
-      easing: 'ease-in-out',
-      once: true,
-      offset: 300,
-    })
+    const el = ref.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.05, rootMargin: '0px 0px -10% 0px' }
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
   }, [])
 
+  return { ref, inView }
+}
+
+export default function Services() {
+  const header = useInView()
+
   return (
-    <section
-      id="services"
-      className="bg-muted/10 py-16 md:py-10"
-      data-aos="fade-right"
-      data-aos-offset="300"
-      data-aos-easing="ease-in-out"
-    >
+    <section id="services" className="bg-muted/10 py-16 md:py-10" style={{ zoom: 0.67 }}>
       <div className="mx-auto max-w-6xl px-6">
-        <div className="text-center" data-aos="fade-right" data-aos-delay="50" data-aos-duration="750">
+        <div
+          ref={header.ref}
+          className={`text-center transition-all duration-500 ease-out ${
+            header.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}
+        >
           <h2 className="text-4xl font-semibold lg:text-5xl">Services</h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
             ATLAS provides a full suite of algo trading solutions, AI signal delivery, and custom development for active traders.
@@ -73,28 +89,43 @@ export default function Services() {
         <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {services.map((service, index) => {
             const Icon = service.icon
-            return (
-              <Card
-                key={service.title}
-                className="border"
-                data-aos="fade-right"
-                data-aos-delay={index * 90}
-                data-aos-duration="750"
-              >
-                <CardHeader>
-                  <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-background text-primary shadow-sm">
-                    <Icon className="size-6" />
-                  </div>
-                  <CardTitle className="mt-6 text-xl">{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="mt-2 text-sm text-muted-foreground">{service.description}</p>
-                </CardContent>
-              </Card>
-            )
+            return <ServiceCard key={service.title} service={service} index={index} Icon={Icon} />
           })}
         </div>
       </div>
     </section>
+  )
+}
+
+function ServiceCard({
+  service,
+  index,
+  Icon,
+}: {
+  service: (typeof services)[number]
+  index: number
+  Icon: typeof Activity
+}) {
+  const { ref, inView } = useInView()
+  const delay = Math.min(index * 40, 120)
+
+  return (
+    <Card
+      ref={ref}
+      className={`border transition-all ease-out ${
+        inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+      }`}
+      style={{ transitionDuration: '450ms', transitionDelay: inView ? `${delay}ms` : '0ms' }}
+    >
+      <CardHeader>
+        <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-background text-primary shadow-sm">
+          <Icon className="size-6" />
+        </div>
+        <CardTitle className="mt-6 text-xl">{service.title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="mt-2 text-sm text-muted-foreground">{service.description}</p>
+      </CardContent>
+    </Card>
   )
 }

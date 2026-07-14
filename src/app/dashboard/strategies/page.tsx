@@ -9,7 +9,7 @@ import { clearTokens, getAccessToken } from "@/lib/auth";
 import { extractApiErrorMessage } from "@/lib/errors";
 import type { StrategyCard, UserProfile } from "@/lib/types";
 
-const dummyStrategies: StrategyCard[] = [
+const rawDummyStrategies = [
   {
     id: 1,
     name: "Momentum Master",
@@ -126,6 +126,16 @@ const dummyStrategies: StrategyCard[] = [
     created_at: new Date().toISOString(),
   },
 ];
+
+const dummyStrategies: StrategyCard[] = rawDummyStrategies.map((s) => ({
+  strategy_type: "CUSTOM",
+  parameters: null,
+  symbol: null,
+  timeframe: "1h",
+  signal_source: "platform_engine",
+  last_backtest_id: null,
+  ...s,
+})) as StrategyCard[];
 
 // ─────────────────────────────────────────────
 // FAQ DATA
@@ -297,7 +307,8 @@ export default function StrategiesPage() {
     setError(null);
     try {
       const [profileRes] = await Promise.all([api.get<UserProfile>("/auth/me")]);
-      if (profileRes.data.role === "admin") {
+      const viewMode = typeof window !== "undefined" ? sessionStorage.getItem("viewMode") : null;
+      if (profileRes.data.role === "admin" && viewMode !== "trader") {
         router.replace("/dashboard/admin");
         return;
       }
