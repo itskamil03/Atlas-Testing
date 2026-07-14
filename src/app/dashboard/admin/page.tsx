@@ -354,12 +354,19 @@ export default function AdminPage() {
     router.push("/login");
   };
 
-  const loadUsers = async () => {
-    const params: Record<string, string | number> = { page: 1, page_size: 20 };
-    if (userSearch) params.search = userSearch;
-    if (kycFilter !== "all") params.kyc_status = kycFilter;
-    const res = await api.get<AdminUserListResponse>("/admin/users", { params });
-    setUsers(res.data);
+  const loadUsers = async (kycOverride?: string) => {
+    setError("");
+    setMessage("");
+    try {
+      const activeKyc = kycOverride !== undefined ? kycOverride : kycFilter;
+      const params: Record<string, string | number> = { page: 1, page_size: 20 };
+      if (userSearch) params.search = userSearch;
+      if (activeKyc !== "all") params.kyc_status = activeKyc;
+      const res = await api.get<AdminUserListResponse>("/admin/users", { params });
+      setUsers(res.data);
+    } catch (err: unknown) {
+      setError(getApiErrorMessage(err, "Failed to load users."));
+    }
   };
 
   const loadTrades = async () => {
@@ -953,14 +960,18 @@ export default function AdminPage() {
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="text-lg font-semibold">Users Management</h2>
               <div className="flex gap-2">
-                <input value={userSearch} onChange={(e) => setUserSearch(e.target.value)} placeholder="Search users" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm" />
-                <select value={kycFilter} onChange={(e) => setKycFilter(e.target.value)} className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm">
-                  <option value="all">All KYC</option>
-                  <option value="pending">Pending</option>
-                  <option value="approved">Approved</option>
-                  <option value="rejected">Rejected</option>
+                <input value={userSearch} onChange={(e) => setUserSearch(e.target.value)} placeholder="Search users by name, email..." className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none transition-colors duration-150" />
+                <select value={kycFilter} onChange={(e) => {
+                  const nextKyc = e.target.value;
+                  setKycFilter(nextKyc);
+                  void loadUsers(nextKyc);
+                }} className="rounded-lg border border-[#2A3B50] hover:border-[#4ADE80] focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-[#0F1B2B] px-3 py-2 text-sm text-[#ECF5FF] outline-none transition-colors duration-150 cursor-pointer">
+                  <option value="all" className="bg-[#0F1B2B] text-white">All KYC</option>
+                  <option value="pending" className="bg-[#0F1B2B] text-white">Pending</option>
+                  <option value="approved" className="bg-[#0F1B2B] text-white">Approved</option>
+                  <option value="rejected" className="bg-[#0F1B2B] text-white">Rejected</option>
                 </select>
-                <button onClick={() => void loadUsers()} className="rounded-lg border border-[#2E4762] px-3 py-2 text-sm">Apply</button>
+                <button onClick={() => void loadUsers()} className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Apply</button>
               </div>
             </div>
 
@@ -986,7 +997,7 @@ export default function AdminPage() {
                       <td className="px-2 py-3">${formatCurrency(item.wallet_balance)}</td>
                       <td className="px-2 py-3">{item.linked_exchange_accounts}</td>
                       <td className="px-2 py-3">{item.followers}</td>
-                      <td className="px-2 py-3"><button onClick={() => banToggleUser(item.id, item.is_active)} className={`rounded-md border px-2 py-1 text-xs ${item.is_active ? "border-[#6A2F39] text-[#FFC3CE]" : "border-[#2E6153] text-[#C4FCE2]"}`}>{item.is_active ? "Ban" : "Unban"}</button></td>
+                      <td className="px-2 py-3"><button onClick={() => banToggleUser(item.id, item.is_active)} className={`rounded-md px-2.5 py-1 text-xs font-semibold active:scale-95 transition-all duration-100 ${item.is_active ? "border border-[#6A2F39] text-[#FFC3CE] hover:bg-red-600 hover:text-white hover:border-red-600" : "bg-emerald-600 hover:bg-emerald-700 text-white"}`}>{item.is_active ? "Ban" : "Unban"}</button></td>
                     </tr>
                   ))}
                 </tbody>
