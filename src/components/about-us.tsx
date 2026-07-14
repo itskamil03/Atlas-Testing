@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Check } from 'lucide-react'
 import { motion } from 'framer-motion'
+import Link from 'next/link'
 
 export default function AboutUs() {
   const fadeUp = { hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0 } }
@@ -122,8 +123,8 @@ export default function AboutUs() {
 
             <div className="mt-6">
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.12 }}>
-                <Button asChild className="shadow-md">
-                  <a href="#contact">Explore Our Research</a>
+                <Button asChild className="shadow-md bg-emerald-600 hover:bg-emerald-700 text-white font-semibold active:scale-95 transition-all duration-100 border-none">
+                  <Link href="/academy">Explore Our Research</Link>
                 </Button>
               </motion.div>
             </div>

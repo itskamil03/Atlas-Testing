@@ -16,7 +16,7 @@ export default function Pricing() {
                     <Card className="flex flex-col">
                         <CardHeader>
                             <CardTitle className="font-medium">Starter Plan</CardTitle>
-                            <span className="my-3 block text-2xl font-semibold">Coming soon</span>
+                            <span className="my-3 block text-2xl font-semibold">₹2,000 <span className="text-sm font-normal text-muted-foreground">/ mo</span></span>
                             <CardDescription className="text-sm">For beginner traders</CardDescription>
                         </CardHeader>
 
@@ -45,9 +45,8 @@ export default function Pricing() {
                         <CardFooter className="mt-auto">
                             <Button
                                 asChild
-                                variant="outline"
-                                className="w-full">
-                                <Link href="#">Get Started</Link>
+                                className="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold transition-all duration-100 border-none">
+                                <Link href="/signup">Get Started</Link>
                             </Button>
                         </CardFooter>
                     </Card>
@@ -58,7 +57,7 @@ export default function Pricing() {
                         <div className="flex flex-col">
                             <CardHeader>
                                 <CardTitle className="font-medium">Algo Pro Plan</CardTitle>
-                                <span className="my-3 block text-2xl font-semibold">Coming soon</span>
+                                 <span className="my-3 block text-2xl font-semibold">₹5,000 <span className="text-sm font-normal text-muted-foreground">/ mo</span></span>
                                 <CardDescription className="text-sm">For serious traders</CardDescription>
                             </CardHeader>
 
@@ -93,8 +92,8 @@ export default function Pricing() {
                             <CardFooter>
                                 <Button
                                     asChild
-                                    className="w-full">
-                                    <Link href="#">Get Started</Link>
+                                    className="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold transition-all duration-100 border-none">
+                                    <Link href="/signup">Get Started</Link>
                                 </Button>
                             </CardFooter>
                         </div>
@@ -103,7 +102,7 @@ export default function Pricing() {
                     <Card className="flex flex-col">
                         <CardHeader>
                             <CardTitle className="font-medium">Elite Plan</CardTitle>
-                            <span className="my-3 block text-2xl font-semibold">Coming soon</span>
+                             <span className="my-3 block text-2xl font-semibold">₹10,000 <span className="text-sm font-normal text-muted-foreground">/ mo</span></span>
                             <CardDescription className="text-sm">For professional & fund traders</CardDescription>
                         </CardHeader>
 
@@ -135,9 +134,8 @@ export default function Pricing() {
                         <CardFooter className="mt-auto">
                             <Button
                                 asChild
-                                variant="outline"
-                                className="w-full">
-                                <Link href="#">Get Started</Link>
+                                className="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold transition-all duration-100 border-none">
+                                <Link href="/signup">Get Started</Link>
                             </Button>
                         </CardFooter>
                     </Card>
