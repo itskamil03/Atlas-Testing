@@ -16,11 +16,13 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
   
   // Check if the current URL contains "/dashboard"
   const isDashboard = pathname?.startsWith('/dashboard');
+  // Hide navbar on admin page
+  const isAdminPage = pathname?.startsWith('/dashboard/admin');
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Conditionally render the Header */}
-      {isDashboard ? <Header /> : <HeroHeader />}
+      {/* Conditionally render the Header - hidden on admin page */}
+      {isDashboard && !isAdminPage ? <Header /> : isAdminPage ? null : <HeroHeader />}
       
       {/* The actual page content */}
       <main className={`grow ${isDashboard ? '' : 'pt-16 sm:pt-18 md:pt-20 lg:pt-20'}`}>

@@ -297,12 +297,6 @@ export default function AdminPage() {
     setActiveTab(routeTab);
   }, [searchParams]);
 
-  useEffect(() => {
-    if (pathname.startsWith("/dashboard/admin")) {
-      router.replace(`/admin?${searchParams.toString() || "tab=overview"}`);
-    }
-  }, [pathname, router, searchParams]);
-
   const loadAll = useCallback(async () => {
     setLoading(true);
     setError(null);

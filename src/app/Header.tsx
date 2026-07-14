@@ -162,7 +162,7 @@ export default function Header({ displayName = "Trader" }: HeaderProps) {
                       }
                       router.push("/dashboard/admin");
                     }}
-                    className="mt-1 w-full rounded-lg px-3 py-2 text-left text-sm font-bold text-emerald-400 hover:bg-gray-100 dark:hover:bg-[#111822] transition-colors duration-200"
+                    className="mt-1 w-full rounded-lg px-3 py-2 text-left text-sm font-bold text-[#9BFF00] hover:bg-gray-100 dark:hover:bg-[#111822] transition-colors duration-200"
                   >
                     Admin Panel
                   </button>
