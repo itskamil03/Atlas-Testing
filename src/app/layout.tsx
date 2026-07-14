@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import ProgressBar from "@/components/ProgressBar";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import FooterSection from "@/components/footer";
+import Providers from "@/providers/Providers";
 
 const libreBaskerville = Libre_Baskerville({
   subsets: ["latin"],
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
     shortcut: "/favicon.png?v=2",
     apple: [{ url: "/apple-touch-icon.png?v=2", sizes: "180x180" }],
   },
-};
+ };
 
 export default function RootLayout({
   children,
@@ -45,9 +46,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <LayoutWrapper>{children}</LayoutWrapper>
-          <FooterSection />
-          <ProgressBar/>
+          <Providers>
+            <LayoutWrapper>{children}</LayoutWrapper>
+            <FooterSection />
+            <ProgressBar/>
+          </Providers>
         </ThemeProvider>
       </body>
     </html>
