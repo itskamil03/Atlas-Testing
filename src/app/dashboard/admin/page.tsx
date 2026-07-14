@@ -379,11 +379,21 @@ export default function AdminPage() {
     }
   };
 
-  const loadAudit = async () => {
-    const params: Record<string, string | number> = { page: 1, page_size: 20 };
-    if (auditSeverity !== "all") params.severity = auditSeverity;
-    const res = await api.get<AuditLogListResponse>("/admin/audit-logs", { params });
-    setAuditLogs(res.data);
+  const loadAudit = async (severityOverride?: string) => {
+    setError("");
+    setMessage("");
+    try {
+      const activeSeverity = severityOverride !== undefined ? severityOverride : auditSeverity;
+      const params: Record<string, string | number> = { page: 1, page_size: 20 };
+      if (activeSeverity !== "all") params.severity = activeSeverity;
+      console.log("Admin - loading audit logs with params:", params);
+      const res = await api.get<AuditLogListResponse>("/admin/audit-logs", { params });
+      setAuditLogs(res.data);
+      console.log("Admin - audit logs loaded successfully:", res.data);
+    } catch (err: unknown) {
+      console.error("Admin - failed to load audit logs:", err);
+      setError(getApiErrorMessage(err, "Failed to load audit logs."));
+    }
   };
 
   const searchStrategies = async () => {
@@ -1062,7 +1072,11 @@ export default function AdminPage() {
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-lg font-semibold">Audit & Security Logs</h2>
               <div className="flex gap-2">
-                <select value={auditSeverity} onChange={(e) => setAuditSeverity(e.target.value)} className="rounded-lg border border-[#2A3B50] hover:border-[#4ADE80] focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-[#0F1B2B] px-3 py-2 text-sm text-[#ECF5FF] outline-none transition-colors duration-150 cursor-pointer">
+                <select value={auditSeverity} onChange={(e) => {
+                  const nextSeverity = e.target.value;
+                  setAuditSeverity(nextSeverity);
+                  void loadAudit(nextSeverity);
+                }} className="rounded-lg border border-[#2A3B50] hover:border-[#4ADE80] focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-[#0F1B2B] px-3 py-2 text-sm text-[#ECF5FF] outline-none transition-colors duration-150 cursor-pointer">
                   <option value="all" className="bg-[#0F1B2B] text-white">All severity</option>
                   <option value="info" className="bg-[#0F1B2B] text-white">Info</option>
                   <option value="warning" className="bg-[#0F1B2B] text-white">Warning</option>
@@ -1077,7 +1091,15 @@ export default function AdminPage() {
                 <div key={item.id} className="rounded-xl border border-[#27384D] bg-[#0F1D2F] p-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="font-medium">{item.action}</p>
-                    <span className={`rounded-full px-2 py-1 text-xs ${item.severity === "warning" ? "bg-[#44212A] text-[#FFB7C7]" : item.severity === "error" ? "bg-[#4E1E1E] text-[#FFB8B8]" : "bg-[#17314A] text-[#B5D8FF]"}`}>{item.severity}</span>
+                    <span className={`rounded-full px-2 py-1 text-xs border ${
+                      item.severity === "warning"
+                        ? "bg-[#44212A] text-[#FFB7C7] border-[#703543]"
+                        : item.severity === "error"
+                        ? "bg-[#4E1E1E] text-[#FFB8B8] border-[#8A3030]"
+                        : item.severity === "info"
+                        ? "bg-[#10251D] text-[#B9F6D2] border-[#2E6153]"
+                        : "bg-[#17314A] text-[#B5D8FF] border-[#2A527A]"
+                    }`}>{item.severity}</span>
                   </div>
                   <p className="mt-1 text-xs text-[#8CA7C8]">{item.target_type} #{item.target_id ?? "n/a"} | actor {item.actor_user_id ?? "system"}</p>
                   <p className="mt-1 text-xs text-[#728CAA]">{formatDate(item.created_at)}</p>
