@@ -217,13 +217,13 @@ export default function DashboardPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <button className="rounded-lg border border-gray-200 dark:border-white/10 bg-transparent dark:bg-white/[0.03] px-3 py-1.5 text-xs text-gray-500 dark:text-[#A8B3BF] hover:dark:border-cyan-400/30 hover:dark:text-cyan-300 transition-colors">Select Dates</button>
+              <button className="rounded-lg border border-gray-200 dark:border-white/10 bg-transparent dark:bg-white/[0.03] px-3 py-1.5 text-xs text-gray-500 dark:text-[#A8B3BF] hover:dark:border-emerald-500/30 hover:dark:text-emerald-400 active:scale-95 transition-all duration-100">Select Dates</button>
               <div className="flex items-center rounded-lg border border-gray-200 dark:border-white/10 bg-gray-100 dark:bg-white/[0.03] p-1 text-xs text-gray-500 dark:text-[#94A1AE]">
-                <button className="rounded px-2 py-1 hover:text-gray-700 dark:hover:text-[#E4EBF3]">1D</button>
-                <button className="rounded px-2 py-1 hover:text-gray-700 dark:hover:text-[#E4EBF3]">1W</button>
-                <button className="rounded px-2 py-1 hover:text-gray-700 dark:hover:text-[#E4EBF3]">1M</button>
-                <button className="rounded px-2 py-1 hover:text-gray-700 dark:hover:text-[#E4EBF3]">1Y</button>
-                <button className="rounded bg-gradient-to-r from-cyan-400 to-blue-500 px-2 py-1 font-bold text-black">All</button>
+                <button className="rounded px-2 py-1 hover:text-emerald-500 dark:hover:text-emerald-400 active:scale-95 transition-colors">1D</button>
+                <button className="rounded px-2 py-1 hover:text-emerald-500 dark:hover:text-emerald-400 active:scale-95 transition-colors">1W</button>
+                <button className="rounded px-2 py-1 hover:text-emerald-500 dark:hover:text-emerald-400 active:scale-95 transition-colors">1M</button>
+                <button className="rounded px-2 py-1 hover:text-emerald-500 dark:hover:text-emerald-400 active:scale-95 transition-colors">1Y</button>
+                <button className="rounded bg-emerald-600 active:scale-95 px-2 py-1 font-semibold text-white transition-all duration-100">All</button>
               </div>
             </div>
           </div>
@@ -296,8 +296,8 @@ export default function DashboardPage() {
                 <div className="mb-4 flex items-center justify-between">
                   <h2 className="text-lg font-bold text-gray-900 dark:text-white">Portfolio Performance</h2>
                   <div className="flex items-center rounded-lg border border-gray-200 dark:border-white/10 bg-gray-100 dark:bg-white/[0.03] p-1 text-xs text-gray-500 dark:text-[#94A1AE]">
-                    <button className="rounded bg-gray-200 dark:bg-white/10 px-2 py-1 text-gray-700 dark:text-white">P&L</button>
-                    <button className="rounded px-2 py-1">ROI</button>
+                    <button className="rounded bg-emerald-600 px-2 py-1 text-white font-semibold active:scale-95 transition-all duration-100">P&L</button>
+                    <button className="rounded px-2 py-1 hover:text-emerald-500 dark:hover:text-emerald-400 active:scale-95 transition-colors">ROI</button>
                   </div>
                 </div>
 
@@ -328,13 +328,13 @@ export default function DashboardPage() {
               </div>
 
               <aside className="flex flex-col items-center justify-center rounded-2xl border border-gray-200 dark:border-white/[0.06] bg-white dark:bg-[#0B0F17] p-4 text-center">
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-cyan-400/10 text-cyan-300">
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-400/10 text-emerald-300">
                   <TrendingUp size={22} />
                 </div>
                 <p className="text-sm text-gray-500 dark:text-[#95A2B1]">You haven&apos;t mirrored any strategies yet</p>
                 <button
                   onClick={() => router.push("/dashboard/strategies")}
-                  className="mx-auto mt-4 flex items-center gap-1 rounded-lg bg-gradient-to-r from-cyan-400 to-blue-500 px-5 py-2.5 text-sm font-bold text-black shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_28px_rgba(34,211,238,0.5)] transition-shadow"
+                  className="mx-auto mt-4 flex items-center gap-1 rounded-lg bg-gradient-to-r from-[#0EA5E9] to-[#10B981] hover:from-[#10B981] hover:to-[#4ADE80] active:scale-95 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_28px_rgba(16,185,129,0.5)] transition-all duration-150"
                 >
                   Explore Strategies
                   <ChevronRight size={16} />
@@ -429,7 +429,7 @@ export default function DashboardPage() {
                     void loadData();
                     void loadExtras();
                   }}
-                  className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-cyan-400 to-blue-500 px-3 py-1.5 text-xs font-bold text-black"
+                  className="flex items-center gap-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-3 py-1.5 text-xs font-semibold transition-all duration-100"
                 >
                   <RefreshCw size={12} />
                   Refresh
@@ -437,10 +437,10 @@ export default function DashboardPage() {
               </div>
 
               <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
-                <button className="rounded-full border border-gray-200 dark:border-white/10 px-3 py-1.5 text-gray-500 dark:text-[#A3AFBD] hover:dark:border-cyan-400/30 hover:dark:text-cyan-300 transition-colors">Symbol</button>
-                <button className="rounded-full border border-gray-200 dark:border-white/10 px-3 py-1.5 text-gray-500 dark:text-[#A3AFBD] hover:dark:border-cyan-400/30 hover:dark:text-cyan-300 transition-colors">All</button>
-                <button className="rounded-full border border-gray-200 dark:border-white/10 px-3 py-1.5 text-gray-500 dark:text-[#A3AFBD] hover:dark:border-cyan-400/30 hover:dark:text-cyan-300 transition-colors">Source</button>
-                <button className="rounded-full border border-gray-200 dark:border-white/10 px-3 py-1.5 text-gray-500 dark:text-[#A3AFBD] hover:dark:border-cyan-400/30 hover:dark:text-cyan-300 transition-colors">Select Dates</button>
+                <button className="rounded-full border border-gray-200 dark:border-white/10 px-3 py-1.5 text-gray-500 dark:text-[#A3AFBD] hover:dark:border-emerald-500/30 hover:dark:text-emerald-400 active:scale-95 transition-all duration-100">Symbol</button>
+                <button className="rounded-full border border-gray-200 dark:border-white/10 px-3 py-1.5 text-gray-500 dark:text-[#A3AFBD] hover:dark:border-emerald-500/30 hover:dark:text-emerald-400 active:scale-95 transition-all duration-100">All</button>
+                <button className="rounded-full border border-gray-200 dark:border-white/10 px-3 py-1.5 text-gray-500 dark:text-[#A3AFBD] hover:dark:border-emerald-500/30 hover:dark:text-emerald-400 active:scale-95 transition-all duration-100">Source</button>
+                <button className="rounded-full border border-gray-200 dark:border-white/10 px-3 py-1.5 text-gray-500 dark:text-[#A3AFBD] hover:dark:border-emerald-500/30 hover:dark:text-emerald-400 active:scale-95 transition-all duration-100">Select Dates</button>
               </div>
 
               <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-white/[0.06]">
