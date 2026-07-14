@@ -7,6 +7,7 @@ import { clearTokens, getAccessToken } from "@/lib/auth";
 import { Logo } from "@/components/logo";
 import { ThemeToggleButton } from "@/components/ThemeToggleButton";
 import { api } from "@/lib/api";
+import { getAdminRoute, setAdminViewMode } from "@/lib/adminRoutes";
 import type { UserProfile } from "@/lib/types";
 
 interface HeaderProps {
@@ -25,6 +26,7 @@ export default function Header({ displayName = "Trader" }: HeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [viewMode, setViewMode] = useState<string | null>(null);
 
@@ -48,10 +50,10 @@ export default function Header({ displayName = "Trader" }: HeaderProps) {
 
   const getNavLinkPath = (name: string, defaultPath: string) => {
     if (isAdmin && viewMode === "admin") {
-      if (name === "Dashboard") return "/dashboard/admin?tab=overview";
-      if (name === "Strategies") return "/dashboard/admin?tab=strategies";
-      if (name === "Academy") return "/dashboard/admin?tab=academy";
-      if (name === "Notification") return "/dashboard/admin?tab=notifications";
+      if (name === "Dashboard") return getAdminRoute("overview");
+      if (name === "Strategies") return getAdminRoute("strategies");
+      if (name === "Academy") return getAdminRoute("academy");
+      if (name === "Notification") return getAdminRoute("notifications");
     }
     return defaultPath;
   };
@@ -84,8 +86,8 @@ export default function Header({ displayName = "Trader" }: HeaderProps) {
           </Link>
         </div>
 
-        {/* Navigation Links - Center */}
-        <nav className="flex items-center gap-5 text-sm">
+        {/* Navigation Links - Center (Hidden on Mobile) */}
+        <nav className="hidden md:flex items-center gap-5 text-sm">
           {navLinks.map((link) => (
             <Link
               key={link.path}
@@ -101,7 +103,7 @@ export default function Header({ displayName = "Trader" }: HeaderProps) {
           ))}
         </nav>
 
-        {/* Right Section - Theme Toggle & User Menu */}
+        {/* Right Section - Theme Toggle, User Menu, Mobile Toggle */}
         <div className="relative flex items-center gap-2">
           {/* Dark/Light Mode Toggle */}
           <ThemeToggleButton />
@@ -117,6 +119,24 @@ export default function Header({ displayName = "Trader" }: HeaderProps) {
               <circle cx="12" cy="8" r="4" />
               <path d="M4 20c0-3.5 3.6-6 8-6s8 2.5 8 6" />
             </svg>
+          </button>
+
+          {/* Mobile Menu Toggle Button (Visible only on Mobile) */}
+          <button
+            type="button"
+            onClick={() => setShowMobileMenu((current) => !current)}
+            className="flex md:hidden rounded-lg border border-gray-200 dark:border-[#26303A] p-2 text-gray-500 dark:text-[#AEB8C4] hover:bg-gray-100 dark:hover:bg-[#10151D] transition-all duration-200 active:scale-95"
+            aria-label="Toggle navigation menu"
+          >
+            {showMobileMenu ? (
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
           </button>
 
           {/* Profile Dropdown Menu */}
@@ -190,6 +210,26 @@ export default function Header({ displayName = "Trader" }: HeaderProps) {
           )}
         </div>
       </div>
+
+      {/* Mobile Navigation Dropdown Menu */}
+      {showMobileMenu && (
+        <nav className="flex md:hidden flex-col gap-2 border-t border-gray-100 dark:border-[#1B222B] mt-3 pt-3 bg-white dark:bg-[#06090E]">
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              href={getNavLinkPath(link.name, link.path)}
+              onClick={() => setShowMobileMenu(false)}
+              className={`transition-colors duration-200 py-2 px-3 rounded-lg text-sm ${
+                isLinkActive(link.name, link.path)
+                  ? "font-semibold bg-emerald-600/10 text-emerald-400"
+                  : "text-gray-500 dark:text-[#8D98A5] hover:bg-gray-100 dark:hover:bg-[#111822] hover:text-gray-700 dark:hover:text-[#DEE6EE]"
+              }`}
+            >
+              {link.name}
+            </Link>
+          ))}
+        </nav>
+      )}
     </header>
   );
 }

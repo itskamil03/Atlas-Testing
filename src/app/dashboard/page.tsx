@@ -6,6 +6,7 @@ import { Wallet, Activity, TrendingUp, Target, ChevronRight, RefreshCw } from "l
 
 import { api } from "@/lib/api";
 import { clearTokens, getAccessToken, isDemoSession } from "@/lib/auth";
+import { getAdminRoute, setAdminViewMode } from "@/lib/adminRoutes";
 import { extractApiErrorMessage } from "@/lib/errors";
 import type { BrokerBalance, DashboardOverview, DashboardSummary, Trade, UserProfile } from "@/lib/types";
 
@@ -143,7 +144,8 @@ export default function DashboardPage() {
 
       const viewMode = typeof window !== "undefined" ? sessionStorage.getItem("viewMode") : null;
       if (profileRes.data.role === "admin" && viewMode !== "trader") {
-        router.replace("/dashboard/admin");
+        setAdminViewMode();
+        router.replace(getAdminRoute("overview"));
         return;
       }
 

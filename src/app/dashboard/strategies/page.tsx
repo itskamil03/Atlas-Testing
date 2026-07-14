@@ -6,6 +6,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 
 import { api } from "@/lib/api";
 import { clearTokens, getAccessToken } from "@/lib/auth";
+import { getAdminRoute, setAdminViewMode } from "@/lib/adminRoutes";
 import { extractApiErrorMessage } from "@/lib/errors";
 import type { StrategyCard, UserProfile } from "@/lib/types";
 
@@ -309,7 +310,8 @@ export default function StrategiesPage() {
       const [profileRes] = await Promise.all([api.get<UserProfile>("/auth/me")]);
       const viewMode = typeof window !== "undefined" ? sessionStorage.getItem("viewMode") : null;
       if (profileRes.data.role === "admin" && viewMode !== "trader") {
-        router.replace("/dashboard/admin");
+        setAdminViewMode();
+        router.replace(getAdminRoute("strategies"));
         return;
       }
       setStrategies(dummyStrategies);

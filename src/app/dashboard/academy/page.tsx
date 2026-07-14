@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { api } from "@/lib/api";
 import { clearTokens, getAccessToken } from "@/lib/auth";
+import { getAdminRoute, setAdminViewMode } from "@/lib/adminRoutes";
 import { extractApiErrorMessage } from "@/lib/errors";
 import type { AcademyArticle, AcademyArticleCreateRequest, UserProfile } from "@/lib/types";
 
@@ -34,7 +35,8 @@ export default function AcademyPage() {
       ]);
       const viewMode = typeof window !== "undefined" ? sessionStorage.getItem("viewMode") : null;
       if (profileRes.data.role === "admin" && viewMode !== "trader") {
-        router.replace("/dashboard/admin");
+        setAdminViewMode();
+        router.replace(getAdminRoute("academy"));
         return;
       }
       setArticles(articlesRes.data);
