@@ -917,8 +917,8 @@ export default function AdminPage() {
                 <textarea value={articleForm.content_markdown} onChange={(e) => setArticleForm((prev) => ({ ...prev, content_markdown: e.target.value }))} placeholder="Markdown content" rows={8} className="w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 font-mono text-sm" />
                 <label className="flex items-center gap-2 text-sm text-[#A8C2DE]"><input type="checkbox" checked={articleForm.is_published} onChange={(e) => setArticleForm((prev) => ({ ...prev, is_published: e.target.checked }))} />Publish</label>
                 <div className="flex gap-2">
-                  <button onClick={saveArticle} className="rounded-xl bg-gradient-to-r from-[#2563EB] to-[#0EA5E9] px-4 py-2 text-sm font-semibold">{editingArticleId ? "Update" : "Create"} Article</button>
-                  {editingArticleId ? <button onClick={() => { setEditingArticleId(null); setArticleForm(emptyArticle); }} className="rounded-xl border border-[#2E4762] px-4 py-2 text-sm">Cancel</button> : null}
+                  <button onClick={saveArticle} className="rounded-xl bg-gradient-to-r from-[#0EA5E9] to-[#10B981] hover:from-[#10B981] hover:to-[#4ADE80] active:scale-95 px-4 py-2 text-sm font-semibold text-white transition-all duration-150">{editingArticleId ? "Update" : "Create"} Article</button>
+                  {editingArticleId ? <button onClick={() => { setEditingArticleId(null); setArticleForm(emptyArticle); }} className="rounded-xl border border-[#2E4762] hover:bg-[#121E30] active:scale-95 px-4 py-2 text-sm font-semibold transition-all duration-100">Cancel</button> : null}
                 </div>
               </div>
             </div>
@@ -926,7 +926,7 @@ export default function AdminPage() {
             <div className="rounded-2xl border border-[#1E2A39] bg-[#0D1725]/70 p-5 backdrop-blur">
               <div className="flex items-center justify-between gap-2">
                 <h3 className="font-semibold">Articles</h3>
-                <input value={articleSearch} onChange={(e) => setArticleSearch(e.target.value)} placeholder="Search articles" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm" />
+                <input value={articleSearch} onChange={(e) => setArticleSearch(e.target.value)} placeholder="Search articles by title, slug, or summary..." className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm w-72 focus:border-emerald-500 focus:outline-none transition-colors duration-150" />
               </div>
               <div className="mt-3 max-h-[420px] space-y-2 overflow-auto pr-1">
                 {filteredArticles.map((item) => (
@@ -937,8 +937,8 @@ export default function AdminPage() {
                         <p className="text-xs text-[#8EA8C7]">{item.slug} - {item.is_published ? "Published" : "Draft"}</p>
                       </div>
                       <div className="flex gap-2">
-                        <button onClick={() => { setEditingArticleId(item.id); setArticleForm({ title: item.title, slug: item.slug, category: item.category, summary: item.summary, content_markdown: item.content_markdown, is_published: item.is_published }); }} className="rounded-md border border-[#315375] px-2 py-1 text-xs">Edit</button>
-                        <button onClick={() => removeArticle(item.id)} className="rounded-md border border-[#5C2A35] px-2 py-1 text-xs text-[#FFB9C7]">Delete</button>
+                        <button onClick={() => { setEditingArticleId(item.id); setArticleForm({ title: item.title, slug: item.slug, category: item.category, summary: item.summary, content_markdown: item.content_markdown, is_published: item.is_published }); }} className="rounded-md bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-2.5 py-1 text-xs font-semibold transition-all duration-100">Edit</button>
+                        <button onClick={() => removeArticle(item.id)} className="rounded-md border border-[#5C2A35] hover:bg-red-600 hover:text-white hover:border-red-600 active:scale-95 text-[#FFB9C7] px-2.5 py-1 text-xs transition-all duration-100">Delete</button>
                       </div>
                     </div>
                   </div>
