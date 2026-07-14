@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Zap, TrendingUp, Shield, Brain, Code, BookOpen } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 export default function Academy() {
   const fadeUp = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }
@@ -200,8 +201,10 @@ export default function Academy() {
           className="mt-16 text-center"
         >
           <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.12 }}>
-            <Button size="lg" className="shadow-lg">
-              Enroll Now
+            <Button asChild size="lg" className="shadow-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold active:scale-95 transition-all duration-100">
+              <Link href="/signup">
+                Enroll Now
+              </Link>
             </Button>
           </motion.div>
         </motion.div>
