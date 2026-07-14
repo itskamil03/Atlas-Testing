@@ -169,11 +169,9 @@ export default function DashboardPage() {
       router.push("/login");
       return;
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     void loadData();
     void loadExtras();
     void loadCurrentUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   const winRate =

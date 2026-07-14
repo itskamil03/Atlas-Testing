@@ -338,9 +338,7 @@ export default function StrategiesPage() {
       router.push("/login");
       return;
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     void loadPage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   useEffect(() => {
