@@ -6,15 +6,26 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import axios from "axios";
 
-import { api } from "@/lib/api";
+import { StrategyStatusBadges } from "@/components/auto-trading/StrategyStatusBadges";
+import { AdminSubscriptionsTab } from "@/components/admin/AdminSubscriptionsTab";
+import { AdminUsersTab } from "@/components/admin/AdminUsersTab";
+import { AdminKYCTab } from "@/components/admin/AdminKYCTab";
+import { AdminTradesTab } from "@/components/admin/AdminTradesTab";
+import { parametersFromDefaults, StrategyParameterFields } from "@/components/admin/StrategyParameterFields";
+import { api, getStrategyTypeDefinitions } from "@/lib/api";
 import { clearTokens, getAccessToken } from "@/lib/auth";
+import { formatIST } from "@/lib/datetime";
+import {
+  FALLBACK_STRATEGY_TYPES,
+  getStrategyTypeDefinition,
+  type StrategyTypeDefinition,
+} from "@/lib/strategySchemas";
 import type {
   AcademyArticle,
   AcademyArticleCreateRequest,
   AcademyArticleUpdateRequest,
   ActivityItem,
   AdminDashboardMetrics,
-  AdminTradeListResponse,
   AdminUserListResponse,
   AuditLogListResponse,
   ChartPoint,
@@ -28,9 +39,11 @@ import type {
 type AdminTab =
   | "overview"
   | "strategies"
+  | "subscriptions"
   | "performance"
   | "academy"
   | "users"
+  | "kyc"
   | "trades"
   | "notifications"
   | "settings"
@@ -42,6 +55,11 @@ type StrategyFormState = {
   strategy_tag: string;
   exchange: string;
   risk_level: "low" | "medium" | "high";
+  strategy_type: "RSI" | "EMA_CROSSOVER" | "LONDON_BREAKOUT" | "CUSTOM";
+  parameters: Record<string, string>;
+  symbol: string;
+  timeframe: string;
+  signal_source: "platform_engine" | "creator_webhook";
   logo_url: string;
   image_url: string;
   tags: string[];
@@ -57,13 +75,51 @@ type StrategyFormState = {
   is_featured: boolean;
 };
 
+const buildDefaultParameters = (
+  strategyType: StrategyFormState["strategy_type"],
+  definitions: StrategyTypeDefinition[],
+) => {
+  const definition = getStrategyTypeDefinition(definitions, strategyType);
+  if (!definition) {
+    return parametersFromDefaults(FALLBACK_STRATEGY_TYPES[0].parameters);
+  }
+  return parametersFromDefaults(definition.parameters);
+};
+
+const emptyStrategy: StrategyFormState = {
+  name: "",
+  description: "",
+  strategy_tag: "",
+  exchange: "Delta Exchange",
+  risk_level: "medium",
+  strategy_type: "RSI",
+  parameters: buildDefaultParameters("RSI", FALLBACK_STRATEGY_TYPES),
+  symbol: "BTCUSD",
+  timeframe: "1h",
+  signal_source: "platform_engine",
+  logo_url: "",
+  image_url: "",
+  tags: [] as string[],
+  followers: 0,
+  recommended_margin: "100",
+  mdd_percent: "0",
+  win_rate_percent: "0",
+  pnl: "0",
+  roi_percent: "0",
+  chart_points: ["0", "5", "8", "12", "10", "15"],
+  academy_slugs: [] as string[],
+  is_public: true,
+  is_featured: false,
+};
+
 const tabs: { id: AdminTab; label: string }[] = [
   { id: "overview", label: "Overview" },
-  { id: "strategies", label: "Strategy Management" },
-  { id: "performance", label: "Performance" },
-  { id: "academy", label: "Academy CMS" },
+  { id: "strategies", label: "Strategies" },
+  { id: "subscriptions", label: "Subscriptions" },
   { id: "users", label: "Users" },
+  { id: "kyc", label: "KYC" },
   { id: "trades", label: "Trades" },
+  { id: "academy", label: "Academy" },
   { id: "notifications", label: "Notifications" },
   { id: "settings", label: "Settings" },
   { id: "security", label: "Security" },
@@ -75,27 +131,6 @@ function parseAdminTab(value: string | null): AdminTab {
   if (!value) return "overview";
   return tabIds.has(value as AdminTab) ? (value as AdminTab) : "overview";
 }
-
-const emptyStrategy: StrategyFormState = {
-  name: "",
-  description: "",
-  strategy_tag: "",
-  exchange: "Delta Exchange",
-  risk_level: "medium",
-  logo_url: "",
-  image_url: "",
-  tags: [] as string[],
-  followers: 0,
-  recommended_margin: "1000",
-  mdd_percent: "0",
-  win_rate_percent: "0",
-  pnl: "0",
-  roi_percent: "0",
-  chart_points: ["0", "5", "8", "12", "10", "15"],
-  academy_slugs: [] as string[],
-  is_public: true,
-  is_featured: false,
-};
 
 const emptyArticle: AcademyArticleCreateRequest = {
   title: "",
@@ -113,7 +148,7 @@ function formatCurrency(value: string | number): string {
 }
 
 function formatDate(value: string): string {
-  return new Date(value).toLocaleString();
+  return formatIST(value);
 }
 
 function getApiErrorMessage(err: unknown, fallback: string): string {
@@ -126,6 +161,25 @@ function getApiErrorMessage(err: unknown, fallback: string): string {
 }
 
 function getAdminWebSocketUrl(): string | null {
+  const wsBaseUrl = process.env.NEXT_PUBLIC_WS_BASE_URL;
+  if (wsBaseUrl) {
+    try {
+      const url = new URL(wsBaseUrl);
+      if (url.protocol === "http:") url.protocol = "ws:";
+      if (url.protocol === "https:") url.protocol = "wss:";
+      if (!url.pathname || url.pathname === "/") {
+        url.pathname = "/api/v1/ws/live";
+      } else if (!url.pathname.startsWith("/api/v1/ws/")) {
+        url.pathname = `${url.pathname.replace(/\/+$/, "")}/api/v1/ws/live`;
+      }
+      url.search = "";
+      url.hash = "";
+      return url.toString().replace(/\/$/, "");
+    } catch {
+      // fall through to API-derived URL
+    }
+  }
+
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   if (!baseUrl) {
     return null;
@@ -134,10 +188,10 @@ function getAdminWebSocketUrl(): string | null {
   const normalized = baseUrl.replace(/\/+$/, "");
   const root = normalized.replace(/\/api\/v1$/, "");
   if (root.startsWith("https://")) {
-    return `${root.replace("https://", "wss://")}/ws/live`;
+    return `${root.replace("https://", "wss://")}/api/v1/ws/live`;
   }
   if (root.startsWith("http://")) {
-    return `${root.replace("http://", "ws://")}/ws/live`;
+    return `${root.replace("http://", "ws://")}/api/v1/ws/live`;
   }
   return null;
 }
@@ -158,10 +212,16 @@ export default function AdminPage() {
   const [selectedStrategyIds, setSelectedStrategyIds] = useState<number[]>([]);
   const [editingStrategyId, setEditingStrategyId] = useState<number | null>(null);
   const [strategyForm, setStrategyForm] = useState<StrategyFormState>(emptyStrategy);
+  const [strategyTypeDefinitions, setStrategyTypeDefinitions] = useState<StrategyTypeDefinition[]>(
+    FALLBACK_STRATEGY_TYPES,
+  );
   const [tagInput, setTagInput] = useState("");
+  const [backtesting, setBacktesting] = useState(false);
+  const [backtestSummary, setBacktestSummary] = useState<string | null>(null);
 
   const [performanceStrategyId, setPerformanceStrategyId] = useState<number | null>(null);
   const [performanceData, setPerformanceData] = useState<StrategyPerformance | null>(null);
+  const [editingPerformance, setEditingPerformance] = useState<StrategyPerformance | null>(null);
 
   const [articles, setArticles] = useState<AcademyArticle[]>([]);
   const [editingArticleId, setEditingArticleId] = useState<number | null>(null);
@@ -171,11 +231,7 @@ export default function AdminPage() {
   const [users, setUsers] = useState<AdminUserListResponse | null>(null);
   const [userSearch, setUserSearch] = useState("");
   const [kycFilter, setKycFilter] = useState("all");
-
-  const [trades, setTrades] = useState<AdminTradeListResponse | null>(null);
-  const [tradeSearch, setTradeSearch] = useState("");
-  const [tradeStatusFilter, setTradeStatusFilter] = useState("all");
-  const [manualClosePrice, setManualClosePrice] = useState<Record<number, string>>({});
+  const [subscriptionFilter, setSubscriptionFilter] = useState("all");
 
   const [notificationTitle, setNotificationTitle] = useState("");
   const [notificationMessage, setNotificationMessage] = useState("");
@@ -194,6 +250,11 @@ export default function AdminPage() {
   const filteredArticles = useMemo(
     () => articles.filter((item) => item.title.toLowerCase().includes(articleSearch.toLowerCase()) || item.slug.toLowerCase().includes(articleSearch.toLowerCase())),
     [articles, articleSearch],
+  );
+
+  const activeStrategyDefinition = useMemo(
+    () => getStrategyTypeDefinition(strategyTypeDefinitions, strategyForm.strategy_type),
+    [strategyForm.strategy_type, strategyTypeDefinitions],
   );
 
   const strategyPreview = useMemo(() => {
@@ -220,9 +281,27 @@ export default function AdminPage() {
   );
 
   useEffect(() => {
+    void getStrategyTypeDefinitions()
+      .then((res) => {
+        if (res.data.types?.length) {
+          setStrategyTypeDefinitions(res.data.types);
+        }
+      })
+      .catch(() => {
+        setStrategyTypeDefinitions(FALLBACK_STRATEGY_TYPES);
+      });
+  }, []);
+
+  useEffect(() => {
     const routeTab = parseAdminTab(searchParams.get("tab"));
     setActiveTab(routeTab);
   }, [searchParams]);
+
+  useEffect(() => {
+    if (pathname.startsWith("/dashboard/admin")) {
+      router.replace(`/admin?${searchParams.toString() || "tab=overview"}`);
+    }
+  }, [pathname, router, searchParams]);
 
   const loadAll = useCallback(async () => {
     setLoading(true);
@@ -234,9 +313,6 @@ export default function AdminPage() {
         router.replace("/dashboard");
         return;
       }
-      if (typeof window !== "undefined") {
-        sessionStorage.setItem("viewMode", "admin");
-      }
       setProfile(me.data);
 
       const [
@@ -246,7 +322,6 @@ export default function AdminPage() {
         strategiesRes,
         articlesRes,
         usersRes,
-        tradesRes,
         settingsRes,
         logsRes,
       ] = await Promise.all([
@@ -256,7 +331,6 @@ export default function AdminPage() {
         api.get<StrategyCard[]>("/admin/strategies"),
         api.get<AcademyArticle[]>("/admin/academy/articles"),
         api.get<AdminUserListResponse>("/admin/users", { params: { page: 1, page_size: 20 } }),
-        api.get<AdminTradeListResponse>("/admin/trades", { params: { page: 1, page_size: 20 } }),
         api.get<PlatformSettings>("/admin/platform-settings"),
         api.get<AuditLogListResponse>("/admin/audit-logs", { params: { page: 1, page_size: 20 } }),
       ]);
@@ -267,7 +341,6 @@ export default function AdminPage() {
       setStrategies(strategiesRes.data);
       setArticles(articlesRes.data);
       setUsers(usersRes.data);
-      setTrades(tradesRes.data);
       setPlatformSettings(settingsRes.data);
       setAuditLogs(logsRes.data);
 
@@ -309,6 +382,22 @@ export default function AdminPage() {
     };
     void loadPerformance();
   }, [performanceStrategyId]);
+
+  useEffect(() => {
+    const loadEditingPerformance = async () => {
+      if (!editingStrategyId) {
+        setEditingPerformance(null);
+        return;
+      }
+      try {
+        const res = await api.get<StrategyPerformance>(`/admin/strategies/${editingStrategyId}/performance`);
+        setEditingPerformance(res.data);
+      } catch {
+        setEditingPerformance(null);
+      }
+    };
+    void loadEditingPerformance();
+  }, [editingStrategyId]);
 
   useEffect(() => {
     if (!getAccessToken()) {
@@ -354,53 +443,20 @@ export default function AdminPage() {
     router.push("/login");
   };
 
-  const loadUsers = async (kycOverride?: string) => {
-    setError("");
-    setMessage("");
-    try {
-      const activeKyc = kycOverride !== undefined ? kycOverride : kycFilter;
-      const params: Record<string, string | number> = { page: 1, page_size: 20 };
-      if (userSearch) params.search = userSearch;
-      if (activeKyc !== "all") params.kyc_status = activeKyc;
-      const res = await api.get<AdminUserListResponse>("/admin/users", { params });
-      setUsers(res.data);
-    } catch (err: unknown) {
-      setError(getApiErrorMessage(err, "Failed to load users."));
-    }
+  const loadUsers = async () => {
+    const params: Record<string, string | number> = { page: 1, page_size: 50 };
+    if (userSearch) params.search = userSearch;
+    if (kycFilter !== "all") params.kyc_status = kycFilter;
+    if (subscriptionFilter !== "all") params.subscription_status = subscriptionFilter;
+    const res = await api.get<AdminUserListResponse>("/admin/users", { params });
+    setUsers(res.data);
   };
 
-  const loadTrades = async () => {
-    setError("");
-    setMessage("");
-    try {
-      const params: Record<string, string | number> = { page: 1, page_size: 20 };
-      if (tradeSearch) params.search = tradeSearch;
-      if (tradeStatusFilter !== "all") params.status_filter = tradeStatusFilter;
-      console.log("Admin - loading trades with params:", params);
-      const res = await api.get<AdminTradeListResponse>("/admin/trades", { params });
-      setTrades(res.data);
-      console.log("Admin - trades loaded successfully:", res.data);
-    } catch (err: unknown) {
-      console.error("Admin - failed to load trades:", err);
-      setError(getApiErrorMessage(err, "Failed to load trades."));
-    }
-  };
-
-  const loadAudit = async (severityOverride?: string) => {
-    setError("");
-    setMessage("");
-    try {
-      const activeSeverity = severityOverride !== undefined ? severityOverride : auditSeverity;
-      const params: Record<string, string | number> = { page: 1, page_size: 20 };
-      if (activeSeverity !== "all") params.severity = activeSeverity;
-      console.log("Admin - loading audit logs with params:", params);
-      const res = await api.get<AuditLogListResponse>("/admin/audit-logs", { params });
-      setAuditLogs(res.data);
-      console.log("Admin - audit logs loaded successfully:", res.data);
-    } catch (err: unknown) {
-      console.error("Admin - failed to load audit logs:", err);
-      setError(getApiErrorMessage(err, "Failed to load audit logs."));
-    }
+  const loadAudit = async () => {
+    const params: Record<string, string | number> = { page: 1, page_size: 20 };
+    if (auditSeverity !== "all") params.severity = auditSeverity;
+    const res = await api.get<AuditLogListResponse>("/admin/audit-logs", { params });
+    setAuditLogs(res.data);
   };
 
   const searchStrategies = async () => {
@@ -416,12 +472,23 @@ export default function AdminPage() {
 
   const startEditStrategy = (item: StrategyCard) => {
     setEditingStrategyId(item.id);
+    const strategyType = (item.strategy_type ?? "RSI") as StrategyFormState["strategy_type"];
+    const definition = getStrategyTypeDefinition(strategyTypeDefinitions, strategyType);
+    const defaults = definition ? parametersFromDefaults(definition.parameters) : buildDefaultParameters(strategyType, strategyTypeDefinitions);
+    const params = item.parameters ?? defaults;
     setStrategyForm({
       name: item.name,
       description: item.description ?? "",
       strategy_tag: item.strategy_tag,
       exchange: item.exchange,
       risk_level: item.risk_level,
+      strategy_type: strategyType,
+      parameters: Object.fromEntries(
+        Object.entries(params).map(([key, value]) => [key, String(value)]),
+      ),
+      symbol: item.symbol ?? "BTCUSD",
+      timeframe: item.timeframe ?? "1h",
+      signal_source: item.signal_source ?? "platform_engine",
       logo_url: item.logo_url ?? "",
       image_url: item.image_url ?? "",
       tags: item.tags ? item.tags.split(",").map((tag) => tag.trim()).filter(Boolean) : [],
@@ -441,8 +508,74 @@ export default function AdminPage() {
 
   const resetStrategyForm = () => {
     setEditingStrategyId(null);
-    setStrategyForm(emptyStrategy);
+    setStrategyForm({
+      ...emptyStrategy,
+      parameters: buildDefaultParameters("RSI", strategyTypeDefinitions),
+    });
     setTagInput("");
+    setBacktestSummary(null);
+  };
+
+  const runStrategyBacktest = async () => {
+    if (!strategyForm.strategy_tag) {
+      setError("Strategy tag is required before running a backtest.");
+      return;
+    }
+    if (strategyForm.strategy_type === "CUSTOM") {
+      setError("CUSTOM strategies cannot be backtested on-platform.");
+      return;
+    }
+    setBacktesting(true);
+    setError(null);
+    setMessage(null);
+    setBacktestSummary(null);
+    try {
+      const res = await api.post<{
+        id: number;
+        roi: number;
+        drawdown: number;
+        win_rate: number;
+        total_trades?: number;
+        profit_factor?: number;
+        net_profit?: number;
+        applied_to_strategy: boolean;
+      }>("/backtesting/run", {
+        strategy_tag: strategyForm.strategy_tag,
+        symbol: strategyForm.symbol,
+        timeframe: strategyForm.timeframe,
+        strategy_type: strategyForm.strategy_type,
+        parameters: Object.fromEntries(
+          Object.entries(strategyForm.parameters).map(([key, value]) => [key, Number.isNaN(Number(value)) ? value : Number(value)]),
+        ),
+        periods: 200,
+        initial_capital: Number(strategyForm.recommended_margin || 1000),
+        apply_to_strategy: true,
+      });
+      setStrategyForm((prev) => ({
+        ...prev,
+        roi_percent: String(res.data.roi),
+        mdd_percent: String(res.data.drawdown),
+        win_rate_percent: String(res.data.win_rate),
+        pnl: res.data.net_profit != null ? String(res.data.net_profit) : prev.pnl,
+      }));
+      setBacktestSummary(
+        [
+          `ROI ${res.data.roi}%`,
+          `Win rate ${res.data.win_rate}%`,
+          `Max drawdown ${res.data.drawdown}%`,
+          res.data.total_trades != null ? `${res.data.total_trades} trades` : null,
+          res.data.profit_factor != null ? `Profit factor ${res.data.profit_factor}` : null,
+          res.data.net_profit != null ? `Net profit ${res.data.net_profit}` : null,
+        ]
+          .filter(Boolean)
+          .join(" · "),
+      );
+      setMessage(`Backtest completed (run #${res.data.id}). Metrics auto-filled from results.`);
+    } catch (err: unknown) {
+      setError(getApiErrorMessage(err, "Backtest failed."));
+    } finally {
+      setBacktesting(false);
+    }
   };
 
   const saveStrategy = async () => {
@@ -456,6 +589,9 @@ export default function AdminPage() {
         description: strategyForm.description || null,
         logo_url: strategyForm.logo_url || null,
         image_url: strategyForm.image_url || null,
+        parameters: Object.fromEntries(
+          Object.entries(strategyForm.parameters).map(([key, value]) => [key, Number.isNaN(Number(value)) ? value : Number(value)]),
+        ),
       };
       if (editingStrategyId) {
         const res = await api.patch<StrategyCard>(`/admin/strategies/${editingStrategyId}`, payload);
@@ -486,18 +622,30 @@ export default function AdminPage() {
     }
   };
 
-  const runBulkAction = async (action: "publish" | "unpublish" | "feature" | "unfeature" | "delete" | "duplicate") => {
+  const runBulkAction = async (action: "publish" | "unpublish" | "feature" | "unfeature" | "delete" | "duplicate" | "archive") => {
     if (selectedStrategyIds.length === 0) {
       setError("Select at least one strategy first.");
       return;
     }
     try {
-      await api.post("/admin/strategies/bulk", { strategy_ids: selectedStrategyIds, action });
+      const apiAction = action === "archive" ? "unpublish" : action;
+      await api.post("/admin/strategies/bulk", { strategy_ids: selectedStrategyIds, action: apiAction });
       await searchStrategies();
       setSelectedStrategyIds([]);
       setMessage(`Bulk action completed: ${action}`);
     } catch (err: unknown) {
       setError(getApiErrorMessage(err, "Failed to run bulk action."));
+    }
+  };
+
+  const runStrategyAction = async (strategyId: number, action: "publish" | "unpublish" | "feature" | "unfeature" | "archive") => {
+    try {
+      const apiAction = action === "archive" ? "unpublish" : action;
+      await api.post("/admin/strategies/bulk", { strategy_ids: [strategyId], action: apiAction });
+      await searchStrategies();
+      setMessage(`Strategy ${action} completed.`);
+    } catch (err: unknown) {
+      setError(getApiErrorMessage(err, `Failed to ${action} strategy.`));
     }
   };
 
@@ -541,32 +689,17 @@ export default function AdminPage() {
     }
   };
 
-  const manualCloseTrade = async (tradeId: number) => {
-    const price = manualClosePrice[tradeId];
-    if (!price) {
-      setError("Enter close price first.");
-      return;
-    }
+  const saveUserRiskLimits = async (userId: number, maxDailyLoss: number, maxTradesPerDay: number) => {
     try {
-      await api.post(`/admin/trades/${tradeId}/manual-close`, { close_price: price });
-      await loadTrades();
-      setMessage("Trade closed manually.");
+      await api.patch(`/admin/users/${userId}/risk-limits`, {
+        max_daily_loss: maxDailyLoss,
+        max_trades_per_day: maxTradesPerDay,
+      });
+      await loadUsers();
+      setMessage(`Risk limits updated (max daily loss $${maxDailyLoss}).`);
     } catch (err: unknown) {
-      setError(getApiErrorMessage(err, "Failed to close trade."));
-    }
-  };
-
-  const syncTrades = async () => {
-    setError("");
-    setMessage("");
-    try {
-      console.log("Admin - queuing trade sync");
-      await api.post("/admin/trades/sync");
-      setMessage("Trade sync queued.");
-      console.log("Admin - trade sync queued successfully");
-    } catch (err: unknown) {
-      console.error("Admin - failed to queue trade sync:", err);
-      setError(getApiErrorMessage(err, "Failed to queue trade sync."));
+      setError(getApiErrorMessage(err, "Failed to update risk limits."));
+      throw err;
     }
   };
 
@@ -609,52 +742,83 @@ export default function AdminPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#030507] text-[#ECF2FF]">
-        <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6 lg:px-8">
-          <div className="animate-pulse rounded-3xl border border-[#1A2330] bg-[#0C1420]/70 p-8 backdrop-blur">
-            <div className="h-8 w-56 rounded bg-[#1B2738]" />
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              <div className="h-28 rounded-2xl bg-[#121C2A]" />
-              <div className="h-28 rounded-2xl bg-[#121C2A]" />
-              <div className="h-28 rounded-2xl bg-[#121C2A]" />
+      <div className="min-h-screen bg-[#050607]">
+        <div className="mx-auto max-w-[1480px] px-4 py-8 sm:px-6 lg:px-8">
+          <div className="animate-pulse rounded-[28px] border border-[#1A212A] bg-[#0B1118] p-8">
+            <div className="h-8 w-56 rounded bg-[#1A212A]" />
+            <div className="mt-6 grid gap-4 md:grid-cols-4">
+              <div className="h-28 rounded-2xl bg-[#121820]" />
+              <div className="h-28 rounded-2xl bg-[#121820]" />
+              <div className="h-28 rounded-2xl bg-[#121820]" />
+              <div className="h-28 rounded-2xl bg-[#121820]" />
             </div>
           </div>
         </div>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_8%_16%,rgba(56,189,248,0.2),transparent_32%),radial-gradient(circle_at_88%_2%,rgba(34,197,94,0.18),transparent_28%),linear-gradient(180deg,#050A12_0%,#03060D_100%)] text-[#ECF2FF]">
+    <div className="min-h-screen bg-[#050607]">
       <div className="mx-auto max-w-[1480px] px-4 py-6 sm:px-6 lg:px-8">
-        <header className="relative overflow-hidden rounded-3xl border border-[#22344B] bg-[linear-gradient(120deg,rgba(10,18,30,0.92),rgba(8,21,35,0.82))] p-5 shadow-[0_30px_120px_-60px_rgba(0,0,0,0.8)] backdrop-blur">
-          <div className="pointer-events-none absolute -top-28 right-0 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(56,189,248,0.28)_0%,transparent_65%)]" />
+        <header className="rounded-[28px] border border-[#1A212A] bg-[linear-gradient(180deg,#0D1218,#090D12)] p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-[#9CC4E8]">Atlus Trading Admin</p>
-              <h1 className="mt-1 text-3xl font-semibold text-[#F6FAFF]">Command Center</h1>
-              <p className="mt-1 text-sm text-[#B5CAE2]">Unified control panel for strategy publishing, compliance, users, risk, and live operations.</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-[#9BFF00]">Admin Console</p>
+              <h1 className="mt-1 text-3xl font-semibold text-[#F3F7FB]">Atlas Control Center</h1>
+              <p className="mt-1 text-sm text-[#8E9AAA]">
+                Signed in as {profile?.full_name ?? "Admin"} · {profile?.email}
+              </p>
             </div>
-            <div className="flex items-center gap-2">
-              <button onClick={() => { if (typeof window !== "undefined") { sessionStorage.setItem("viewMode", "trader"); } router.push("/dashboard"); }} className="rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Trader Dashboard</button>
-              <button onClick={onLogout} className="rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Sign Out</button>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => void loadAll()}
+                className="rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100"
+              >
+                Refresh
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    sessionStorage.setItem("viewMode", "trader");
+                  }
+                  router.push("/dashboard");
+                }}
+                className="rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100"
+              >
+                Trader Dashboard
+              </button>
+              <button
+                type="button"
+                onClick={onLogout}
+                className="rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100"
+              >
+                Logout
+              </button>
             </div>
-          </div>
-          <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-[#A6BCD6]">
-            <span>Logged in as {profile?.full_name} ({profile?.email})</span>
-            <span className="rounded-full border border-[#315E4A] bg-[#10251D] px-2.5 py-1 text-xs font-medium text-[#B9F6D2]">Live Control Mode</span>
           </div>
         </header>
 
-        {error ? <p className="mt-4 rounded-xl border border-[#75414A] bg-[#2A1219]/95 px-4 py-2 text-sm text-[#FFB3C0]">{error}</p> : null}
-        {message ? <p className="mt-4 rounded-xl border border-[#3B7A62] bg-[#10251D]/95 px-4 py-2 text-sm text-[#B9F6D2]">{message}</p> : null}
+        {error ? (
+          <p className="mt-4 rounded-2xl border border-[#5A2A2A] bg-[#2A1414] px-4 py-3 text-sm text-[#FFB4B4]">{error}</p>
+        ) : null}
+        {message ? (
+          <p className="mt-4 rounded-2xl border border-[#2A4A1A] bg-[#142A14] px-4 py-3 text-sm text-[#B7FF45]">{message}</p>
+        ) : null}
 
-        <nav className="sticky top-3 z-20 mt-5 flex gap-2 overflow-x-auto rounded-2xl border border-[#213347] bg-[#0B1320]/85 p-2 shadow-[0_16px_40px_-30px_rgba(0,0,0,0.9)] backdrop-blur">
+        <nav className="sticky top-3 z-20 mt-5 flex gap-1 overflow-x-auto rounded-[24px] border border-[#1A212A] bg-[#0B1118]/95 p-1.5 backdrop-blur">
           {tabs.map((tab) => (
             <button
               key={tab.id}
+              type="button"
               onClick={() => setTab(tab.id)}
-              className={`whitespace-nowrap rounded-xl px-4 py-2 text-sm transition ${activeTab === tab.id ? "bg-[linear-gradient(135deg,#1B3553,#1B4A57)] text-[#ECF5FF] shadow-[inset_0_0_0_1px_rgba(156,196,232,0.25)]" : "text-[#9CB2CA] hover:bg-[#121E30]"}`}
+              className={`whitespace-nowrap rounded-[18px] px-4 py-2.5 text-sm font-medium transition active:scale-95 duration-100 ${
+                activeTab === tab.id
+                  ? "bg-emerald-600 text-white"
+                  : "text-[#8E9AAA] hover:bg-[#121820] hover:text-[#F3F7FB]"
+              }`}
             >
               {tab.label}
             </button>
@@ -664,54 +828,99 @@ export default function AdminPage() {
         {activeTab === "overview" ? (
           <section className="mt-5 space-y-5">
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              <div className="rounded-2xl border border-[#1E2A39] bg-[#0D1725]/70 p-4 backdrop-blur transition hover:-translate-y-0.5 hover:border-[#2C4460]">
-                <p className="text-xs uppercase tracking-[0.1em] text-[#88A4C6]">Total Users</p>
-                <p className="mt-3 text-3xl font-semibold">{metrics?.total_users ?? 0}</p>
-              </div>
-              <div className="rounded-2xl border border-[#1E2A39] bg-[#0D1725]/70 p-4 backdrop-blur transition hover:-translate-y-0.5 hover:border-[#2C4460]">
-                <p className="text-xs uppercase tracking-[0.1em] text-[#88A4C6]">Active Traders</p>
-                <p className="mt-3 text-3xl font-semibold">{metrics?.active_traders ?? 0}</p>
-              </div>
-              <div className="rounded-2xl border border-[#1E2A39] bg-[#0D1725]/70 p-4 backdrop-blur transition hover:-translate-y-0.5 hover:border-[#2C4460]">
-                <p className="text-xs uppercase tracking-[0.1em] text-[#88A4C6]">Revenue</p>
-                <p className="mt-3 text-3xl font-semibold">${formatCurrency(metrics?.revenue ?? "0")}</p>
-              </div>
-              <div className="rounded-2xl border border-[#1E2A39] bg-[#0D1725]/70 p-4 backdrop-blur transition hover:-translate-y-0.5 hover:border-[#2C4460]">
-                <p className="text-xs uppercase tracking-[0.1em] text-[#88A4C6]">Profit Share</p>
-                <p className="mt-3 text-3xl font-semibold">${formatCurrency(metrics?.profit_share ?? "0")}</p>
-              </div>
+              {[
+                { label: "Total Users", value: metrics?.total_users ?? 0 },
+                { label: "Active Subscriptions", value: metrics?.total_subscriptions ?? 0 },
+                { label: "Published Strategies", value: metrics?.total_strategies ?? 0 },
+                { label: "Trades Today", value: metrics?.trades_today ?? 0 },
+              ].map((card) => (
+                <div
+                  key={card.label}
+                  className="rounded-[24px] border border-[#1A212A] bg-[#0B1118] p-5 transition hover:border-[#9BFF00]/30"
+                >
+                  <p className="text-xs uppercase tracking-wide text-[#6B7785]">{card.label}</p>
+                  <p className="mt-3 text-3xl font-semibold text-[#F3F7FB]">{card.value}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {[
+                { label: "Active Traders", value: metrics?.active_traders ?? 0 },
+                { label: "Revenue", value: `$${formatCurrency(metrics?.revenue ?? "0")}` },
+                { label: "Profit Share", value: `$${formatCurrency(metrics?.profit_share ?? "0")}` },
+                { label: "Total Followers", value: metrics?.total_followers ?? 0 },
+              ].map((card) => (
+                <div
+                  key={card.label}
+                  className="rounded-[24px] border border-[#1A212A] bg-[#0B1118] p-5"
+                >
+                  <p className="text-xs uppercase tracking-wide text-[#6B7785]">{card.label}</p>
+                  <p className="mt-3 text-2xl font-semibold text-[#9BFF00]">{card.value}</p>
+                </div>
+              ))}
             </div>
 
             <div className="grid gap-5 lg:grid-cols-[1.3fr_0.7fr]">
-              <div className="rounded-2xl border border-[#1E2A39] bg-[#0D1725]/70 p-5 backdrop-blur">
-                <h2 className="text-lg font-semibold">Growth Chart (Trades)</h2>
+              <div className="rounded-[28px] border border-[#1A212A] bg-[#0B1118] p-6">
+                <h2 className="text-lg font-semibold text-[#F3F7FB]">Growth Chart (Trades)</h2>
                 <div className="mt-4 flex h-44 items-end gap-2">
                   {growth.map((point) => {
                     const max = Math.max(...growth.map((item) => Number(item.value || 0)), 1);
                     const height = (Number(point.value || 0) / max) * 100;
                     return (
                       <div key={point.label} className="group flex flex-1 flex-col items-center gap-1">
-                        <div className="w-full rounded-md bg-gradient-to-t from-[#2563EB] to-[#22D3EE] transition group-hover:from-[#38BDF8] group-hover:to-[#34D399]" style={{ height: `${Math.max(height, 8)}%` }} />
-                        <span className="text-[10px] text-[#87A1BF]">{point.label}</span>
+                        <div
+                          className="w-full rounded-md bg-gradient-to-t from-[#9BFF00]/30 to-[#9BFF00] transition group-hover:to-[#B7FF45]"
+                          style={{ height: `${Math.max(height, 8)}%` }}
+                        />
+                        <span className="text-[10px] text-[#6B7785]">{point.label}</span>
                       </div>
                     );
                   })}
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-[#1E2A39] bg-[#0D1725]/70 p-5 backdrop-blur">
-                <h2 className="text-lg font-semibold">Recent Activities</h2>
+              <div className="rounded-[28px] border border-[#1A212A] bg-[#0B1118] p-6">
+                <h2 className="text-lg font-semibold text-[#F3F7FB]">Recent Activities</h2>
                 <div className="mt-4 max-h-52 space-y-2 overflow-auto pr-1">
                   {activities.map((item) => (
-                    <div key={item.id} className="rounded-xl border border-[#26384C] bg-[#101D2F] px-3 py-2">
-                      <p className="text-sm font-medium text-[#DDE9F7]">{item.title}</p>
-                      <p className="mt-1 text-xs text-[#8EA6C3]">{item.category} - {formatDate(item.created_at)}</p>
+                    <div key={item.id} className="rounded-xl border border-[#242D37] bg-[#050607] px-3 py-2">
+                      <p className="text-sm font-medium text-[#F3F7FB]">{item.title}</p>
+                      <p className="mt-1 text-xs text-[#8E9AAA]">
+                        {item.category} · {formatDate(item.created_at)}
+                      </p>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
+
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { tab: "subscriptions" as AdminTab, label: "Verify UPI Payments" },
+                { tab: "users" as AdminTab, label: "Manage Users" },
+                { tab: "strategies" as AdminTab, label: "Publish Strategies" },
+                { tab: "notifications" as AdminTab, label: "Broadcast Alerts" },
+              ].map((action) => (
+                <button
+                  key={action.tab}
+                  type="button"
+                  onClick={() => setTab(action.tab)}
+                  className="rounded-2xl border border-[#242D37] bg-[#0B1118] px-4 py-4 text-left text-sm font-medium text-[#F3F7FB] transition hover:border-[#9BFF00]/40"
+                >
+                  {action.label}
+                </button>
+              ))}
+            </div>
           </section>
+        ) : null}
+
+        {activeTab === "subscriptions" ? (
+          <AdminSubscriptionsTab
+            onMessage={setMessage}
+            onError={setError}
+          />
         ) : null}
 
         {activeTab === "strategies" ? (
@@ -721,17 +930,18 @@ export default function AdminPage() {
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <h2 className="text-lg font-semibold">Strategy Management</h2>
                   <div className="flex gap-2">
-                    <input value={strategySearch} onChange={(e) => setStrategySearch(e.target.value)} placeholder="Search strategy by name, tag, risk level..." className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm w-64 focus:border-emerald-500 focus:outline-none transition-colors duration-150" />
-                    <button onClick={searchStrategies} className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Search</button>
+                    <input value={strategySearch} onChange={(e) => setStrategySearch(e.target.value)} placeholder="Search strategy" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm" />
+                    <button onClick={searchStrategies} className="rounded-lg border border-[#2E4762] px-3 py-2 text-sm hover:bg-[#18283C]">Search</button>
                   </div>
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <button onClick={() => runBulkAction("publish")} className="rounded-md bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-3 py-1 text-xs font-semibold transition-all duration-100">Publish</button>
-                  <button onClick={() => runBulkAction("unpublish")} className="rounded-md bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-3 py-1 text-xs font-semibold transition-all duration-100">Unpublish</button>
-                  <button onClick={() => runBulkAction("feature")} className="rounded-md bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-3 py-1 text-xs font-semibold transition-all duration-100">Feature</button>
-                  <button onClick={() => runBulkAction("duplicate")} className="rounded-md bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-3 py-1 text-xs font-semibold transition-all duration-100">Duplicate</button>
-                  <button onClick={() => runBulkAction("delete")} className="rounded-md border border-[#65313C] hover:bg-red-600 hover:text-white hover:border-red-600 active:scale-95 text-[#FFC2CC] px-3 py-1 text-xs transition-all duration-100">Delete</button>
+                  <button onClick={() => runBulkAction("publish")} className="rounded-md border border-[#2B4A62] px-3 py-1 text-xs">Publish</button>
+                  <button onClick={() => runBulkAction("unpublish")} className="rounded-md border border-[#2B4A62] px-3 py-1 text-xs">Unpublish</button>
+                  <button onClick={() => runBulkAction("feature")} className="rounded-md border border-[#2B4A62] px-3 py-1 text-xs">Feature</button>
+                  <button onClick={() => runBulkAction("archive")} className="rounded-md border border-[#2B4A62] px-3 py-1 text-xs">Archive</button>
+                  <button onClick={() => runBulkAction("duplicate")} className="rounded-md border border-[#2B4A62] px-3 py-1 text-xs">Duplicate</button>
+                  <button onClick={() => runBulkAction("delete")} className="rounded-md border border-[#65313C] px-3 py-1 text-xs text-[#FFC2CC]">Delete</button>
                 </div>
 
                 <div className="mt-4 max-h-[440px] space-y-2 overflow-auto pr-1">
@@ -753,11 +963,18 @@ export default function AdminPage() {
                           <div>
                             <p className="font-medium">{item.name}</p>
                             <p className="text-xs text-[#8EA9C9]">{item.strategy_tag} - {item.risk_level.toUpperCase()} - ROI {item.roi_percent}%</p>
+                            <div className="mt-2">
+                              <StrategyStatusBadges strategy={item} />
+                            </div>
                           </div>
                         </label>
-                        <div className="flex gap-2">
-                          <button onClick={() => startEditStrategy(item)} className="rounded-md bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-2.5 py-1 text-xs font-semibold transition-all duration-100">Edit</button>
-                          <button onClick={() => deleteStrategy(item.id)} className="rounded-md border border-[#5C2A35] hover:bg-red-600 hover:text-white hover:border-red-600 active:scale-95 text-[#FFBAC8] px-2.5 py-1 text-xs transition-all duration-100">Delete</button>
+                        <div className="flex flex-wrap gap-2">
+                          <button onClick={() => startEditStrategy(item)} className="rounded-md border border-[#335174] px-2 py-1 text-xs">Edit</button>
+                          <button onClick={() => runStrategyAction(item.id, "publish")} className="rounded-md border border-[#2B4A62] px-2 py-1 text-xs">Publish</button>
+                          <button onClick={() => runStrategyAction(item.id, "unpublish")} className="rounded-md border border-[#2B4A62] px-2 py-1 text-xs">Unpublish</button>
+                          <button onClick={() => runStrategyAction(item.id, "feature")} className="rounded-md border border-[#2B4A62] px-2 py-1 text-xs">Feature</button>
+                          <button onClick={() => runStrategyAction(item.id, "archive")} className="rounded-md border border-[#2B4A62] px-2 py-1 text-xs">Archive</button>
+                          <button onClick={() => deleteStrategy(item.id)} className="rounded-md border border-[#5C2A35] px-2 py-1 text-xs text-[#FFBAC8]">Delete</button>
                         </div>
                       </div>
                     </div>
@@ -767,35 +984,160 @@ export default function AdminPage() {
 
               <div className="rounded-2xl border border-[#1E2A39] bg-[#0D1725]/70 p-5 backdrop-blur">
                 <h3 className="text-lg font-semibold">{editingStrategyId ? "Edit Strategy" : "Create Strategy"}</h3>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <input value={strategyForm.name} onChange={(e) => setStrategyForm((prev) => ({ ...prev, name: e.target.value }))} placeholder="Name" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-                  <input value={strategyForm.strategy_tag} onChange={(e) => setStrategyForm((prev) => ({ ...prev, strategy_tag: e.target.value }))} placeholder="Strategy Tag" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-                  <input value={strategyForm.exchange} onChange={(e) => setStrategyForm((prev) => ({ ...prev, exchange: e.target.value }))} placeholder="Exchange" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-                  <select value={strategyForm.risk_level} onChange={(e) => setStrategyForm((prev) => ({ ...prev, risk_level: e.target.value as "low" | "medium" | "high" }))} className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2">
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                  </select>
-                  <input value={strategyForm.logo_url} onChange={(e) => setStrategyForm((prev) => ({ ...prev, logo_url: e.target.value }))} placeholder="Logo URL" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-                  <input value={strategyForm.image_url} onChange={(e) => setStrategyForm((prev) => ({ ...prev, image_url: e.target.value }))} placeholder="Cover Image URL" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-                  <input value={strategyForm.recommended_margin} onChange={(e) => setStrategyForm((prev) => ({ ...prev, recommended_margin: e.target.value }))} placeholder="Recommended Margin" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-                  <input value={strategyForm.roi_percent} onChange={(e) => setStrategyForm((prev) => ({ ...prev, roi_percent: e.target.value }))} placeholder="ROI %" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-                  <input value={strategyForm.win_rate_percent} onChange={(e) => setStrategyForm((prev) => ({ ...prev, win_rate_percent: e.target.value }))} placeholder="Win Rate %" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-                  <input value={strategyForm.mdd_percent} onChange={(e) => setStrategyForm((prev) => ({ ...prev, mdd_percent: e.target.value }))} placeholder="MDD %" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-                  <input value={strategyForm.pnl} onChange={(e) => setStrategyForm((prev) => ({ ...prev, pnl: e.target.value }))} placeholder="PNL" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-                  <input type="number" min={0} value={strategyForm.followers} onChange={(e) => setStrategyForm((prev) => ({ ...prev, followers: Number(e.target.value) }))} placeholder="Followers" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
+                <p className="mt-1 text-sm text-[#8EA9C9]">Upload a strategy for users to discover and deploy.</p>
+
+                <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                  <label className="text-sm text-[#A9C3DE]">
+                    Strategy name *
+                    <input value={strategyForm.name} onChange={(e) => setStrategyForm((prev) => ({ ...prev, name: e.target.value }))} placeholder="BankNifty Momentum" className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
+                  </label>
+                  <label className="text-sm text-[#A9C3DE]">
+                    Strategy tag (unique slug) *
+                    <input value={strategyForm.strategy_tag} onChange={(e) => setStrategyForm((prev) => ({ ...prev, strategy_tag: e.target.value }))} placeholder="banknifty-momentum" className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
+                  </label>
+                  <label className="text-sm text-[#A9C3DE]">
+                    Exchange
+                    <select value={strategyForm.exchange} onChange={(e) => setStrategyForm((prev) => ({ ...prev, exchange: e.target.value }))} className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2">
+                      <option value="Delta Exchange">Delta Exchange</option>
+                      <option value="Zerodha">Zerodha</option>
+                      <option value="Binance">Binance</option>
+                    </select>
+                  </label>
+                  <label className="text-sm text-[#A9C3DE]">
+                    Risk level
+                    <select value={strategyForm.risk_level} onChange={(e) => setStrategyForm((prev) => ({ ...prev, risk_level: e.target.value as "low" | "medium" | "high" }))} className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2">
+                      <option value="low">Low</option>
+                      <option value="medium">Medium</option>
+                      <option value="high">High</option>
+                    </select>
+                  </label>
+                  <label className="text-sm text-[#A9C3DE]">
+                    Strategy type *
+                    <select
+                      value={strategyForm.strategy_type}
+                      onChange={(e) => {
+                        const nextType = e.target.value as StrategyFormState["strategy_type"];
+                        const definition = getStrategyTypeDefinition(strategyTypeDefinitions, nextType);
+                        setStrategyForm((prev) => ({
+                          ...prev,
+                          strategy_type: nextType,
+                          parameters: definition
+                            ? parametersFromDefaults(definition.parameters)
+                            : buildDefaultParameters(nextType, strategyTypeDefinitions),
+                          signal_source:
+                            definition?.default_signal_source ??
+                            (nextType === "CUSTOM" ? "creator_webhook" : prev.signal_source),
+                          symbol: nextType === "LONDON_BREAKOUT" ? "XAUUSD" : prev.symbol,
+                          timeframe: nextType === "LONDON_BREAKOUT" ? "15m" : prev.timeframe,
+                        }));
+                      }}
+                      className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2"
+                    >
+                      {strategyTypeDefinitions.map((definition) => (
+                        <option key={definition.type} value={definition.type}>
+                          {definition.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="text-sm text-[#A9C3DE]">
+                    Signal source *
+                    <select
+                      value={strategyForm.signal_source}
+                      onChange={(e) => setStrategyForm((prev) => ({ ...prev, signal_source: e.target.value as StrategyFormState["signal_source"] }))}
+                      disabled={strategyForm.strategy_type === "CUSTOM"}
+                      className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 disabled:opacity-60"
+                    >
+                      <option value="platform_engine">Platform engine (auto)</option>
+                      <option value="creator_webhook">Creator webhook</option>
+                    </select>
+                  </label>
+                  <label className="text-sm text-[#A9C3DE]">
+                    Symbol *
+                    <input value={strategyForm.symbol} onChange={(e) => setStrategyForm((prev) => ({ ...prev, symbol: e.target.value.toUpperCase().replace(/^[#$]+/, "") }))} placeholder="XAUUSD (maps to XAUTUSD on Delta)" className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
+                    <p className="mt-1 text-xs text-[#8EA9C9]">Gold on Delta India is listed as XAUTUSD. You can enter XAUUSD — the platform resolves it automatically.</p>
+                  </label>
+                  <label className="text-sm text-[#A9C3DE]">
+                    Timeframe *
+                    <select value={strategyForm.timeframe} onChange={(e) => setStrategyForm((prev) => ({ ...prev, timeframe: e.target.value }))} className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2">
+                      <option value="1m">1m</option>
+                      <option value="5m">5m</option>
+                      <option value="15m">15m</option>
+                      <option value="1h">1h</option>
+                      <option value="4h">4h</option>
+                      <option value="1d">1d</option>
+                    </select>
+                  </label>
+                  <label className="text-sm text-[#A9C3DE]">
+                    Recommended margin ($)
+                    <input value={strategyForm.recommended_margin} onChange={(e) => setStrategyForm((prev) => ({ ...prev, recommended_margin: e.target.value }))} placeholder="1000" className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
+                  </label>
+                  <label className="text-sm text-[#A9C3DE]">
+                    ROI % (display)
+                    <input value={strategyForm.roi_percent} onChange={(e) => setStrategyForm((prev) => ({ ...prev, roi_percent: e.target.value }))} placeholder="12.5" className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
+                  </label>
+                  <label className="text-sm text-[#A9C3DE]">
+                    Win rate % (display)
+                    <input value={strategyForm.win_rate_percent} onChange={(e) => setStrategyForm((prev) => ({ ...prev, win_rate_percent: e.target.value }))} placeholder="68" className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
+                  </label>
+                  <label className="text-sm text-[#A9C3DE]">
+                    Max drawdown % (display)
+                    <input value={strategyForm.mdd_percent} onChange={(e) => setStrategyForm((prev) => ({ ...prev, mdd_percent: e.target.value }))} placeholder="8" className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
+                  </label>
+                  <label className="text-sm text-[#A9C3DE] sm:col-span-2">
+                    Logo URL (optional)
+                    <input value={strategyForm.logo_url} onChange={(e) => setStrategyForm((prev) => ({ ...prev, logo_url: e.target.value }))} placeholder="https://..." className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
+                  </label>
+                  <label className="text-sm text-[#A9C3DE] sm:col-span-2">
+                    Cover image URL (optional)
+                    <input value={strategyForm.image_url} onChange={(e) => setStrategyForm((prev) => ({ ...prev, image_url: e.target.value }))} placeholder="https://..." className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
+                  </label>
                 </div>
 
-                <textarea value={strategyForm.description} onChange={(e) => setStrategyForm((prev) => ({ ...prev, description: e.target.value }))} placeholder="Description" rows={3} className="mt-3 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-
-                <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                  <input value={strategyForm.chart_points.join(",")} onChange={(e) => setStrategyForm((prev) => ({ ...prev, chart_points: e.target.value.split(",").map((item) => item.trim()) }))} placeholder="Chart points comma separated" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-                  <input value={strategyForm.chart_points.join(",")} onChange={(e) => setStrategyForm((prev) => ({ ...prev, chart_points: e.target.value.split(",").map((item) => item.trim()) }))} placeholder="Chart points comma separated" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 focus:border-emerald-500 focus:outline-none" />
-                  <input value={strategyForm.academy_slugs.join(",")} onChange={(e) => setStrategyForm((prev) => ({ ...prev, academy_slugs: e.target.value.split(",").map((item) => item.trim()) }))} placeholder="Linked academy slugs" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 focus:border-emerald-500 focus:outline-none" />
+                <div className="mt-4 rounded-xl border border-[#243447] bg-[#0B1522] p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <h4 className="text-sm font-semibold text-[#D7E8FA]">Strategy parameters</h4>
+                      <p className="text-xs text-[#8EA9C9]">Used for backtest, deploy, and live runner.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={runStrategyBacktest}
+                      disabled={backtesting || strategyForm.strategy_type === "CUSTOM"}
+                      className="rounded-lg border border-[#2F6F9B] px-3 py-2 text-xs font-semibold text-[#B9DCFF] disabled:opacity-50"
+                    >
+                      {backtesting ? "Running..." : "Run Backtest & Fill Stats"}
+                    </button>
+                  </div>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    <StrategyParameterFields
+                      fields={activeStrategyDefinition?.parameters ?? []}
+                      values={strategyForm.parameters}
+                      onChange={(key, value) =>
+                        setStrategyForm((prev) => ({
+                          ...prev,
+                          parameters: { ...prev.parameters, [key]: value },
+                        }))
+                      }
+                    />
+                  </div>
+                  {backtestSummary ? (
+                    <p className="mt-3 text-xs text-[#AEE7B8]">{backtestSummary}</p>
+                  ) : null}
+                  {strategyForm.signal_source === "creator_webhook" && strategyForm.strategy_tag ? (
+                    <p className="mt-3 text-xs text-[#8EA9C9]">
+                      Webhook URL: POST /api/v1/strategy/webhook/{strategyForm.strategy_tag}
+                    </p>
+                  ) : null}
                 </div>
+
+                <label className="mt-4 block text-sm text-[#A9C3DE]">
+                  Description
+                  <textarea value={strategyForm.description} onChange={(e) => setStrategyForm((prev) => ({ ...prev, description: e.target.value }))} placeholder="Explain how this strategy works..." rows={4} className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
+                </label>
 
                 <div className="mt-3 flex flex-wrap items-center gap-2">
-                  <input value={tagInput} onChange={(e) => setTagInput(e.target.value)} placeholder="Add tag" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none" />
+                  <input value={tagInput} onChange={(e) => setTagInput(e.target.value)} placeholder="Add tag" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm" />
                   <button
                     onClick={() => {
                       const normalized = tagInput.trim().toLowerCase();
@@ -805,7 +1147,7 @@ export default function AdminPage() {
                       }
                       setTagInput("");
                     }}
-                    className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-3 py-2 text-sm font-semibold transition-all duration-100"
+                    className="rounded-lg border border-[#2A3B50] px-3 py-2 text-sm"
                   >
                     Add Tag
                   </button>
@@ -822,9 +1164,25 @@ export default function AdminPage() {
                 </div>
 
                 <div className="mt-4 flex gap-2">
-                  <button onClick={saveStrategy} disabled={saving} className="rounded-xl bg-gradient-to-r from-[#0EA5E9] to-[#10B981] hover:from-[#10B981] hover:to-[#4ADE80] active:scale-95 px-4 py-2 text-sm font-semibold text-white transition-all duration-150 disabled:opacity-60">{saving ? "Saving..." : editingStrategyId ? "Update Strategy" : "Create Strategy"}</button>
-                  {editingStrategyId ? <button onClick={resetStrategyForm} className="rounded-xl border border-[#2E4762] hover:bg-[#121E30] active:scale-95 px-4 py-2 text-sm font-semibold transition-all duration-100">Cancel</button> : null}
+                  <button onClick={saveStrategy} disabled={saving} className="rounded-xl bg-gradient-to-r from-[#2563EB] to-[#0EA5E9] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60">{saving ? "Saving..." : editingStrategyId ? "Update Strategy" : "Create Strategy"}</button>
+                  {editingStrategyId ? <button onClick={resetStrategyForm} className="rounded-xl border border-[#2E4762] px-4 py-2 text-sm">Cancel</button> : null}
                 </div>
+
+                {editingStrategyId ? (
+                  <div className="mt-5 rounded-xl border border-[#27384D] bg-[#0F1D2F] p-4">
+                    <h4 className="text-sm font-semibold text-[#DDE9F7]">Additional analytics</h4>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                      <div className="rounded-lg border border-[#35506E] bg-[#0C1624] p-3 text-xs"><p className="text-[#80A8CE]">Followers</p><p className="mt-1 text-base font-semibold">{strategyForm.followers}</p></div>
+                      <div className="rounded-lg border border-[#35506E] bg-[#0C1624] p-3 text-xs"><p className="text-[#80A8CE]">Live PnL</p><p className="mt-1 text-base font-semibold">{strategyForm.pnl}</p></div>
+                      <div className="rounded-lg border border-[#35506E] bg-[#0C1624] p-3 text-xs"><p className="text-[#80A8CE]">ROI %</p><p className="mt-1 text-base font-semibold">{strategyForm.roi_percent}%</p></div>
+                      <div className="rounded-lg border border-[#35506E] bg-[#0C1624] p-3 text-xs"><p className="text-[#80A8CE]">Win Rate %</p><p className="mt-1 text-base font-semibold">{strategyForm.win_rate_percent}%</p></div>
+                      <div className="rounded-lg border border-[#35506E] bg-[#0C1624] p-3 text-xs"><p className="text-[#80A8CE]">MDD %</p><p className="mt-1 text-base font-semibold">{strategyForm.mdd_percent}%</p></div>
+                      <div className="rounded-lg border border-[#35506E] bg-[#0C1624] p-3 text-xs"><p className="text-[#80A8CE]">Win/Loss Ratio</p><p className="mt-1 text-base font-semibold">{editingPerformance?.win_loss_ratio ?? "-"}</p></div>
+                      <div className="rounded-lg border border-[#35506E] bg-[#0C1624] p-3 text-xs"><p className="text-[#80A8CE]">Risk Reward Ratio</p><p className="mt-1 text-base font-semibold">{editingPerformance?.average_rr ?? "-"}</p></div>
+                      <div className="rounded-lg border border-[#35506E] bg-[#0C1624] p-3 text-xs"><p className="text-[#80A8CE]">Open Positions</p><p className="mt-1 text-base font-semibold">{editingPerformance?.open_positions ?? 0}</p></div>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             </div>
 
@@ -841,9 +1199,9 @@ export default function AdminPage() {
                 <div className="p-4">
                   <div className="flex items-center gap-3">
                     {strategyForm.logo_url ? (
-                      <Image src={strategyForm.logo_url} alt="strategy-logo" width={44} height={44} className="h-11 w-11 rounded-xl border border-[#2E6153] object-cover" unoptimized />
+                      <Image src={strategyForm.logo_url} alt="strategy-logo" width={44} height={44} className="h-11 w-11 rounded-xl border border-[#35506E] object-cover" unoptimized />
                     ) : (
-                      <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#2E6153] bg-[#10251D] text-xs text-[#C4FCE2] font-semibold">LOGO</div>
+                      <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#35506E] bg-[#13243A] text-xs text-[#A8C0DB]">LOGO</div>
                     )}
                     <div>
                       <p className="font-semibold">{strategyForm.name || "Strategy Name"}</p>
@@ -924,8 +1282,8 @@ export default function AdminPage() {
                 <textarea value={articleForm.content_markdown} onChange={(e) => setArticleForm((prev) => ({ ...prev, content_markdown: e.target.value }))} placeholder="Markdown content" rows={8} className="w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 font-mono text-sm" />
                 <label className="flex items-center gap-2 text-sm text-[#A8C2DE]"><input type="checkbox" checked={articleForm.is_published} onChange={(e) => setArticleForm((prev) => ({ ...prev, is_published: e.target.checked }))} />Publish</label>
                 <div className="flex gap-2">
-                  <button onClick={saveArticle} className="rounded-xl bg-gradient-to-r from-[#0EA5E9] to-[#10B981] hover:from-[#10B981] hover:to-[#4ADE80] active:scale-95 px-4 py-2 text-sm font-semibold text-white transition-all duration-150">{editingArticleId ? "Update" : "Create"} Article</button>
-                  {editingArticleId ? <button onClick={() => { setEditingArticleId(null); setArticleForm(emptyArticle); }} className="rounded-xl border border-[#2E4762] hover:bg-[#121E30] active:scale-95 px-4 py-2 text-sm font-semibold transition-all duration-100">Cancel</button> : null}
+                  <button onClick={saveArticle} className="rounded-xl bg-gradient-to-r from-[#2563EB] to-[#0EA5E9] px-4 py-2 text-sm font-semibold">{editingArticleId ? "Update" : "Create"} Article</button>
+                  {editingArticleId ? <button onClick={() => { setEditingArticleId(null); setArticleForm(emptyArticle); }} className="rounded-xl border border-[#2E4762] px-4 py-2 text-sm">Cancel</button> : null}
                 </div>
               </div>
             </div>
@@ -933,7 +1291,7 @@ export default function AdminPage() {
             <div className="rounded-2xl border border-[#1E2A39] bg-[#0D1725]/70 p-5 backdrop-blur">
               <div className="flex items-center justify-between gap-2">
                 <h3 className="font-semibold">Articles</h3>
-                <input value={articleSearch} onChange={(e) => setArticleSearch(e.target.value)} placeholder="Search articles by title, slug, or summary..." className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm w-72 focus:border-emerald-500 focus:outline-none transition-colors duration-150" />
+                <input value={articleSearch} onChange={(e) => setArticleSearch(e.target.value)} placeholder="Search articles" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm" />
               </div>
               <div className="mt-3 max-h-[420px] space-y-2 overflow-auto pr-1">
                 {filteredArticles.map((item) => (
@@ -944,8 +1302,8 @@ export default function AdminPage() {
                         <p className="text-xs text-[#8EA8C7]">{item.slug} - {item.is_published ? "Published" : "Draft"}</p>
                       </div>
                       <div className="flex gap-2">
-                        <button onClick={() => { setEditingArticleId(item.id); setArticleForm({ title: item.title, slug: item.slug, category: item.category, summary: item.summary, content_markdown: item.content_markdown, is_published: item.is_published }); }} className="rounded-md bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-2.5 py-1 text-xs font-semibold transition-all duration-100">Edit</button>
-                        <button onClick={() => removeArticle(item.id)} className="rounded-md border border-[#5C2A35] hover:bg-red-600 hover:text-white hover:border-red-600 active:scale-95 text-[#FFB9C7] px-2.5 py-1 text-xs transition-all duration-100">Delete</button>
+                        <button onClick={() => { setEditingArticleId(item.id); setArticleForm({ title: item.title, slug: item.slug, category: item.category, summary: item.summary, content_markdown: item.content_markdown, is_published: item.is_published }); }} className="rounded-md border border-[#315375] px-2 py-1 text-xs">Edit</button>
+                        <button onClick={() => removeArticle(item.id)} className="rounded-md border border-[#5C2A35] px-2 py-1 text-xs text-[#FFB9C7]">Delete</button>
                       </div>
                     </div>
                   </div>
@@ -956,92 +1314,24 @@ export default function AdminPage() {
         ) : null}
 
         {activeTab === "users" ? (
-          <section className="mt-5 rounded-2xl border border-[#1E2A39] bg-[#0D1725]/70 p-5 backdrop-blur">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-lg font-semibold">Users Management</h2>
-              <div className="flex gap-2">
-                <input value={userSearch} onChange={(e) => setUserSearch(e.target.value)} placeholder="Search users by name, email..." className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none transition-colors duration-150" />
-                <select value={kycFilter} onChange={(e) => {
-                  const nextKyc = e.target.value;
-                  setKycFilter(nextKyc);
-                  void loadUsers(nextKyc);
-                }} className="rounded-lg border border-[#2A3B50] hover:border-[#4ADE80] focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-[#0F1B2B] px-3 py-2 text-sm text-[#ECF5FF] outline-none transition-colors duration-150 cursor-pointer">
-                  <option value="all" className="bg-[#0F1B2B] text-white">All KYC</option>
-                  <option value="pending" className="bg-[#0F1B2B] text-white">Pending</option>
-                  <option value="approved" className="bg-[#0F1B2B] text-white">Approved</option>
-                  <option value="rejected" className="bg-[#0F1B2B] text-white">Rejected</option>
-                </select>
-                <button onClick={() => void loadUsers()} className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Apply</button>
-              </div>
-            </div>
-
-            <div className="mt-4 overflow-x-auto">
-              <table className="min-w-full text-sm">
-                <thead>
-                  <tr className="border-b border-[#2A3C53] text-left text-xs uppercase tracking-[0.08em] text-[#8CA7C6]">
-                    <th className="px-2 py-2">User</th>
-                    <th className="px-2 py-2">KYC</th>
-                    <th className="px-2 py-2">Subscription</th>
-                    <th className="px-2 py-2">Wallet</th>
-                    <th className="px-2 py-2">Exchanges</th>
-                    <th className="px-2 py-2">Followers</th>
-                    <th className="px-2 py-2">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users?.items.map((item) => (
-                    <tr key={item.id} className="border-b border-[#1E2D40]">
-                      <td className="px-2 py-3"><p className="font-medium">{item.full_name}</p><p className="text-xs text-[#89A4C3]">{item.email}</p></td>
-                      <td className="px-2 py-3">{item.kyc_status}</td>
-                      <td className="px-2 py-3">{item.subscription_status}</td>
-                      <td className="px-2 py-3">${formatCurrency(item.wallet_balance)}</td>
-                      <td className="px-2 py-3">{item.linked_exchange_accounts}</td>
-                      <td className="px-2 py-3">{item.followers}</td>
-                      <td className="px-2 py-3"><button onClick={() => banToggleUser(item.id, item.is_active)} className={`rounded-md px-2.5 py-1 text-xs font-semibold active:scale-95 transition-all duration-100 ${item.is_active ? "border border-[#6A2F39] text-[#FFC3CE] hover:bg-red-600 hover:text-white hover:border-red-600" : "bg-emerald-600 hover:bg-emerald-700 text-white"}`}>{item.is_active ? "Ban" : "Unban"}</button></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
+          <AdminUsersTab
+            users={users}
+            userSearch={userSearch}
+            kycFilter={kycFilter}
+            subscriptionFilter={subscriptionFilter}
+            onUserSearchChange={setUserSearch}
+            onKycFilterChange={setKycFilter}
+            onSubscriptionFilterChange={setSubscriptionFilter}
+            onApply={() => void loadUsers()}
+            onBanToggle={banToggleUser}
+            onSaveRiskLimits={saveUserRiskLimits}
+            formatCurrency={formatCurrency}
+          />
         ) : null}
 
-        {activeTab === "trades" ? (
-          <section className="mt-5 rounded-2xl border border-[#1E2A39] bg-[#0D1725]/70 p-5 backdrop-blur">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-lg font-semibold">Trades Management</h2>
-              <div className="flex gap-2">
-                <input value={tradeSearch} onChange={(e) => setTradeSearch(e.target.value)} placeholder="Search symbol/strategy" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm" />
-                <select value={tradeStatusFilter} onChange={(e) => setTradeStatusFilter(e.target.value)} className="rounded-lg border border-[#2A3B50] hover:border-[#4ADE80] focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-[#0F1B2B] px-3 py-2 text-sm text-[#ECF5FF] outline-none transition-colors duration-150 cursor-pointer">
-                  <option value="all" className="bg-[#0F1B2B] text-white">All Status</option>
-                  <option value="OPEN" className="bg-[#0F1B2B] text-white">Open</option>
-                  <option value="PENDING" className="bg-[#0F1B2B] text-white">Pending</option>
-                  <option value="CLOSED" className="bg-[#0F1B2B] text-white">Closed</option>
-                  <option value="CANCELLED" className="bg-[#0F1B2B] text-white">Cancelled</option>
-                </select>
-                <button onClick={() => void loadTrades()} className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Apply</button>
-                <button onClick={syncTrades} className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Sync Exchange</button>
-              </div>
-            </div>
+        {activeTab === "kyc" ? <AdminKYCTab onMessage={setMessage} /> : null}
 
-            <div className="mt-4 space-y-2">
-              {trades?.items.map((item) => (
-                <div key={item.id} className="rounded-xl border border-[#24384E] bg-[#101D30] p-3">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div>
-                      <p className="font-medium">{item.symbol} {item.side} - {item.status}</p>
-                      <p className="text-xs text-[#89A5C6]">Qty {item.quantity} @ {item.price} | PNL {item.pnl} | {formatDate(item.created_at)}</p>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <input value={manualClosePrice[item.id] ?? ""} onChange={(e) => setManualClosePrice((prev) => ({ ...prev, [item.id]: e.target.value }))} placeholder="Close price" className="w-28 rounded-md border border-[#2A3B50] bg-[#0F1B2B] px-2 py-1 text-xs" />
-                      <button onClick={() => manualCloseTrade(item.id)} className="rounded-md border border-[#315375] px-2 py-1 text-xs">Manual Close</button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        ) : null}
+        {activeTab === "trades" ? <AdminTradesTab onMessage={setMessage} /> : null}
 
         {activeTab === "notifications" ? (
           <section className="mt-5 rounded-2xl border border-[#1E2A39] bg-[#0D1725]/70 p-5 backdrop-blur">
@@ -1056,7 +1346,7 @@ export default function AdminPage() {
               </select>
             </div>
             <textarea value={notificationMessage} onChange={(e) => setNotificationMessage(e.target.value)} placeholder="Notification message" rows={4} className="mt-3 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-            <button onClick={broadcastNotification} className="mt-3 rounded-xl bg-gradient-to-r from-[#0EA5E9] to-[#10B981] hover:from-[#10B981] hover:to-[#4ADE80] active:scale-95 px-4 py-2 text-sm font-semibold transition-all duration-150">Broadcast to Users</button>
+            <button onClick={broadcastNotification} className="mt-3 rounded-xl bg-gradient-to-r from-[#0EA5E9] to-[#10B981] px-4 py-2 text-sm font-semibold">Broadcast to Users</button>
           </section>
         ) : null}
 
@@ -1075,7 +1365,7 @@ export default function AdminPage() {
                 <label className="flex items-center gap-2 text-sm text-[#A8C2DE]"><input type="checkbox" checked={platformSettings.maintenance_mode} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, maintenance_mode: e.target.checked } : prev))} />Maintenance Mode</label>
               </div>
             ) : null}
-             <button onClick={saveSettings} className="mt-4 rounded-xl bg-gradient-to-r from-[#0EA5E9] to-[#10B981] hover:from-[#10B981] hover:to-[#4ADE80] active:scale-95 px-4 py-2 text-sm font-semibold transition-all duration-150">Save Settings</button>
+            <button onClick={saveSettings} className="mt-4 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#0EA5E9] px-4 py-2 text-sm font-semibold">Save Settings</button>
           </section>
         ) : null}
 
@@ -1084,17 +1374,13 @@ export default function AdminPage() {
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-lg font-semibold">Audit & Security Logs</h2>
               <div className="flex gap-2">
-                <select value={auditSeverity} onChange={(e) => {
-                  const nextSeverity = e.target.value;
-                  setAuditSeverity(nextSeverity);
-                  void loadAudit(nextSeverity);
-                }} className="rounded-lg border border-[#2A3B50] hover:border-[#4ADE80] focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-[#0F1B2B] px-3 py-2 text-sm text-[#ECF5FF] outline-none transition-colors duration-150 cursor-pointer">
-                  <option value="all" className="bg-[#0F1B2B] text-white">All severity</option>
-                  <option value="info" className="bg-[#0F1B2B] text-white">Info</option>
-                  <option value="warning" className="bg-[#0F1B2B] text-white">Warning</option>
-                  <option value="error" className="bg-[#0F1B2B] text-white">Error</option>
+                <select value={auditSeverity} onChange={(e) => setAuditSeverity(e.target.value)} className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm">
+                  <option value="all">All severity</option>
+                  <option value="info">Info</option>
+                  <option value="warning">Warning</option>
+                  <option value="error">Error</option>
                 </select>
-                <button onClick={() => void loadAudit()} className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Filter</button>
+                <button onClick={() => void loadAudit()} className="rounded-lg border border-[#2E4762] px-3 py-2 text-sm">Filter</button>
               </div>
             </div>
 
@@ -1103,15 +1389,7 @@ export default function AdminPage() {
                 <div key={item.id} className="rounded-xl border border-[#27384D] bg-[#0F1D2F] p-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="font-medium">{item.action}</p>
-                    <span className={`rounded-full px-2 py-1 text-xs border ${
-                      item.severity === "warning"
-                        ? "bg-[#44212A] text-[#FFB7C7] border-[#703543]"
-                        : item.severity === "error"
-                        ? "bg-[#4E1E1E] text-[#FFB8B8] border-[#8A3030]"
-                        : item.severity === "info"
-                        ? "bg-[#10251D] text-[#B9F6D2] border-[#2E6153]"
-                        : "bg-[#17314A] text-[#B5D8FF] border-[#2A527A]"
-                    }`}>{item.severity}</span>
+                    <span className={`rounded-full px-2 py-1 text-xs ${item.severity === "warning" ? "bg-[#44212A] text-[#FFB7C7]" : item.severity === "error" ? "bg-[#4E1E1E] text-[#FFB8B8]" : "bg-[#17314A] text-[#B5D8FF]"}`}>{item.severity}</span>
                   </div>
                   <p className="mt-1 text-xs text-[#8CA7C8]">{item.target_type} #{item.target_id ?? "n/a"} | actor {item.actor_user_id ?? "system"}</p>
                   <p className="mt-1 text-xs text-[#728CAA]">{formatDate(item.created_at)}</p>
@@ -1121,6 +1399,6 @@ export default function AdminPage() {
           </section>
         ) : null}
       </div>
-    </main>
+    </div>
   );
 }
