@@ -1034,7 +1034,7 @@ export default function AdminPage() {
               </select>
             </div>
             <textarea value={notificationMessage} onChange={(e) => setNotificationMessage(e.target.value)} placeholder="Notification message" rows={4} className="mt-3 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-            <button onClick={broadcastNotification} className="mt-3 rounded-xl bg-gradient-to-r from-[#0EA5E9] to-[#10B981] px-4 py-2 text-sm font-semibold">Broadcast to Users</button>
+            <button onClick={broadcastNotification} className="mt-3 rounded-xl bg-gradient-to-r from-[#0EA5E9] to-[#10B981] hover:from-[#10B981] hover:to-[#4ADE80] px-4 py-2 text-sm font-semibold transition-all duration-300">Broadcast to Users</button>
           </section>
         ) : null}
 
