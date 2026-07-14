@@ -104,7 +104,7 @@ export function AdminKYCTab({ onMessage }: Props) {
                 ) : null}
               </div>
               {filter === "pending" ? (
-                <div className="flex min-w-[220px] flex-col gap-2">
+                <div className="flex min-w-55 flex-col gap-2">
                   <input
                     value={rejectReason[record.user_id] || ""}
                     onChange={(e) => setRejectReason((prev) => ({ ...prev, [record.user_id]: e.target.value }))}

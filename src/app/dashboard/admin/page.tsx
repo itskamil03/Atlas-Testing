@@ -363,11 +363,20 @@ export default function AdminPage() {
   };
 
   const loadTrades = async () => {
-    const params: Record<string, string | number> = { page: 1, page_size: 20 };
-    if (tradeSearch) params.search = tradeSearch;
-    if (tradeStatusFilter !== "all") params.status_filter = tradeStatusFilter;
-    const res = await api.get<AdminTradeListResponse>("/admin/trades", { params });
-    setTrades(res.data);
+    setError("");
+    setMessage("");
+    try {
+      const params: Record<string, string | number> = { page: 1, page_size: 20 };
+      if (tradeSearch) params.search = tradeSearch;
+      if (tradeStatusFilter !== "all") params.status_filter = tradeStatusFilter;
+      console.log("Admin - loading trades with params:", params);
+      const res = await api.get<AdminTradeListResponse>("/admin/trades", { params });
+      setTrades(res.data);
+      console.log("Admin - trades loaded successfully:", res.data);
+    } catch (err: unknown) {
+      console.error("Admin - failed to load trades:", err);
+      setError(getApiErrorMessage(err, "Failed to load trades."));
+    }
   };
 
   const loadAudit = async () => {
@@ -531,10 +540,15 @@ export default function AdminPage() {
   };
 
   const syncTrades = async () => {
+    setError("");
+    setMessage("");
     try {
+      console.log("Admin - queuing trade sync");
       await api.post("/admin/trades/sync");
       setMessage("Trade sync queued.");
+      console.log("Admin - trade sync queued successfully");
     } catch (err: unknown) {
+      console.error("Admin - failed to queue trade sync:", err);
       setError(getApiErrorMessage(err, "Failed to queue trade sync."));
     }
   };
@@ -983,7 +997,7 @@ export default function AdminPage() {
                   <option value="CLOSED">Closed</option>
                   <option value="CANCELLED">Cancelled</option>
                 </select>
-                <button onClick={() => void loadTrades()} className="rounded-lg border border-[#2E4762] px-3 py-2 text-sm">Apply</button>
+                <button onClick={() => void loadTrades()} className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 text-sm font-semibold transition">Apply</button>
                 <button onClick={syncTrades} className="rounded-lg border border-[#2E6153] px-3 py-2 text-sm text-[#C4FCE2]">Sync Exchange</button>
               </div>
             </div>
