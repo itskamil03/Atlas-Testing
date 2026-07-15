@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import useEmblaCarousel from 'embla-carousel-react';
 
 import { api } from "@/lib/api";
-import { clearTokens, getAccessToken } from "@/lib/auth";
+import { clearTokens, getAccessToken, isDemoSession } from "@/lib/auth";
 import { getAdminRoute, setAdminViewMode } from "@/lib/adminRoutes";
 import { extractApiErrorMessage } from "@/lib/errors";
-import type { StrategyCard, UserProfile } from "@/lib/types";
+import type { StrategyCard, UserProfile, SubscriptionStatus } from "@/lib/types";
 
 const rawDummyStrategies = [
   {
@@ -299,6 +299,7 @@ export default function StrategiesPage() {
   const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+  const [hasSubscription, setHasSubscription] = useState(false);
 
   // FAQ state
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
@@ -307,9 +308,19 @@ export default function StrategiesPage() {
     setLoading(true);
     setError(null);
     try {
-      const [profileRes] = await Promise.all([api.get<UserProfile>("/auth/me")]);
+      const [profileRes, subRes] = await Promise.all([
+        api.get<UserProfile>("/auth/me"),
+        api.get<SubscriptionStatus>("/subscriptions/me").catch(() => null),
+      ]);
+
+      const isAdmin = profileRes.data.role === "admin";
+      const isDemo = isDemoSession();
+      const hasActiveSub = subRes?.data?.has_active_subscription ?? false;
+
+      setHasSubscription(isAdmin || isDemo || hasActiveSub);
+
       const viewMode = typeof window !== "undefined" ? sessionStorage.getItem("viewMode") : null;
-      if (profileRes.data.role === "admin" && viewMode !== "trader") {
+      if (isAdmin && viewMode !== "trader") {
         setAdminViewMode();
         router.replace(getAdminRoute("strategies"));
         return;
@@ -589,22 +600,24 @@ export default function StrategiesPage() {
             )}
             </div>
 
-            <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/55 px-4 dark:bg-[#040607]/65">
-              <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white px-5 py-6 text-center shadow-xl dark:border-[#26313D] dark:bg-[#0B1018]">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-[#91A0AF]">Subscription required</p>
-                <h2 className="mt-2 text-2xl font-semibold text-gray-900 dark:text-[#F6FAFF]">Unlock strategy access</h2>
-                <p className="mt-2 text-sm leading-6 text-gray-500 dark:text-[#9AA6B2]">
-                  Choose a subscription plan to view published strategies and start exploring automated trading systems.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => router.push("/dashboard/subscription")}
-                  className="mt-5 rounded-xl bg-[#9BFF00] px-5 py-3 text-sm font-semibold text-[#11140D] transition hover:bg-[#B7FF45]"
-                >
-                  Go to Subscription Plan
-                </button>
+            {!hasSubscription && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/55 px-4 dark:bg-[#040607]/65">
+                <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white px-5 py-6 text-center shadow-xl dark:border-[#26313D] dark:bg-[#0B1018]">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-[#91A0AF]">Subscription required</p>
+                  <h2 className="mt-2 text-2xl font-semibold text-gray-900 dark:text-[#F6FAFF]">Unlock strategy access</h2>
+                  <p className="mt-2 text-sm leading-6 text-gray-500 dark:text-[#9AA6B2]">
+                    Choose a subscription plan to view published strategies and start exploring automated trading systems.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => router.push("/dashboard/subscription")}
+                    className="mt-5 rounded-xl bg-[#9BFF00] px-5 py-3 text-sm font-semibold text-[#11140D] transition hover:bg-[#B7FF45]"
+                  >
+                    Go to Subscription Plan
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
           </section>
         )}
 
