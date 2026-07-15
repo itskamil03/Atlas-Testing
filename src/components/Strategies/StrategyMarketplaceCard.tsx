@@ -146,12 +146,12 @@ export function StrategyMarketplaceCard({
               ? onMirror
               : onConnectBroker
         }
-        className={`mt-5 w-full rounded-2xl px-4 py-3 text-sm font-semibold transition ${
+        className={`mt-5 w-full rounded-full px-4 py-3 text-sm font-semibold transition ${
           isLocked
-            ? "border border-[#FFD56A]/40 text-[#FFD56A] hover:bg-[#FFD56A]/10"
+            ? "border border-[#FFD56A] text-[#FFD56A] hover:bg-[#FFD56A]/10"
             : hasBroker
               ? "bg-[#9BFF00] text-[#11140D] hover:bg-[#B7FF45]"
-              : "border border-[#9BFF00]/40 text-[#9BFF00] hover:bg-[#9BFF00]/10"
+              : "border border-[#9BFF00] text-[#9BFF00] hover:bg-[#9BFF00]/10"
         }`}
       >
         {isLocked ? "Upgrade to Unlock" : hasBroker ? "Deploy Strategy" : "Connect to Broker"}
