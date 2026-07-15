@@ -578,7 +578,7 @@ function ProfilePageInner() {
   };
 
   return (
-    <div style={{ zoom: 0.85 }}>
+    <div>
       <div className="mx-auto flex w-full max-w-[1100px] flex-col px-4 py-6 sm:px-6 lg:px-8">
 
         <section className="grid gap-6 lg:grid-cols-[220px_1fr]">
@@ -1094,7 +1094,7 @@ export default function ProfilePage() {
     <Suspense
       fallback={
         <main className="min-h-screen bg-[#050607] text-[#E8ECEF]">
-          <div className="mx-auto w-full max-w-[1100px] px-4 py-6 sm:px-6 lg:px-8" style={{ zoom: 0.85 }}>
+          <div className="mx-auto w-full max-w-[1100px] px-4 py-6 sm:px-6 lg:px-8">
             <div className="rounded-2xl border border-[#1A1E23] bg-[#0A0D13] px-4 py-4 text-sm text-[#9AA5B1]">
               Loading profile...
             </div>
