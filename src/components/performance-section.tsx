@@ -34,7 +34,7 @@ export default function PerformanceSection() {
                 </div>
 
                 {/* ── Equity Curve ── */}
-                <div className="mb-8">
+                <div className="mb-8 max-w-[80%] mx-auto w-full">
                     <EquityCurve />
                 </div>
 
