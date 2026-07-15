@@ -364,7 +364,7 @@ export default function SignupPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-secondary disabled:opacity-50"
+                    className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 text-sm font-semibold transition-all duration-100 disabled:opacity-50"
                   >
                     {loading ? 'Verifying...' : 'Verify OTP'}
                   </button>
@@ -390,7 +390,7 @@ export default function SignupPage() {
                 <button
                   type="submit"
                   disabled={loading || !termsAccepted}
-                  className="w-full rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-secondary disabled:opacity-50"
+                  className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 text-sm font-semibold transition-all duration-100 disabled:opacity-50"
                 >
                   {loading ? 'Creating Account...' : 'Create Account'}
                 </button>
@@ -399,7 +399,7 @@ export default function SignupPage() {
               <button
                 type="submit"
                 disabled={loading || !!passwordError || !!confirmError}
-                className="w-full rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-secondary disabled:opacity-50"
+                className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 text-sm font-semibold transition-all duration-100 disabled:opacity-50"
               >
                 {loading ? 'Sending OTP...' : 'Send OTP'}
               </button>

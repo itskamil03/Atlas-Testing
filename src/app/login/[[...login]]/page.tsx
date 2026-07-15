@@ -252,7 +252,7 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full rounded-xl bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-[0.98] text-[#11140D] px-4 py-3 text-sm font-semibold transition-all duration-100"
+                            className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white px-4 py-3 text-sm font-semibold transition-all duration-100"
                         >
                             {loading ? 'Please wait...' : challengeId ? 'Verify OTP' : 'Login to Account'}
                         </button>
