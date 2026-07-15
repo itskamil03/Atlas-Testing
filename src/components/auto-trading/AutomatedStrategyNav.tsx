@@ -9,14 +9,14 @@ type AutomatedStrategyNavProps = {
 
 export function AutomatedStrategyNav({ strategyId, active }: AutomatedStrategyNavProps) {
   const links: Array<{ href: string; label: string; key: NavKey }> = [
-    { href: "/strategies", label: "Strategies", key: "marketplace" },
-    { href: "/my-strategies", label: "My Strategies", key: "list" },
+    { href: "/dashboard/strategies", label: "Strategies", key: "marketplace" },
+    { href: "/dashboard/automated-strategies", label: "My Strategies", key: "list" },
   ];
 
   if (strategyId) {
     links.push(
-      { href: `/my-strategies/${strategyId}`, label: "Details", key: "detail" },
-      { href: `/my-strategies/${strategyId}/trades`, label: "Trades", key: "trades" },
+      { href: `/dashboard/automated-strategies/${strategyId}`, label: "Details", key: "detail" },
+      { href: `/dashboard/automated-strategies/${strategyId}/trades`, label: "Trades", key: "trades" },
     );
   }
 

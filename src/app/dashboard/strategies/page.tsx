@@ -488,7 +488,7 @@ export default function StrategiesPage() {
 
         {/* CTA */}
         <button
-          onClick={() => router.push(`/dashboard/strategy/${strategy.id}`)}
+          onClick={() => router.push(`/dashboard/strategies/${strategy.strategy_tag}`)}
           className="mt-4 w-full rounded-xl bg-[#9BFF00] px-4 py-2 font-semibold text-[#11140D] hover:bg-[#B7FF45] transition-colors duration-200"
         >
           Explore Strategy

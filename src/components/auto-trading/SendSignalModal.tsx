@@ -201,7 +201,7 @@ export function SendSignalModal({
           <p className="mt-4 rounded-xl border border-[#4A4428] bg-[#2A2414] px-3 py-2.5 text-sm text-[#F5D98B]">
             Auto-trading is not running.{" "}
             {automatedStrategyId ? (
-              <Link href={`/my-strategies/${automatedStrategyId}`} className="text-[#9BFF00] underline">
+              <Link href={`/dashboard/automated-strategies/${automatedStrategyId}/dashboard`} className="text-[#9BFF00] underline">
                 Open My Strategies
               </Link>
             ) : null}{" "}
@@ -241,7 +241,7 @@ export function SendSignalModal({
 
             {automatedStrategyId ? (
               <p className="mt-3 text-center text-xs text-[#6B7785]">
-                <Link href={`/my-strategies/${automatedStrategyId}`} className="text-[#9BFF00] hover:underline">
+                <Link href={`/dashboard/automated-strategies/${automatedStrategyId}/dashboard`} className="text-[#9BFF00] hover:underline">
                   Manage deployment & controls →
                 </Link>
               </p>
