@@ -211,9 +211,7 @@ export default function StrategiesPage() {
                       hasBroker={hasBroker}
                       onMirror={() => router.push(`/dashboard/strategies/${encodeURIComponent(strategy.strategy_tag)}`)}
                       onConnectBroker={() =>
-                        requireBroker(`/dashboard/strategies/${encodeURIComponent(strategy.strategy_tag)}`, () =>
-                          router.push(`/dashboard/strategies/${encodeURIComponent(strategy.strategy_tag)}`),
-                        )
+                        router.push(`/dashboard/strategies/${encodeURIComponent(strategy.strategy_tag)}`)
                       }
                       onUpgrade={() => router.push("/dashboard/subscription")}
                     />

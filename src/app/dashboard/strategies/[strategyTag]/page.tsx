@@ -94,7 +94,7 @@ export default function StrategyDetailPage() {
 
   useEffect(() => {
     if (searchParams.get("deploy") !== "1" || myStrategiesLoading) return;
-    requireBroker(`/strategies/${encodeURIComponent(strategyTag)}?deploy=1`, () => {
+    requireBroker(`/dashboard/strategies/${encodeURIComponent(strategyTag)}?deploy=1`, () => {
       if (deployedStrategy) {
         openSignalModal("SELL");
       } else {
@@ -416,7 +416,7 @@ export default function StrategyDetailPage() {
                     <button
                       type="button"
                       onClick={() =>
-                        requireBroker(`/strategies/${encodeURIComponent(strategyTag)}?deploy=1`, () =>
+                        requireBroker(`/dashboard/strategies/${encodeURIComponent(strategyTag)}?deploy=1`, () =>
                           setShowDeployModal(true),
                         )
                       }
