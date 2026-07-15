@@ -526,7 +526,7 @@ export default function StrategiesPage() {
           </p>
         ) : (
           <section className="relative mt-5 overflow-hidden rounded-2xl border border-gray-200 bg-white/80 p-4 dark:border-[#1A212A] dark:bg-[#070A10]/80">
-            <div className="pointer-events-none select-none blur-[5px]">
+            <div className={hasSubscription ? "" : "pointer-events-none select-none blur-[5px]"}>
             {/* Carousel header */}
             <div className="mb-4 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold text-gray-700 dark:text-[#DDE5EE]">
