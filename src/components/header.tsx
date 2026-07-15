@@ -94,6 +94,7 @@ export const HeroHeader = () => {
                                         <li key={index}>
                                             <Link
                                                 href={item.href}
+                                                onClick={() => setMenuState(false)}
                                                 aria-current={isActiveLink(item.href) ? 'page' : undefined}
                                                 className={cn(
                                                     'block duration-150',
@@ -112,7 +113,7 @@ export const HeroHeader = () => {
                                     asChild
                                     size="sm"
                                     className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold transition-all duration-100 border-none">
-                                    <Link href="/login">
+                                    <Link href="/login" onClick={() => setMenuState(false)}>
                                          <span>Login</span>
                                     </Link>
                                 </Button>
@@ -121,7 +122,7 @@ export const HeroHeader = () => {
                                     asChild
                                     size="sm"
                                     className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold transition-all duration-100 border-none">
-                                    <Link href="/signup">
+                                    <Link href="/signup" onClick={() => setMenuState(false)}>
                                          <span>Get Started</span>
                                     </Link>
                                 </Button>
