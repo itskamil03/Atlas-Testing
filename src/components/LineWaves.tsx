@@ -159,9 +159,16 @@ export default function LineWaves({
             const lineSpacing = height / (usableLineCount + 1)
             const sampleStep = Math.max(18, width / 12)
 
-            // Precompute mouse world position and radius² once per layer call
-            const mouseX = smoothMouseRef.current.x * width
-            const mouseY = smoothMouseRef.current.y * height
+            // Precompute mouse world position with rotation correction and radius² once per layer call
+            const rawMouseX = smoothMouseRef.current.x * width
+            const rawMouseY = smoothMouseRef.current.y * height
+            const cx = width / 2
+            const cy = height / 2
+            const angleRad = (-rotation * Math.PI) / 180
+            const cosA = Math.cos(angleRad)
+            const sinA = Math.sin(angleRad)
+            const mouseX = cx + (rawMouseX - cx) * cosA - (rawMouseY - cy) * sinA
+            const mouseY = cy + (rawMouseX - cx) * sinA + (rawMouseY - cy) * cosA
             const influenceRadius = Math.max(width, height) * 0.6
             const radiusSq = influenceRadius * influenceRadius
 
