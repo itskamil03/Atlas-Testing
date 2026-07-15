@@ -10,9 +10,9 @@ type WorkflowBannerProps = {
 
 const STEPS = [
   { id: "broker" as const, label: "Connect Broker", href: "/dashboard/broker" },
-  { id: "strategies" as const, label: "Select Strategy", href: "/strategies" },
-  { id: "deploy" as const, label: "Deploy & Set Limits", href: "/strategies" },
-  { id: "monitor" as const, label: "Auto Trade Live", href: "/my-strategies" },
+  { id: "strategies" as const, label: "Select Strategy", href: "/dashboard/strategies" },
+  { id: "deploy" as const, label: "Deploy & Set Limits", href: "/dashboard/strategies" },
+  { id: "monitor" as const, label: "Auto Trade Live", href: "/dashboard" },
 ];
 
 export function WorkflowBanner({ activeStep = "broker" }: WorkflowBannerProps) {

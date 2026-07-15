@@ -930,7 +930,14 @@ function ProfilePageInner() {
                     <div className="mt-6 rounded-2xl border border-[#242C35] bg-[#0E141B] px-4 py-3 text-sm text-[#AAB4C0]">
                       <div className="flex items-center justify-between">
                         <div>Don't have a Delta Exchange account? Create one via our partner link.</div>
-                        <button className="rounded-full bg-[#9BFF00] px-4 py-2 text-sm font-semibold text-[#11140D]">Create Account</button>
+                        <a 
+                          href="https://www.delta.exchange/signup" 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="rounded-full bg-[#9BFF00] px-4 py-2 text-sm font-semibold text-[#11140D] hover:bg-[#B7FF45] transition"
+                        >
+                          Create Account
+                        </a>
                       </div>
                     </div>
                   </div>
