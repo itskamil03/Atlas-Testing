@@ -123,7 +123,7 @@ export default function AboutUs() {
 
             <div className="mt-6">
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.12 }}>
-                <Button asChild className="shadow-md bg-emerald-600 hover:bg-emerald-700 text-white font-semibold active:scale-95 transition-all duration-100 border-none">
+                <Button asChild className="shadow-md bg-[#9BFF00] hover:bg-[#B7FF45] text-[#11140D] font-semibold active:scale-95 transition-all duration-100 border-none">
                   <Link href="/academy">Explore Our Research</Link>
                 </Button>
               </motion.div>

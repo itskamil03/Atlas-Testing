@@ -111,17 +111,18 @@ export const HeroHeader = () => {
                                 <Button
                                     asChild
                                     size="sm"
-                                    className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold transition-all duration-100 border-none">
+                                    className="bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] font-semibold transition-all duration-100 border-none">
                                     <Link href="/login">
-                                        <span>Login</span>
+                                         <span>Login</span>
                                     </Link>
                                 </Button>
                                 <ThemeToggleButton/>
                                 <Button
                                     asChild
-                                    size="sm">
+                                    size="sm"
+                                    className="bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] font-semibold transition-all duration-100 border-none">
                                     <Link href="/signup">
-                                        <span>Get Started</span>
+                                         <span>Get Started</span>
                                     </Link>
                                 </Button>
                             </div>

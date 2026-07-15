@@ -768,7 +768,7 @@ export default function AdminPage() {
               <button
                 type="button"
                 onClick={() => void loadAll()}
-                className="rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100"
+                className="rounded-xl bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-4 py-2 text-sm font-semibold transition-all duration-100"
               >
                 Refresh
               </button>
@@ -780,14 +780,14 @@ export default function AdminPage() {
                   }
                   router.push("/dashboard");
                 }}
-                className="rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100"
+                className="rounded-xl bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-4 py-2 text-sm font-semibold transition-all duration-100"
               >
                 Trader Dashboard
               </button>
               <button
                 type="button"
                 onClick={onLogout}
-                className="rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100"
+                className="rounded-xl bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-4 py-2 text-sm font-semibold transition-all duration-100"
               >
                 Logout
               </button>
@@ -810,7 +810,7 @@ export default function AdminPage() {
               onClick={() => setTab(tab.id)}
               className={`whitespace-nowrap rounded-[18px] px-4 py-2.5 text-sm font-medium transition active:scale-95 duration-100 ${
                 activeTab === tab.id
-                  ? "bg-emerald-600 text-white"
+                  ? "bg-[#9BFF00] text-[#11140D]"
                   : "text-[#8E9AAA] hover:bg-[#121820] hover:text-[#F3F7FB]"
               }`}
             >

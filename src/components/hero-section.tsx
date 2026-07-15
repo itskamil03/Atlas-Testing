@@ -159,7 +159,7 @@ export default function HeroSection() {
                                     </AnimatedGroup>
                                 </div>
 
-                                <div className="mx-auto mt-28 md:mt-36 max-w-6xl">
+                                <div className="mx-auto mt-20 md:mt-24 max-w-6xl">
                                     <div className="mb-6 text-center">
                                         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-yellow-400">Pages</p>
                                         <h2 className="mt-3 text-xl font-semibold md:text-2xl text-white">Open any page directly</h2>
@@ -168,7 +168,7 @@ export default function HeroSection() {
                                         </p>
                                     </div>
 
-                                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-[28vh] sm:mt-[32vh] md:mt-[35vh]">
+                                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-8">
                                         {navPages.map((item) => (
                                             <Link
                                                 key={item.title}

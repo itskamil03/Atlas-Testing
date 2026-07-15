@@ -88,8 +88,8 @@ export default function NotificationsPage() {
             <h1 className="mt-1 text-2xl font-semibold text-gray-900 dark:text-[#F6FAFF]">Alerts & Updates</h1>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => router.push("/dashboard")} className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Dashboard</button>
-            <button onClick={onLogout} className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Sign Out</button>
+            <button onClick={() => router.push("/dashboard")} className="rounded-lg bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-4 py-2 text-sm font-semibold transition-all duration-100">Dashboard</button>
+            <button onClick={onLogout} className="rounded-lg bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-4 py-2 text-sm font-semibold transition-all duration-100">Sign Out</button>
           </div>
         </header>
 
@@ -99,7 +99,7 @@ export default function NotificationsPage() {
         <section className="rounded-2xl border border-gray-200 dark:border-[#1A1E23] bg-white dark:bg-[#0A0D13] p-5">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-[#F3F7FB]">Create Notification</h2>
-            <button onClick={markAllRead} disabled={saving} className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-3 py-2 text-xs font-semibold transition-all duration-100 disabled:opacity-50">Mark all read</button>
+            <button onClick={markAllRead} disabled={saving} className="rounded-lg bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-3 py-2 text-xs font-semibold transition-all duration-100 disabled:opacity-50">Mark all read</button>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="text-sm text-gray-500 dark:text-[#9AA5B1] flex flex-col">Category
@@ -117,7 +117,7 @@ export default function NotificationsPage() {
               <textarea rows={3} value={form.message} onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF] focus:border-emerald-500 focus:outline-none transition-colors duration-150" />
             </label>
           </div>
-          <button onClick={createNotification} disabled={saving || !form.title || !form.message} className="mt-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-5 py-2 font-semibold transition-all duration-100 disabled:opacity-60">{saving ? "Saving..." : "Create"}</button>
+          <button onClick={createNotification} disabled={saving || !form.title || !form.message} className="mt-4 rounded-lg bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-5 py-2 font-semibold transition-all duration-100 disabled:opacity-60">{saving ? "Saving..." : "Create"}</button>
         </section>
 
         <section className="mt-5 rounded-2xl border border-gray-200 dark:border-[#1A1E23] bg-white dark:bg-[#0A0D13] p-5">

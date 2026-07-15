@@ -815,7 +815,7 @@ function ProfilePageInner() {
                         <button
                           onClick={() => void connectSelectedBroker()}
                           disabled={connectingBroker}
-                          className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-5 py-2 font-semibold transition-all duration-100 disabled:opacity-60"
+                          className="rounded-lg bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-5 py-2 font-semibold transition-all duration-100 disabled:opacity-60"
                         >
                           {connectingBroker ? "Connecting..." : "Connect"}
                         </button>
@@ -918,7 +918,7 @@ function ProfilePageInner() {
                             <button
                               onClick={() => void connectSelectedBroker()}
                               disabled={connectingBroker}
-                              className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-5 py-2 font-semibold transition-all duration-100 disabled:opacity-60"
+                              className="rounded-lg bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-5 py-2 font-semibold transition-all duration-100 disabled:opacity-60"
                             >
                               {connectingBroker ? "Connecting..." : "Connect"}
                             </button>
