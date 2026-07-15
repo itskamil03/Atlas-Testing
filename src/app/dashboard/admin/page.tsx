@@ -1276,8 +1276,8 @@ export default function AdminPage() {
                 <textarea value={articleForm.content_markdown} onChange={(e) => setArticleForm((prev) => ({ ...prev, content_markdown: e.target.value }))} placeholder="Markdown content" rows={8} className="w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 font-mono text-sm" />
                 <label className="flex items-center gap-2 text-sm text-[#A8C2DE]"><input type="checkbox" checked={articleForm.is_published} onChange={(e) => setArticleForm((prev) => ({ ...prev, is_published: e.target.checked }))} />Publish</label>
                 <div className="flex gap-2">
-                  <button onClick={saveArticle} className="rounded-xl bg-gradient-to-r from-[#2563EB] to-[#0EA5E9] px-4 py-2 text-sm font-semibold">{editingArticleId ? "Update" : "Create"} Article</button>
-                  {editingArticleId ? <button onClick={() => { setEditingArticleId(null); setArticleForm(emptyArticle); }} className="rounded-xl border border-[#2E4762] px-4 py-2 text-sm">Cancel</button> : null}
+                  <button onClick={saveArticle} className="rounded-xl bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-4 py-2 text-sm font-semibold transition-all duration-100 disabled:opacity-60">{editingArticleId ? "Update" : "Create"} Article</button>
+                  {editingArticleId ? <button onClick={() => { setEditingArticleId(null); setArticleForm(emptyArticle); }} className="rounded-xl border border-[#242D37] px-4 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Cancel</button> : null}
                 </div>
               </div>
             </div>
@@ -1285,7 +1285,7 @@ export default function AdminPage() {
             <div className="rounded-2xl border border-[#1E2A39] bg-[#0D1725]/70 p-5 backdrop-blur">
               <div className="flex items-center justify-between gap-2">
                 <h3 className="font-semibold">Articles</h3>
-                <input value={articleSearch} onChange={(e) => setArticleSearch(e.target.value)} placeholder="Search articles" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm" />
+                <input value={articleSearch} onChange={(e) => setArticleSearch(e.target.value)} placeholder="Search articles" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm text-white" />
               </div>
               <div className="mt-3 max-h-[420px] space-y-2 overflow-auto pr-1">
                 {filteredArticles.map((item) => (
@@ -1296,8 +1296,8 @@ export default function AdminPage() {
                         <p className="text-xs text-[#8EA8C7]">{item.slug} - {item.is_published ? "Published" : "Draft"}</p>
                       </div>
                       <div className="flex gap-2">
-                        <button onClick={() => { setEditingArticleId(item.id); setArticleForm({ title: item.title, slug: item.slug, category: item.category, summary: item.summary, content_markdown: item.content_markdown, is_published: item.is_published }); }} className="rounded-md border border-[#315375] px-2 py-1 text-xs">Edit</button>
-                        <button onClick={() => removeArticle(item.id)} className="rounded-md border border-[#5C2A35] px-2 py-1 text-xs text-[#FFB9C7]">Delete</button>
+                        <button onClick={() => { setEditingArticleId(item.id); setArticleForm({ title: item.title, slug: item.slug, category: item.category, summary: item.summary, content_markdown: item.content_markdown, is_published: item.is_published }); }} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Edit</button>
+                        <button onClick={() => removeArticle(item.id)} className="rounded-md border border-[#5C2A35] px-2 py-1 text-xs text-[#FFBAC8] hover:border-red-500/40 hover:text-red-400 hover:bg-red-500/10 transition duration-150 active:scale-95">Delete</button>
                       </div>
                     </div>
                   </div>
@@ -1339,8 +1339,8 @@ export default function AdminPage() {
                 <option value="email">Email</option>
               </select>
             </div>
-            <textarea value={notificationMessage} onChange={(e) => setNotificationMessage(e.target.value)} placeholder="Notification message" rows={4} className="mt-3 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-            <button onClick={broadcastNotification} className="mt-3 rounded-xl bg-gradient-to-r from-[#0EA5E9] to-[#10B981] px-4 py-2 text-sm font-semibold">Broadcast to Users</button>
+             <textarea value={notificationMessage} onChange={(e) => setNotificationMessage(e.target.value)} placeholder="Notification message" rows={4} className="mt-3 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-white" />
+            <button onClick={broadcastNotification} className="mt-3 rounded-xl bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-4 py-2 text-sm font-semibold transition-all duration-100">Broadcast to Users</button>
           </section>
         ) : null}
 
@@ -1349,17 +1349,17 @@ export default function AdminPage() {
             <h2 className="text-lg font-semibold">Platform Settings</h2>
             {platformSettings ? (
               <div className="mt-4 grid gap-3 md:grid-cols-2">
-                <input value={platformSettings.site_name} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, site_name: e.target.value } : prev))} placeholder="Site name" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-                <input value={platformSettings.support_email} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, support_email: e.target.value } : prev))} placeholder="Support email" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-                <input type="number" value={platformSettings.fee_percent} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, fee_percent: Number(e.target.value) } : prev))} placeholder="Fee %" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-                <input type="number" value={platformSettings.profit_share_percent} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, profit_share_percent: Number(e.target.value) } : prev))} placeholder="Profit share %" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-                <input value={platformSettings.exchange_api_key ?? ""} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, exchange_api_key: e.target.value } : prev))} placeholder="Exchange API key" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
-                <input value={platformSettings.exchange_api_secret ?? ""} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, exchange_api_secret: e.target.value } : prev))} placeholder="Exchange API secret" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2" />
+                <input value={platformSettings.site_name} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, site_name: e.target.value } : prev))} placeholder="Site name" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-white" />
+                <input value={platformSettings.support_email} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, support_email: e.target.value } : prev))} placeholder="Support email" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-white" />
+                <input type="number" value={platformSettings.fee_percent} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, fee_percent: Number(e.target.value) } : prev))} placeholder="Fee %" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-white" />
+                <input type="number" value={platformSettings.profit_share_percent} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, profit_share_percent: Number(e.target.value) } : prev))} placeholder="Profit share %" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-white" />
+                <input value={platformSettings.exchange_api_key ?? ""} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, exchange_api_key: e.target.value } : prev))} placeholder="Exchange API key" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-white" />
+                <input value={platformSettings.exchange_api_secret ?? ""} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, exchange_api_secret: e.target.value } : prev))} placeholder="Exchange API secret" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-white" />
                 <label className="flex items-center gap-2 text-sm text-[#A8C2DE]"><input type="checkbox" checked={platformSettings.telegram_alerts_enabled} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, telegram_alerts_enabled: e.target.checked } : prev))} />Telegram Alerts</label>
                 <label className="flex items-center gap-2 text-sm text-[#A8C2DE]"><input type="checkbox" checked={platformSettings.maintenance_mode} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, maintenance_mode: e.target.checked } : prev))} />Maintenance Mode</label>
               </div>
             ) : null}
-            <button onClick={saveSettings} className="mt-4 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#0EA5E9] px-4 py-2 text-sm font-semibold">Save Settings</button>
+            <button onClick={saveSettings} className="mt-4 rounded-xl bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-4 py-2 text-sm font-semibold transition-all duration-100">Save Settings</button>
           </section>
         ) : null}
 
@@ -1368,13 +1368,13 @@ export default function AdminPage() {
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-lg font-semibold">Audit & Security Logs</h2>
               <div className="flex gap-2">
-                <select value={auditSeverity} onChange={(e) => setAuditSeverity(e.target.value)} className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm">
+                <select value={auditSeverity} onChange={(e) => setAuditSeverity(e.target.value)} className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm text-white outline-none focus:border-[#9BFF00]/40 transition duration-150">
                   <option value="all">All severity</option>
                   <option value="info">Info</option>
                   <option value="warning">Warning</option>
                   <option value="error">Error</option>
                 </select>
-                <button onClick={() => void loadAudit()} className="rounded-lg border border-[#2E4762] px-3 py-2 text-sm">Filter</button>
+                <button onClick={() => void loadAudit()} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Filter</button>
               </div>
             </div>
 
