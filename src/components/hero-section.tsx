@@ -68,7 +68,7 @@ export default function HeroSection() {
                  </div>
             <section className="relative overflow-hidden bg-black">
                 <section className="h-auto min-h-0">
-                    <div className="relative isolate pt-2 md:pt-4">
+                    <div className="relative isolate pt-8 md:pt-16">
                         <div
                             aria-hidden
                             className="absolute inset-0 -z-10 size-full [background:radial-gradient(125%_125%_at_50%_100%,transparent_0%,#000000_75%)]"
@@ -93,71 +93,73 @@ export default function HeroSection() {
 
                         <div className="relative z-10 mx-auto max-w-7xl px-6">
                             <div className="text-center sm:mx-auto lg:mr-auto lg:mt-0">
-                                <AnimatedGroup variants={transitionVariants}>
-                                    <Link
-                                        href="#link"
-                                        className="hover:bg-black group mx-auto flex w-fit items-center gap-4 rounded-full border border-yellow-400/30 bg-black p-1 pl-4 shadow-md shadow-yellow-400/10 transition-colors duration-300">
-                                        <span className="text-yellow-400 text-xs">🚀 Now Live: AI-Powered Algo Trading for Forex & Crypto</span>
-                                        <span className="block h-4 w-0.5 border-l border-yellow-400/40"></span>
+                                <div className="scale-95 md:scale-90 origin-top">
+                                    <AnimatedGroup variants={transitionVariants}>
+                                        <Link
+                                            href="#link"
+                                            className="hover:bg-black group mx-auto flex w-fit items-center gap-4 rounded-full border border-yellow-400/30 bg-black p-1 pl-4 shadow-md shadow-yellow-400/10 transition-colors duration-300">
+                                            <span className="text-yellow-400 text-xs">🚀 Now Live: AI-Powered Algo Trading for Forex & Crypto</span>
+                                            <span className="block h-4 w-0.5 border-l border-yellow-400/40"></span>
 
-                                        <div className="bg-black group-hover:bg-yellow-400/10 size-6 overflow-hidden rounded-full duration-500">
-                                            <div className="flex w-12 -translate-x-1/2 duration-500 ease-in-out group-hover:translate-x-0">
-                                                <span className="flex size-6">
-                                                    <ArrowRight className="m-auto size-3 text-yellow-400" />
-                                                </span>
-                                                <span className="flex size-6">
-                                                    <ArrowRight className="m-auto size-3 text-yellow-400" />
-                                                </span>
+                                            <div className="bg-black group-hover:bg-yellow-400/10 size-6 overflow-hidden rounded-full duration-500">
+                                                <div className="flex w-12 -translate-x-1/2 duration-500 ease-in-out group-hover:translate-x-0">
+                                                    <span className="flex size-6">
+                                                        <ArrowRight className="m-auto size-3 text-yellow-400" />
+                                                    </span>
+                                                    <span className="flex size-6">
+                                                        <ArrowRight className="m-auto size-3 text-yellow-400" />
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Link>
-                                </AnimatedGroup>
+                                        </Link>
+                                    </AnimatedGroup>
 
-                                <TextEffect
-                                    preset="fade-in-blur"
-                                    speedSegment={0.3}
-                                    as="h1"
-                                    className="mx-auto mt-8 max-w-4xl text-balance text-4xl max-md:font-semibold md:text-6xl lg:mt-16 xl:text-[4.25rem] text-white">
-                                    Institutional-Style Market Research For Modern Traders
-                                </TextEffect>
-                                <TextEffect
-                                    per="line"
-                                    preset="fade-in-blur"
-                                    speedSegment={0.3}
-                                    delay={0.5}
-                                    as="p"
-                                    className="mx-auto mt-8 max-w-2xl text-balance text-base text-yellow-100/80">
-                                   "Gold, Forex, Macro & Market Intelligence by ATLAS Research Desk"
-                                </TextEffect>
+                                    <TextEffect
+                                        preset="fade-in-blur"
+                                        speedSegment={0.3}
+                                        as="h1"
+                                        className="mx-auto mt-8 max-w-4xl text-balance text-4xl max-md:font-semibold md:text-6xl lg:mt-16 xl:text-[4.25rem] text-white">
+                                        Institutional-Style Market Research For Modern Traders
+                                    </TextEffect>
+                                    <TextEffect
+                                        per="line"
+                                        preset="fade-in-blur"
+                                        speedSegment={0.3}
+                                        delay={0.5}
+                                        as="p"
+                                        className="mx-auto mt-8 max-w-2xl text-balance text-base text-yellow-100/80">
+                                       "Gold, Forex, Macro & Market Intelligence by ATLAS Research Desk"
+                                    </TextEffect>
 
-                                <AnimatedGroup
-                                    variants={{
-                                        container: {
-                                            visible: {
-                                                transition: {
-                                                    staggerChildren: 0.05,
-                                                    delayChildren: 0.75,
+                                    <AnimatedGroup
+                                        variants={{
+                                            container: {
+                                                visible: {
+                                                    transition: {
+                                                        staggerChildren: 0.05,
+                                                        delayChildren: 0.75,
+                                                    },
                                                 },
                                             },
-                                        },
-                                        ...transitionVariants,
-                                    }}
-                                    className="mt-12 flex flex-col items-center justify-center gap-2 md:flex-row">
-                                    <div
-                                        key={1}
-                                        className="bg-yellow-400/10 rounded-[calc(var(--radius-xl)+0.125rem)] border border-yellow-400/30 p-0.5">
-                                        <Button
-                                            asChild
-                                            size="lg"
-                                            className="rounded-xl px-5 text-sm bg-yellow-400 text-black hover:bg-yellow-300">
-                                                <Link href="/pricing">
-                                                <span className="text-nowrap">Start Trading Now</span>
-                                            </Link>
-                                        </Button>
-                                    </div>
-                                </AnimatedGroup>
+                                            ...transitionVariants,
+                                        }}
+                                        className="mt-12 flex flex-col items-center justify-center gap-2 md:flex-row">
+                                        <div
+                                            key={1}
+                                            className="bg-yellow-400/10 rounded-[calc(var(--radius-xl)+0.125rem)] border border-yellow-400/30 p-0.5">
+                                            <Button
+                                                asChild
+                                                size="lg"
+                                                className="rounded-xl px-5 text-sm bg-yellow-400 text-black hover:bg-yellow-300">
+                                                    <Link href="/pricing">
+                                                    <span className="text-nowrap">Start Trading Now</span>
+                                                </Link>
+                                            </Button>
+                                        </div>
+                                    </AnimatedGroup>
+                                </div>
 
-                                <div className="mx-auto mt-14 max-w-6xl">
+                                <div className="mx-auto mt-28 md:mt-36 max-w-6xl">
                                     <div className="mb-6 text-center">
                                         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-yellow-400">Pages</p>
                                         <h2 className="mt-3 text-xl font-semibold md:text-2xl text-white">Open any page directly</h2>
