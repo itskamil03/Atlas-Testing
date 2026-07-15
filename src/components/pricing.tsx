@@ -5,14 +5,14 @@ import { Check } from 'lucide-react'
 
 export default function Pricing() {
     return (
-        <section id="pricing" className="py-16 md:py-10" style={{ zoom: 0.67 }}>
+        <section id="pricing" className="py-4 md:py-2" style={{ zoom: 0.60 }}>
             <div className="mx-auto max-w-6xl px-6">
                 <div className="mx-auto max-w-2xl space-y-6 text-center">
                     <h1 className="text-center text-4xl font-semibold lg:text-5xl">Simple Pricing, Powerful Signals</h1>
                     <p>This side is currently under development. Pricing is coming soon.</p>
                 </div>
 
-                <div className="mt-8 grid gap-6 md:mt-20 md:grid-cols-3">
+                <div className="mt-8 grid gap-6 md:mt-8 md:grid-cols-3">
                     <Card className="flex flex-col">
                         <CardHeader>
                             <CardTitle className="font-medium">Starter Plan</CardTitle>
@@ -23,7 +23,7 @@ export default function Pricing() {
                         <CardContent className="space-y-4">
                             <hr className="border-dashed" />
 
-                            <ul className="list-outside space-y-3 text-sm">
+                            <ul className="list-outside space-y-1.5 text-xs">
                                 {[
                                     'Up to 5 signals/day',
                                     'Forex & Crypto markets',
@@ -63,7 +63,7 @@ export default function Pricing() {
 
                             <CardContent className="space-y-4">
                                 <hr className="border-dashed" />
-                                <ul className="list-outside space-y-3 text-sm">
+                                <ul className="list-outside space-y-1.5 text-xs">
                                     {[
                                         'Unlimited signals/day',
                                         'Forex, Crypto, Stocks & Commodities',
@@ -109,7 +109,7 @@ export default function Pricing() {
                         <CardContent className="space-y-4">
                             <hr className="border-dashed" />
 
-                            <ul className="list-outside space-y-3 text-sm">
+                            <ul className="list-outside space-y-1.5 text-xs">
                                 {[
                                     'Everything in Pro Trader',
                                     'Custom market & sector summaries',
