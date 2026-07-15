@@ -22,7 +22,7 @@ export default function AboutUs() {
         >
           <h2 className="text-3xl font-semibold sm:text-4xl lg:text-5xl">About ATLAS</h2>
           <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-            Research-first macro intelligence and execution infrastructure for modern traders — blending data,
+            -first macro intelligence and execution infrastructure for modern traders — blending data,
             strategy, and institutional-grade analysis.
           </p>
         </motion.div>
