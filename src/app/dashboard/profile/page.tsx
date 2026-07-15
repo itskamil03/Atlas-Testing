@@ -925,7 +925,7 @@ function ProfilePageInner() {
                     
                     <div className="mt-6 rounded-2xl border border-[#242C35] bg-[#0E141B] px-4 py-3 text-sm text-[#AAB4C0]">
                       <div className="flex items-center justify-between">
-                        <div>Don't have a Delta Exchange account? Create one via our partner link.</div>
+                        <div>Don't have a <span className="text-[#9BFF00] font-medium">Delta Exchange</span> account? Create one via our <span className="text-[#9BFF00] font-medium">partner link</span>.</div>
                         <a 
                           href="https://www.delta.exchange/app/signup" 
                           target="_blank" 
