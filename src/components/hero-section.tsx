@@ -63,7 +63,7 @@ const transitionVariants = {
 export default function HeroSection() {
     return (
         <>
-           <div className="pt-0">
+           <div className="pt-4 ">
                 <LivePriceTicker />
                  </div>
             <section className="relative overflow-hidden bg-black">

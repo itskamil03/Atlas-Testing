@@ -39,7 +39,7 @@ export default function PerformanceSection() {
                 </div>
 
                 {/* ── Bottom Grid ── */}
-                <div className="grid lg:grid-cols-2 gap-6 items-start">
+                <div className="grid lg:grid-cols-2 gap-6 items-start max-w-[80%] mx-auto w-full">
 
                     {/* Signal Performance */}
                     <SignalPerformance />
