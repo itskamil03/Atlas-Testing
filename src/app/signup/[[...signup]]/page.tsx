@@ -174,7 +174,10 @@ export default function SignupPage() {
         <div className="absolute -bottom-32 right-1/3 h-96 w-96 rounded-full bg-secondary/25 blur-3xl" />
       </div>
 
-      <main className="relative mx-auto grid min-h-screen max-w-6xl grid-cols-1 items-center gap-10 px-6 py-12 lg:grid-cols-2 lg:px-10">
+      <main 
+        style={{ zoom: 0.90 }}
+        className="relative mx-auto grid min-h-screen max-w-6xl grid-cols-1 items-center gap-10 px-6 py-12 lg:grid-cols-2 lg:px-10"
+      >
         <section className="hidden rounded-3xl border border-border/60 bg-card/85 p-10 shadow-2xl backdrop-blur md:block">
           <p className="inline-flex rounded-full border border-primary/40 bg-primary/15 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80">
             Join Atlas
