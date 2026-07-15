@@ -155,3 +155,101 @@
     @apply bg-background text-foreground;
   }
 }
+
+:root:not(.dark) {
+  /* Background overrides */
+  .bg-\[\#050607\] {
+    background-color: #f9fafb !important;
+  }
+  .bg-\[\#0A0D13\] {
+    background-color: #ffffff !important;
+  }
+  .bg-\[\#0C1117\] {
+    background-color: #f3f4f6 !important;
+  }
+  .bg-\[\#0E141B\] {
+    background-color: #ffffff !important;
+  }
+  .bg-\[\#0B0F14\] {
+    background-color: #ffffff !important;
+  }
+  .bg-\[\#0A0A0A\] {
+    background-color: #ffffff !important;
+  }
+  .bg-\[\#0A0A0A\]\/90 {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+  }
+  .bg-\[\#111822\] {
+    background-color: #e5e7eb !important;
+  }
+  .bg-\[\#121820\] {
+    background-color: #f3f4f6 !important;
+  }
+  .bg-\[\#0D1218\] {
+    background-color: #ffffff !important;
+  }
+  .bg-\[\#090D12\] {
+    background-color: #ffffff !important;
+  }
+  .bg-\[\#0B1118\]\/95 {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+  }
+  .bg-\[linear-gradient\(180deg\,\#0D1218\,\#090D12\)\] {
+    background: linear-gradient(180deg, #ffffff, #f9fafb) !important;
+  }
+
+  /* Border overrides */
+  .border-\[\#1A1E23\] {
+    border-color: #e5e7eb !important;
+  }
+  .border-\[\#1E2530\] {
+    border-color: #e5e7eb !important;
+  }
+  .border-\[\#26303B\] {
+    border-color: #d1d5db !important;
+  }
+  .border-\[\#242C35\] {
+    border-color: #e5e7eb !important;
+  }
+  .border-\[\#1F2833\] {
+    border-color: #e5e7eb !important;
+  }
+  .border-\[\#1A212A\] {
+    border-color: #e5e7eb !important;
+  }
+  .border-\[\#242D37\] {
+    border-color: #d1d5db !important;
+  }
+
+  /* Text color overrides */
+  .text-\[\#E8ECEF\] {
+    color: #111827 !important;
+  }
+  .text-\[\#F3F7FB\] {
+    color: #111827 !important;
+  }
+  .text-\[\#9AA5B1\] {
+    color: #4b5563 !important;
+  }
+  .text-\[\#8E9AAA\] {
+    color: #4b5563 !important;
+  }
+  .text-\[\#AEB8C4\] {
+    color: #4b5563 !important;
+  }
+  .text-\[\#C1CBD8\] {
+    color: #374151 !important;
+  }
+  .text-\[\#AAB4C0\] {
+    color: #4b5563 !important;
+  }
+  .text-\[\#C9D4E0\] {
+    color: #1f2937 !important;
+  }
+  .text-\[\#F6FAFF\] {
+    color: #111827 !important;
+  }
+  .text-\[\#DDE4EC\] {
+    color: #111827 !important;
+  }
+}

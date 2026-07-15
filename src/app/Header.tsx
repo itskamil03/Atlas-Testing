@@ -17,6 +17,7 @@ interface HeaderProps {
 const navLinks = [
   { name: "Dashboard", path: "/dashboard" },
   { name: "Strategies", path: "/dashboard/strategies" },
+  { name: "Broker", path: "/dashboard/broker" },
   { name: "Subscription", path: "/dashboard/subscription" },
   { name: "Academy", path: "/dashboard/academy" },
   { name: "Notification", path: "/dashboard/notifications" },
