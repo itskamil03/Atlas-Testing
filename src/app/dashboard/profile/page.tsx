@@ -578,7 +578,7 @@ function ProfilePageInner() {
   };
 
   return (
-    <div>
+    <div style={{ zoom: 0.85 }}>
       <div className="mx-auto flex w-full max-w-[1100px] flex-col px-4 py-6 sm:px-6 lg:px-8">
 
         <section className="grid gap-6 lg:grid-cols-[220px_1fr]">
@@ -615,15 +615,11 @@ function ProfilePageInner() {
                   <div className="rounded-xl border border-[#31503A] bg-[#142419] px-4 py-3 text-sm text-[#AEE7B8]">{profileMessage}</div>
                 ) : null}
 
-                <div className="rounded-2xl border border-[#1E2530] bg-[#0C1117] p-5">
-                    <div className="flex items-center justify-between border-b border-[#202A35] pb-4">
-                      <div>
-                        <h3 className="text-lg font-semibold text-[#F3F7FB]">Personal Information</h3>
-                        <p className="mt-1 text-xs text-[#8B95A1]">This data appears across your dashboard and account reports.</p>
-                      </div>
-                    </div>
+                <section className="rounded-2xl border border-[#1A1E23] bg-[#0A0D13] p-5">
+                  <h2 className="text-lg font-semibold text-[#F3F7FB]">Personal Information</h2>
+                  <p className="mt-1 text-sm text-[#8B95A1]">This data appears across your dashboard and account reports.</p>
 
-                    <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                    <div className="mt-4 grid gap-4 sm:grid-cols-2">
                       <label className="text-sm text-[#9AA5B1]">
                         Full Name
                         <input
@@ -709,7 +705,7 @@ function ProfilePageInner() {
                         />
                       </label>
                     </div>
-                </div>
+                </section>
 
                 <div className="flex flex-wrap items-center justify-end gap-3 border-t border-[#202A35] pt-4">
                   <button
@@ -931,7 +927,7 @@ function ProfilePageInner() {
                       <div className="flex items-center justify-between">
                         <div>Don't have a Delta Exchange account? Create one via our partner link.</div>
                         <a 
-                          href="https://www.delta.exchange/signup" 
+                          href="https://www.delta.exchange/app/signup" 
                           target="_blank" 
                           rel="noopener noreferrer" 
                           className="rounded-full bg-[#9BFF00] px-4 py-2 text-sm font-semibold text-[#11140D] hover:bg-[#B7FF45] transition"
@@ -1025,26 +1021,27 @@ function ProfilePageInner() {
             ) : null}
 
             {activeTab === "password" ? (
-              <div>
-                <h2 className="text-xl font-semibold text-[#F3F7FB]">Password Reset</h2>
-                <p className="mt-2 text-sm text-[#8B95A1]">Change your password securely.</p>
-
+              <div className="space-y-6">
                 {passwordError ? (
-                  <div className="mt-4 rounded-xl border border-[#4F2A2A] bg-[#2A1414] px-4 py-3 text-sm text-[#FFB4B4]">{passwordError}</div>
+                  <div className="rounded-xl border border-[#4F2A2A] bg-[#2A1414] px-4 py-3 text-sm text-[#FFB4B4]">{passwordError}</div>
                 ) : null}
 
                 {passwordMessage ? (
-                  <div className="mt-4 rounded-xl border border-[#31503A] bg-[#142419] px-4 py-3 text-sm text-[#AEE7B8]">{passwordMessage}</div>
+                  <div className="rounded-xl border border-[#31503A] bg-[#142419] px-4 py-3 text-sm text-[#AEE7B8]">{passwordMessage}</div>
                 ) : null}
 
-                <div className="mt-6 space-y-4">
+                <section className="rounded-2xl border border-[#1A1E23] bg-[#0A0D13] p-5">
+                  <h2 className="text-lg font-semibold text-[#F3F7FB]">Password Reset</h2>
+                  <p className="mt-1 text-sm text-[#8B95A1]">Change your password securely.</p>
+
+                  <div className="mt-4 space-y-4">
                   <label className="block text-sm text-[#9AA5B1]">
                     Current Password
                     <input
                       type="password"
                       value={passwordForm.current_password}
                       onChange={(e) => updatePasswordField("current_password", e.target.value)}
-                      className="mt-1 w-full rounded-lg border border-[#242C35] bg-[#0E141B] px-3 py-2 text-[#E8ECEF]"
+                      className="mt-1.5 w-full rounded-xl border border-[#26303B] bg-[#0E141B] px-3 py-2.5 text-[#E8ECEF] placeholder:text-[#5E6A78] focus:border-[#3A4A5C] focus:outline-none"
                     />
                   </label>
                   <label className="block text-sm text-[#9AA5B1]">
@@ -1053,7 +1050,7 @@ function ProfilePageInner() {
                       type="password"
                       value={passwordForm.new_password}
                       onChange={(e) => updatePasswordField("new_password", e.target.value)}
-                      className="mt-1 w-full rounded-lg border border-[#242C35] bg-[#0E141B] px-3 py-2 text-[#E8ECEF]"
+                      className="mt-1.5 w-full rounded-xl border border-[#26303B] bg-[#0E141B] px-3 py-2.5 text-[#E8ECEF] placeholder:text-[#5E6A78] focus:border-[#3A4A5C] focus:outline-none"
                     />
                   </label>
                   <label className="block text-sm text-[#9AA5B1]">
@@ -1062,7 +1059,7 @@ function ProfilePageInner() {
                       type="password"
                       value={passwordForm.confirm_password}
                       onChange={(e) => updatePasswordField("confirm_password", e.target.value)}
-                      className="mt-1 w-full rounded-lg border border-[#242C35] bg-[#0E141B] px-3 py-2 text-[#E8ECEF]"
+                      className="mt-1.5 w-full rounded-xl border border-[#26303B] bg-[#0E141B] px-3 py-2.5 text-[#E8ECEF] placeholder:text-[#5E6A78] focus:border-[#3A4A5C] focus:outline-none"
                     />
                   </label>
                 </div>
@@ -1082,7 +1079,8 @@ function ProfilePageInner() {
                     {updatingPassword ? "Updating..." : "Update Password"}
                   </button>
                 </div>
-              </div>
+              </section>
+            </div>
             ) : null}
           </div>
         </section>
@@ -1096,7 +1094,7 @@ export default function ProfilePage() {
     <Suspense
       fallback={
         <main className="min-h-screen bg-[#050607] text-[#E8ECEF]">
-          <div className="mx-auto w-full max-w-[1100px] px-4 py-6 sm:px-6 lg:px-8">
+          <div className="mx-auto w-full max-w-[1100px] px-4 py-6 sm:px-6 lg:px-8" style={{ zoom: 0.85 }}>
             <div className="rounded-2xl border border-[#1A1E23] bg-[#0A0D13] px-4 py-4 text-sm text-[#9AA5B1]">
               Loading profile...
             </div>

@@ -27,7 +27,7 @@ export default function PerformanceSection() {
                         <span className="size-1.5 rounded-full bg-current animate-pulse" />
                         LIVE PERFORMANCE
                     </div>
-                    <h2 className="text-4xl font-semibold lg:text-5xl mb-4">Proven Track Record</h2>
+                    <h2 className="text-3xl font-semibold sm:text-4xl mb-4">Proven Track Record</h2>
                     <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                         Transparency matters. See our recent signal performance with real data.
                     </p>

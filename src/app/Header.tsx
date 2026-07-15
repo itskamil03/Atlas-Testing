@@ -171,7 +171,7 @@ export default function Header({ displayName = "Trader" }: HeaderProps) {
                 <button
                   type="button"
                   onClick={() => {
-                    setShowProfileMenu(false);
+                    setShowProfileMenu(false); 
                     router.push("/dashboard/profile");
                   }}
                   className="mt-1 w-full rounded-lg px-3 py-2 text-left text-sm text-gray-700 dark:text-[#D5DEE8] hover:bg-gray-100 dark:hover:bg-[#111822] transition-colors duration-200"

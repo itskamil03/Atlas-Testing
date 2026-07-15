@@ -3,7 +3,7 @@ export default function StatsSection() {
         <section className="py-12 md:py-20">
             <div className="mx-auto max-w-5xl space-y-8 px-6 md:space-y-16">
                 <div className="relative z-10 mx-auto max-w-xl space-y-6 text-center">
-                    <h2 className="text-4xl font-semibold lg:text-5xl">Trusted by Traders Worldwide</h2>
+                    <h2 className="text-3xl font-semibold sm:text-4xl">Trusted by Traders Worldwide</h2>
                     <p>Our AI has been delivering high-accuracy trading signals to thousands of traders, helping them make smarter, faster decisions every day.</p>
                 </div>
 
