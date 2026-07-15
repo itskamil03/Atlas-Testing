@@ -5,14 +5,14 @@ import { Check } from 'lucide-react'
 
 export default function Pricing() {
     return (
-        <section id="pricing" className="py-4 md:py-2" style={{ zoom: 0.60 }}>
+        <section id="pricing" className="py-16 md:py-10" style={{ zoom: 0.67 }}>
             <div className="mx-auto max-w-6xl px-6">
                 <div className="mx-auto max-w-2xl space-y-6 text-center">
                     <h1 className="text-center text-4xl font-semibold lg:text-5xl">Simple Pricing, Powerful Signals</h1>
                     <p>This side is currently under development. Pricing is coming soon.</p>
                 </div>
 
-                <div className="mt-8 grid gap-6 md:mt-8 md:grid-cols-3">
+                <div className="mt-8 grid gap-6 md:mt-20 md:grid-cols-3">
                     <Card className="flex flex-col">
                         <CardHeader>
                             <CardTitle className="font-medium">Starter Plan</CardTitle>
@@ -23,7 +23,7 @@ export default function Pricing() {
                         <CardContent className="space-y-4">
                             <hr className="border-dashed" />
 
-                            <ul className="list-outside space-y-1.5 text-xs">
+                            <ul className="list-outside space-y-3 text-sm">
                                 {[
                                     'Up to 5 signals/day',
                                     'Forex & Crypto markets',
@@ -51,7 +51,7 @@ export default function Pricing() {
                         </CardFooter>
                     </Card>
 
-                    <Card className="relative">
+                    <Card className="relative md:scale-105 border-emerald-500/40 dark:border-emerald-500/60 shadow-[0_0_30px_rgba(16,185,129,0.15)] z-10">
                         <span className="bg-linear-to-br/increasing absolute inset-x-0 -top-3 mx-auto flex h-6 w-fit items-center rounded-full from-purple-400 to-amber-300 px-3 py-1 text-xs font-medium text-amber-950 ring-1 ring-inset ring-white/20 ring-offset-1 ring-offset-gray-950/5">Most Popular</span>
 
                         <div className="flex flex-col">
@@ -63,7 +63,7 @@ export default function Pricing() {
 
                             <CardContent className="space-y-4">
                                 <hr className="border-dashed" />
-                                <ul className="list-outside space-y-1.5 text-xs">
+                                <ul className="list-outside space-y-3 text-sm">
                                     {[
                                         'Unlimited signals/day',
                                         'Forex, Crypto, Stocks & Commodities',
@@ -109,7 +109,7 @@ export default function Pricing() {
                         <CardContent className="space-y-4">
                             <hr className="border-dashed" />
 
-                            <ul className="list-outside space-y-1.5 text-xs">
+                            <ul className="list-outside space-y-3 text-sm">
                                 {[
                                     'Everything in Pro Trader',
                                     'Custom market & sector summaries',
