@@ -165,17 +165,17 @@ export function AdminUsersTab({
                       <button
                         type="button"
                         onClick={() => openRiskModal(item)}
-                        className="rounded-lg border border-[#2A3B50] px-3 py-1.5 text-xs font-medium text-[#C9D4E0] hover:bg-[#121820]"
+                        className="rounded-lg border border-[#242D37] px-3 py-1.5 text-xs font-medium text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95"
                       >
                         Risk limits
                       </button>
                       <button
                         type="button"
                         onClick={() => onBanToggle(item.id, item.is_active)}
-                        className={`rounded-lg border px-3 py-1.5 text-xs font-medium ${
+                        className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition duration-150 active:scale-95 ${
                           item.is_active
-                            ? "border-[#5A2A2A] text-[#FFB4B4] hover:bg-[#2A1414]"
-                            : "border-[#2A4A1A] text-[#B7FF45] hover:bg-[#142A14]"
+                            ? "border-[#5C2A35] text-[#FFBAC8] hover:border-red-500/40 hover:text-red-400 hover:bg-red-500/10"
+                            : "border-[#2A4A1A] text-[#B7FF45] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5"
                         }`}
                       >
                         {item.is_active ? "Ban" : "Unban"}

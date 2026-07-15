@@ -924,18 +924,18 @@ export default function AdminPage() {
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <h2 className="text-lg font-semibold">Strategy Management</h2>
                   <div className="flex gap-2">
-                    <input value={strategySearch} onChange={(e) => setStrategySearch(e.target.value)} placeholder="Search strategy" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm" />
-                    <button onClick={searchStrategies} className="rounded-lg border border-[#2E4762] px-3 py-2 text-sm hover:bg-[#18283C]">Search</button>
+                    <input value={strategySearch} onChange={(e) => setStrategySearch(e.target.value)} placeholder="Search strategy" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm text-white" />
+                    <button onClick={searchStrategies} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Search</button>
                   </div>
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <button onClick={() => runBulkAction("publish")} className="rounded-md border border-[#2B4A62] px-3 py-1 text-xs">Publish</button>
-                  <button onClick={() => runBulkAction("unpublish")} className="rounded-md border border-[#2B4A62] px-3 py-1 text-xs">Unpublish</button>
-                  <button onClick={() => runBulkAction("feature")} className="rounded-md border border-[#2B4A62] px-3 py-1 text-xs">Feature</button>
-                  <button onClick={() => runBulkAction("archive")} className="rounded-md border border-[#2B4A62] px-3 py-1 text-xs">Archive</button>
-                  <button onClick={() => runBulkAction("duplicate")} className="rounded-md border border-[#2B4A62] px-3 py-1 text-xs">Duplicate</button>
-                  <button onClick={() => runBulkAction("delete")} className="rounded-md border border-[#65313C] px-3 py-1 text-xs text-[#FFC2CC]">Delete</button>
+                  <button onClick={() => runBulkAction("publish")} className="rounded-md border border-[#242D37] px-3 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Publish</button>
+                  <button onClick={() => runBulkAction("unpublish")} className="rounded-md border border-[#242D37] px-3 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Unpublish</button>
+                  <button onClick={() => runBulkAction("feature")} className="rounded-md border border-[#242D37] px-3 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Feature</button>
+                  <button onClick={() => runBulkAction("archive")} className="rounded-md border border-[#242D37] px-3 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Archive</button>
+                  <button onClick={() => runBulkAction("duplicate")} className="rounded-md border border-[#242D37] px-3 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Duplicate</button>
+                  <button onClick={() => runBulkAction("delete")} className="rounded-md border border-[#5C2A35] px-3 py-1 text-xs text-[#FFC2CC] hover:border-red-500/40 hover:text-red-400 hover:bg-red-500/10 transition duration-150 active:scale-95">Delete</button>
                 </div>
 
                 <div className="mt-4 max-h-[440px] space-y-2 overflow-auto pr-1">
@@ -963,12 +963,12 @@ export default function AdminPage() {
                           </div>
                         </label>
                         <div className="flex flex-wrap gap-2">
-                          <button onClick={() => startEditStrategy(item)} className="rounded-md border border-[#335174] px-2 py-1 text-xs">Edit</button>
-                          <button onClick={() => runStrategyAction(item.id, "publish")} className="rounded-md border border-[#2B4A62] px-2 py-1 text-xs">Publish</button>
-                          <button onClick={() => runStrategyAction(item.id, "unpublish")} className="rounded-md border border-[#2B4A62] px-2 py-1 text-xs">Unpublish</button>
-                          <button onClick={() => runStrategyAction(item.id, "feature")} className="rounded-md border border-[#2B4A62] px-2 py-1 text-xs">Feature</button>
-                          <button onClick={() => runStrategyAction(item.id, "archive")} className="rounded-md border border-[#2B4A62] px-2 py-1 text-xs">Archive</button>
-                          <button onClick={() => deleteStrategy(item.id)} className="rounded-md border border-[#5C2A35] px-2 py-1 text-xs text-[#FFBAC8]">Delete</button>
+                          <button onClick={() => startEditStrategy(item)} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Edit</button>
+                          <button onClick={() => runStrategyAction(item.id, "publish")} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Publish</button>
+                          <button onClick={() => runStrategyAction(item.id, "unpublish")} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Unpublish</button>
+                          <button onClick={() => runStrategyAction(item.id, "feature")} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Feature</button>
+                          <button onClick={() => runStrategyAction(item.id, "archive")} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Archive</button>
+                          <button onClick={() => deleteStrategy(item.id)} className="rounded-md border border-[#5C2A35] px-2 py-1 text-xs text-[#FFBAC8] hover:border-red-500/40 hover:text-red-400 hover:bg-red-500/10 transition duration-150 active:scale-95">Delete</button>
                         </div>
                       </div>
                     </div>
@@ -1141,13 +1141,13 @@ export default function AdminPage() {
                       }
                       setTagInput("");
                     }}
-                    className="rounded-lg border border-[#2A3B50] px-3 py-2 text-sm"
+                    className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95"
                   >
                     Add Tag
                   </button>
                   <div className="flex flex-wrap gap-1">
                     {strategyForm.tags.map((tag) => (
-                      <button key={tag} onClick={() => setStrategyForm((prev) => ({ ...prev, tags: prev.tags.filter((item) => item !== tag) }))} className="rounded-full border border-[#33485F] px-2 py-1 text-xs text-[#A9C3DE]">#{tag}</button>
+                      <button key={tag} onClick={() => setStrategyForm((prev) => ({ ...prev, tags: prev.tags.filter((item) => item !== tag) }))} className="rounded-full border border-[#242D37] hover:border-red-500/40 hover:text-red-400 px-2 py-1 text-xs text-[#A9C3DE]">#{tag}</button>
                     ))}
                   </div>
                 </div>
@@ -1158,8 +1158,8 @@ export default function AdminPage() {
                 </div>
 
                 <div className="mt-4 flex gap-2">
-                  <button onClick={saveStrategy} disabled={saving} className="rounded-xl bg-gradient-to-r from-[#2563EB] to-[#0EA5E9] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60">{saving ? "Saving..." : editingStrategyId ? "Update Strategy" : "Create Strategy"}</button>
-                  {editingStrategyId ? <button onClick={resetStrategyForm} className="rounded-xl border border-[#2E4762] px-4 py-2 text-sm">Cancel</button> : null}
+                  <button onClick={saveStrategy} disabled={saving} className="rounded-xl bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-4 py-2 text-sm font-semibold transition-all duration-100 disabled:opacity-60">{saving ? "Saving..." : editingStrategyId ? "Update Strategy" : "Create Strategy"}</button>
+                  {editingStrategyId ? <button onClick={resetStrategyForm} className="rounded-xl border border-[#242D37] px-4 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Cancel</button> : null}
                 </div>
 
                 {editingStrategyId ? (

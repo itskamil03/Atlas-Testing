@@ -84,12 +84,12 @@ export function AdminTradesTab({ onMessage }: Props) {
           value={search}
           onChange={(e) => setSearch(e.target.value.toUpperCase())}
           placeholder="Search symbol or strategy"
-          className="rounded-xl border border-[#24303A] bg-[#0E141B] px-3 py-2 text-sm text-[#F3F7FB]"
+          className="rounded-xl border border-[#24303A] bg-[#0E141B] px-3 py-2 text-sm text-[#F3F7FB] outline-none focus:border-[#9BFF00]/40 transition duration-150"
         />
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="rounded-xl border border-[#24303A] bg-[#0E141B] px-3 py-2 text-sm text-[#F3F7FB]"
+          className="rounded-xl border border-[#24303A] bg-[#0E141B] px-3 py-2 text-sm text-[#F3F7FB] outline-none focus:border-[#9BFF00]/40 transition duration-150"
         >
           <option value="">All statuses</option>
           <option value="OPEN">OPEN</option>
@@ -98,7 +98,7 @@ export function AdminTradesTab({ onMessage }: Props) {
           <option value="FAILED">FAILED</option>
           <option value="CANCELLED">CANCELLED</option>
         </select>
-        <button type="button" onClick={() => void load()} className="rounded-xl border border-[#24303A] px-4 py-2 text-sm text-[#F3F7FB]">
+        <button type="button" onClick={() => void load()} className="rounded-xl border border-[#242D37] px-4 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">
           Refresh
         </button>
       </div>
@@ -136,7 +136,7 @@ export function AdminTradesTab({ onMessage }: Props) {
                       type="button"
                       disabled={busyId === trade.id}
                       onClick={() => void manualClose(trade.id)}
-                      className="rounded-lg border border-[#4F2A2A] px-2 py-1 text-xs text-[#FFB4B4]"
+                      className="rounded-lg border border-[#5C2A35] px-2 py-1 text-xs text-[#FFBAC8] hover:border-red-500/40 hover:text-red-400 hover:bg-red-500/10 transition duration-150 active:scale-95 disabled:opacity-50"
                     >
                       Close
                     </button>

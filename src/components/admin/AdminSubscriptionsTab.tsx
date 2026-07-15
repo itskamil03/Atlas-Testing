@@ -137,7 +137,7 @@ export function AdminSubscriptionsTab({ onMessage, onError }: AdminSubscriptions
             <select
               value={paymentFilter}
               onChange={(e) => setPaymentFilter(e.target.value)}
-              className="rounded-xl border border-[#242D37] bg-[#050607] px-3 py-2 text-sm text-[#F3F7FB]"
+              className="rounded-xl border border-[#242D37] bg-[#050607] px-3 py-2 text-sm text-[#F3F7FB] outline-none focus:border-[#9BFF00]/40 transition duration-150"
             >
               <option value="all">All statuses</option>
               <option value="submitted">Submitted</option>
@@ -149,7 +149,7 @@ export function AdminSubscriptionsTab({ onMessage, onError }: AdminSubscriptions
             <button
               type="button"
               onClick={() => void loadData()}
-              className="rounded-xl border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40"
+              className="rounded-xl border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95"
             >
               Refresh
             </button>
