@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { WorkflowBanner } from "@/components/WorkflowBanner";
-import { StrategyMarketplaceCard } from "@/components/strategies/StrategyMarketplaceCard";
+import { StrategyMarketplaceCard } from "@/components/Strategies/StrategyMarketplaceCard";
 import { api } from "@/lib/api";
 import { clearTokens, getAccessToken, isDemoSession } from "@/lib/auth";
 import type { UserProfile, SubscriptionStatus } from "@/lib/types";

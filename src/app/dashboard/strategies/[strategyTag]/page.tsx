@@ -9,8 +9,8 @@ import { DeployStrategyModal } from "@/components/auto-trading/DeployStrategyMod
 import { SendSignalModal } from "@/components/auto-trading/SendSignalModal";
 import { AssetAllocationChart } from "@/components/dashboard/AssetAllocationChart";
 import { PortfolioPerformanceChart } from "@/components/dashboard/PortfolioPerformanceChart";
-import { StrategyDateFilterBar } from "@/components/strategies/StrategyDateFilterBar";
-import { StrategyTradeHistory } from "@/components/strategies/StrategyTradeHistory";
+import { StrategyDateFilterBar } from "@/components/Strategies/StrategyDateFilterBar";
+import { StrategyTradeHistory } from "@/components/Strategies/StrategyTradeHistory";
 import { WorkflowBanner } from "@/components/WorkflowBanner";
 import type { DateRangeValue } from "@/components/broker/DateRangePicker";
 import { getAccessToken } from "@/lib/auth";
