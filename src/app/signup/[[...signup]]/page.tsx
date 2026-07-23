@@ -27,6 +27,15 @@ export default function SignupPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
+  const validateUsername = (name: string): string | null => {
+    if (!name) return null
+    if (name.length < 4) return 'Username must be at least 4 characters.'
+    const numDigits = (name.match(/\d/g) || []).length
+    if (numDigits < 2) return 'Username must contain at least 2 numbers.'
+    if (!/[^\w\s]/.test(name)) return 'Username must contain at least 1 special character (!@#$%^&*).'
+    return null
+  }
+
   const validatePassword = (pwd: string): string | null => {
     if (!pwd) return null
     if (pwd.length < 8) return 'Password must be at least 8 characters.'
@@ -37,6 +46,7 @@ export default function SignupPage() {
     return null
   }
 
+  const usernameError = validateUsername(username)
   const passwordError = validatePassword(password)
   const confirmError = confirmPassword && confirmPassword !== password ? 'Passwords do not match.' : null
 
@@ -95,6 +105,10 @@ export default function SignupPage() {
     event.preventDefault()
     setError('')
 
+    if (usernameError) {
+      setError(usernameError)
+      return
+    }
     if (passwordError) {
       setError(passwordError)
       return
@@ -263,7 +277,7 @@ export default function SignupPage() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Choose a username"
+                placeholder="Min 4 chars, 1 special char, 2 numbers"
                 className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
                 autoComplete="username"
                 required
