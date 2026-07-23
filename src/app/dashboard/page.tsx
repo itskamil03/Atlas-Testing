@@ -10,6 +10,19 @@ import { getAdminRoute, setAdminViewMode } from "@/lib/adminRoutes";
 import { extractApiErrorMessage } from "@/lib/errors";
 import type { BrokerBalance, DashboardOverview, DashboardSummary, Trade, UserProfile } from "@/lib/types";
 
+import {
+  DateRangePicker,
+  formatDateRangeLabel,
+  type DateRangeValue,
+} from "@/components/broker/DateRangePicker";
+import {
+  dateFilterSubtext,
+  filterChartSeriesByDate,
+  filterTradesByDate,
+  isDateFilterActive,
+  type DatePreset,
+} from "@/lib/dateFilters";
+
 const initialSummary: DashboardSummary = {
   total_trades: 0,
   cumulative_pnl: "0",
@@ -25,6 +38,13 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [brokerBalance, setBrokerBalance] = useState<BrokerBalance | null>(null);
   const [displayName, setDisplayName] = useState("Trader");
+
+  // Date filter state
+  const [datePreset, setDatePreset] = useState<DatePreset>("All");
+  const [useCustomDateRange, setUseCustomDateRange] = useState(false);
+  const [customDateRange, setCustomDateRange] = useState<DateRangeValue>({ from: null, to: null });
+  const [dateLabel, setDateLabel] = useState("Select Dates");
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
 
   const loadData = async () => {
     if (isDemoSession()) {
@@ -174,8 +194,24 @@ export default function DashboardPage() {
     void loadCurrentUser();
   }, [router]);
 
-  const winRate =
-    summary.total_trades > 0 ? Math.round((summary.winning_trades / summary.total_trades) * 100) : 0;
+  const dateFilter = useMemo(
+    () => ({ preset: datePreset, customRange: customDateRange, useCustom: useCustomDateRange }),
+    [customDateRange, datePreset, useCustomDateRange],
+  );
+
+  const filteredTrades = useMemo(() => filterTradesByDate(trades, dateFilter), [dateFilter, trades]);
+  const isFiltered = isDateFilterActive(dateFilter);
+
+  const winRate = useMemo(() => {
+    const source = isFiltered ? filteredTrades : trades;
+    const closed = source.filter((t) => t.status.toUpperCase() === "CLOSED");
+    const wins = closed.filter((t) => Number(t.pnl) > 0).length;
+    return closed.length > 0
+      ? Math.round((wins / closed.length) * 100)
+      : summary.total_trades > 0
+        ? Math.round((summary.winning_trades / summary.total_trades) * 100)
+        : 0;
+  }, [filteredTrades, isFiltered, summary, trades]);
 
   const balanceValue = useMemo(() => {
     const raw = brokerBalance?.balance ?? "0";
@@ -184,25 +220,54 @@ export default function DashboardPage() {
   }, [brokerBalance?.balance]);
 
   const pnlValue = useMemo(() => {
-    const parsed = Number(summary.cumulative_pnl || "0");
-    return Number.isFinite(parsed) ? parsed : 0;
-  }, [summary.cumulative_pnl]);
+    const source = isFiltered ? filteredTrades : trades;
+    const parsed = source.reduce((sum, t) => sum + Number(t.pnl || 0), 0);
+    return isFiltered ? parsed : Number(summary.cumulative_pnl || "0");
+  }, [filteredTrades, isFiltered, summary.cumulative_pnl, trades]);
 
-  const avgGain = trades.length > 0 ? Math.max(pnlValue / Math.max(trades.length, 1), 0) : 0;
-  const avgLoss = trades.length > 0 ? Math.min(pnlValue / Math.max(trades.length, 1), 0) : 0;
+  const avgGain = useMemo(() => {
+    const source = isFiltered ? filteredTrades : trades;
+    const closed = source.filter((t) => t.status.toUpperCase() === "CLOSED");
+    const wins = closed.filter((t) => Number(t.pnl) > 0);
+    if (wins.length === 0) return 0;
+    return wins.reduce((sum, t) => sum + Number(t.pnl || 0), 0) / wins.length;
+  }, [filteredTrades, isFiltered, trades]);
 
-  const totalWinners = summary.winning_trades;
-  const totalLosers = summary.losing_trades;
+  const avgLoss = useMemo(() => {
+    const source = isFiltered ? filteredTrades : trades;
+    const closed = source.filter((t) => t.status.toUpperCase() === "CLOSED");
+    const losses = closed.filter((t) => Number(t.pnl) < 0);
+    if (losses.length === 0) return 0;
+    return losses.reduce((sum, t) => sum + Number(t.pnl || 0), 0) / losses.length;
+  }, [filteredTrades, isFiltered, trades]);
+
+  const totalWinners = useMemo(() => {
+    const source = isFiltered ? filteredTrades : trades;
+    if (isFiltered) {
+      return source.filter((t) => t.status.toUpperCase() === "CLOSED" && Number(t.pnl) > 0).length;
+    }
+    return summary.winning_trades;
+  }, [filteredTrades, isFiltered, summary.winning_trades, trades]);
+
+  const totalLosers = useMemo(() => {
+    const source = isFiltered ? filteredTrades : trades;
+    if (isFiltered) {
+      return source.filter((t) => t.status.toUpperCase() === "CLOSED" && Number(t.pnl) < 0).length;
+    }
+    return summary.losing_trades;
+  }, [filteredTrades, isFiltered, summary.losing_trades, trades]);
 
   const bestTradePnl = useMemo(() => {
-    if (trades.length === 0) return 0;
-    return Math.max(...trades.map((trade) => Number(trade.pnl || 0)));
-  }, [trades]);
+    const source = isFiltered ? filteredTrades : trades;
+    if (source.length === 0) return 0;
+    return Math.max(...source.map((trade) => Number(trade.pnl || 0)));
+  }, [filteredTrades, isFiltered, trades]);
 
   const worstTradePnl = useMemo(() => {
-    if (trades.length === 0) return 0;
-    return Math.min(...trades.map((trade) => Number(trade.pnl || 0)));
-  }, [trades]);
+    const source = isFiltered ? filteredTrades : trades;
+    if (source.length === 0) return 0;
+    return Math.min(...source.map((trade) => Number(trade.pnl || 0)));
+  }, [filteredTrades, isFiltered, trades]);
 
   const formatCurrency = (value: number) => `$${value.toFixed(2)}`;
 
@@ -217,13 +282,57 @@ export default function DashboardPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <button className="rounded-lg border border-gray-200 dark:border-white/10 bg-transparent dark:bg-white/[0.03] px-3 py-1.5 text-xs text-gray-500 dark:text-[#A8B3BF] hover:dark:border-emerald-500/30 hover:dark:text-emerald-400 active:scale-95 transition-all duration-100">Select Dates</button>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setDatePickerOpen(true)}
+                  className={`flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs transition duration-200 ${
+                    useCustomDateRange
+                      ? "border-[#9BFF00] bg-[#9BFF00]/10 text-emerald-400"
+                      : "border-gray-200 dark:border-white/10 bg-transparent dark:bg-white/[0.03] text-gray-500 dark:text-[#A8B3BF] hover:dark:border-emerald-500/30 hover:dark:text-emerald-400"
+                  }`}
+                >
+                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="5" width="18" height="16" rx="2" />
+                    <path d="M8 3v4M16 3v4M3 10h18" />
+                  </svg>
+                  {dateLabel}
+                </button>
+                <DateRangePicker
+                  open={datePickerOpen}
+                  value={customDateRange}
+                  onClose={() => setDatePickerOpen(false)}
+                  onApply={(range, presetLabel) => {
+                    setCustomDateRange(range);
+                    setUseCustomDateRange(true);
+                    setDateLabel(presetLabel === "all_time" ? "All time" : formatDateRangeLabel(range));
+                  }}
+                />
+              </div>
+
               <div className="flex items-center rounded-lg border border-gray-200 dark:border-white/10 bg-gray-100 dark:bg-white/[0.03] p-1 text-xs text-gray-500 dark:text-[#94A1AE]">
-                <button className="rounded px-2 py-1 hover:text-emerald-500 dark:hover:text-emerald-400 active:scale-95 transition-colors">1D</button>
-                <button className="rounded px-2 py-1 hover:text-emerald-500 dark:hover:text-emerald-400 active:scale-95 transition-colors">1W</button>
-                <button className="rounded px-2 py-1 hover:text-emerald-500 dark:hover:text-emerald-400 active:scale-95 transition-colors">1M</button>
-                <button className="rounded px-2 py-1 hover:text-emerald-500 dark:hover:text-emerald-400 active:scale-95 transition-colors">1Y</button>
-                <button className="rounded bg-emerald-600 active:scale-95 px-2 py-1 font-semibold text-white transition-all duration-100">All</button>
+                {(["1D", "1W", "1M", "1Y", "All"] as DatePreset[]).map((preset) => {
+                  const active = !useCustomDateRange && datePreset === preset;
+                  return (
+                    <button
+                      key={preset}
+                      type="button"
+                      onClick={() => {
+                        setDatePreset(preset);
+                        setUseCustomDateRange(false);
+                        setCustomDateRange({ from: null, to: null });
+                        setDateLabel("Select Dates");
+                      }}
+                      className={`rounded px-2 py-1 transition-all duration-100 ${
+                        active
+                          ? "bg-emerald-600 font-semibold text-white"
+                          : "hover:text-emerald-500 dark:hover:text-emerald-400"
+                      }`}
+                    >
+                      {preset}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -440,7 +549,7 @@ export default function DashboardPage() {
                 <button className="rounded-full border border-gray-200 dark:border-white/10 px-3 py-1.5 text-gray-500 dark:text-[#A3AFBD] hover:dark:border-emerald-500/30 hover:dark:text-emerald-400 active:scale-95 transition-all duration-100">Symbol</button>
                 <button className="rounded-full border border-gray-200 dark:border-white/10 px-3 py-1.5 text-gray-500 dark:text-[#A3AFBD] hover:dark:border-emerald-500/30 hover:dark:text-emerald-400 active:scale-95 transition-all duration-100">All</button>
                 <button className="rounded-full border border-gray-200 dark:border-white/10 px-3 py-1.5 text-gray-500 dark:text-[#A3AFBD] hover:dark:border-emerald-500/30 hover:dark:text-emerald-400 active:scale-95 transition-all duration-100">Source</button>
-                <button className="rounded-full border border-gray-200 dark:border-white/10 px-3 py-1.5 text-gray-500 dark:text-[#A3AFBD] hover:dark:border-emerald-500/30 hover:dark:text-emerald-400 active:scale-95 transition-all duration-100">Select Dates</button>
+                <button onClick={() => setDatePickerOpen(true)} className="rounded-full border border-gray-200 dark:border-white/10 px-3 py-1.5 text-gray-500 dark:text-[#A3AFBD] hover:dark:border-emerald-500/30 hover:dark:text-emerald-400 active:scale-95 transition-all duration-100">Select Dates</button>
               </div>
 
               <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-white/[0.06]">
@@ -454,9 +563,9 @@ export default function DashboardPage() {
                   <span>Source</span>
                 </div>
 
-                {trades.length > 0 ? (
+                {filteredTrades.length > 0 ? (
                   <div className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                    {trades.slice(0, 8).map((trade) => (
+                    {filteredTrades.slice(0, 8).map((trade) => (
                       <div key={trade.id} className="grid grid-cols-7 px-3 py-3 text-sm text-gray-700 dark:text-[#C9D4E0]">
                         <span>{trade.symbol}</span>
                         <span>{trade.side}</span>
