@@ -29,6 +29,7 @@ export default function SignupPage() {
 
   const validateUsername = (name: string): string | null => {
     if (!name) return null
+    if (/\s/.test(name)) return 'Username must not contain spaces.'
     if (name.length < 4) return 'Username must be at least 4 characters.'
     const numDigits = (name.match(/\d/g) || []).length
     if (numDigits < 2) return 'Username must contain at least 2 numbers.'
