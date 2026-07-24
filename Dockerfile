@@ -2,7 +2,7 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 # Install pnpm
-RUN npm install -g pnpm
+RUN npm install -g pnpm@11.13.0
 # Copy only package file first
 COPY package.json ./
 # Install dependencies without frozen lockfile
@@ -23,7 +23,7 @@ RUN pnpm run build
 FROM node:20-alpine
 WORKDIR /app
 # Install pnpm
-RUN npm install -g pnpm
+RUN npm install -g pnpm@11.13.0
 # Copy package file
 COPY package.json ./
 # Install only production dependencies
