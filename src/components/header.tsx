@@ -11,7 +11,6 @@ import { ThemeToggleButton } from './ThemeToggleButton'
 
 const menuItems = [
     { name: 'Features', href: '/features' },
-    { name: 'Services', href: '/services' },
     { name: 'Academy', href: '/academy' },
     { name: 'Pricing', href: '/pricing' },
     { name: 'About', href: '/about' },

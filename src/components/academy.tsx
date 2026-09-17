@@ -19,39 +19,6 @@ export default function Academy() {
 
   const moduleIcons = [BookOpen, TrendingUp, Code, Zap, Shield, Brain]
 
-  const features = [
-    {
-      title: 'Automated Execution Algorithms',
-      description: 'Designed to identify and act on high-probability opportunities across global markets.',
-      icon: Zap,
-      gradient: 'from-blue-400/20 to-cyan-400/10'
-    },
-    {
-      title: 'Forex Intelligence Suite',
-      description: 'AI-driven currency market signals, macro analysis, and volatility-aware strategies built for FX traders.',
-      icon: TrendingUp,
-      gradient: 'from-emerald-400/20 to-teal-400/10'
-    },
-    {
-      title: 'Crypto Quant Engine',
-      description: 'Quantitative crypto strategies with momentum, mean-reversion, and risk-managed execution for digital asset markets.',
-      icon: Code,
-      gradient: 'from-purple-400/20 to-pink-400/10'
-    },
-    {
-      title: 'Risk Management Engine',
-      description: 'Integrated risk controls, position sizing, and drawdown management to protect capital while trading aggressively.',
-      icon: Shield,
-      gradient: 'from-orange-400/20 to-red-400/10'
-    },
-    {
-      title: 'Portfolio & Performance Dashboard',
-      description: 'Track trading performance, risk metrics, and portfolio allocations with intuitive analytics designed for professional traders.',
-      icon: TrendingUp,
-      gradient: 'from-indigo-400/20 to-blue-400/10'
-    },
-  ]
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -70,19 +37,35 @@ export default function Academy() {
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           variants={fadeUp}
-          className="mb-12 text-center"
+          className="mb-14 text-center"
         >
-          <motion.p className="text-xs font-semibold uppercase tracking-widest text-cyan-600 dark:text-cyan-400">
-            ATLAS Academy
-          </motion.p>
-          <h2 className="mt-3 text-4xl font-bold sm:text-5xl lg:text-6xl">Master Trading Program</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-            Institutional-grade learning designed for traders and quantitative strategists seeking disciplined execution across global markets.
-          </p>
+          <div className="flex flex-col items-center justify-center">
+            <motion.p className="text-xs font-semibold uppercase tracking-widest text-[#9BFF00] dark:text-[#9BFF00]">
+              ATLAS Academy
+            </motion.p>
+            <h2 className="mt-3 text-4xl font-bold sm:text-5xl lg:text-6xl">Master Trading Program</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
+              Institutional-grade learning designed for traders and quantitative strategists seeking disciplined execution across global markets.
+            </p>
+
+            {/* Enroll Now Button Shifted to Top */}
+            <motion.div 
+              className="mt-6"
+              whileHover={{ scale: 1.04 }} 
+              whileTap={{ scale: 0.98 }} 
+              transition={{ duration: 0.12 }}
+            >
+              <Button asChild size="lg" className="rounded-xl px-8 py-6 text-base shadow-lg bg-[#9BFF00] hover:bg-[#B7FF45] text-[#11140D] font-bold active:scale-95 transition-all duration-100 border-none shadow-[#9BFF00]/20">
+                <Link href="/signup">
+                  Enroll Now
+                </Link>
+              </Button>
+            </motion.div>
+          </div>
         </motion.div>
 
         {/* Two Column: Description + Modules */}
-        <div className="grid gap-8 lg:grid-cols-3 lg:gap-10 mb-20">
+        <div className="grid gap-8 lg:grid-cols-3 lg:gap-10">
           {/* Left: Description + Focus */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -150,64 +133,6 @@ export default function Academy() {
             </p>
           </motion.div>
         </div>
-
-        {/* Features Grid */}
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={containerVariants}>
-          <h3 className="mb-8 text-3xl font-bold">Platform Capabilities</h3>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature, index) => {
-              const IconComponent = feature.icon
-              const colorClasses = [
-                'dark:from-blue-900/30 dark:to-cyan-900/30',
-                'dark:from-emerald-900/30 dark:to-teal-900/30',
-                'dark:from-purple-900/30 dark:to-pink-900/30',
-                'dark:from-orange-900/30 dark:to-red-900/30',
-                'dark:from-indigo-900/30 dark:to-blue-900/30',
-              ][index]
-              return (
-                <motion.div
-                  key={feature.title}
-                  variants={fadeUp}
-                  whileHover={{ y: -8, boxShadow: '0 20px 40px -5px rgba(0,0,0,0.15)' }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
-                >
-                  <Card className="group h-full overflow-hidden border bg-white/40 backdrop-blur-sm transition-all duration-200 dark:bg-slate-900/30">
-                    <div
-                      className={`absolute inset-0 bg-linear-to-br ${feature.gradient} ${colorClasses} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-                    />
-                    <CardContent className="relative p-6">
-                      <div className="mb-4 inline-flex rounded-lg bg-linear-to-br from-slate-100 to-slate-50 p-3 group-hover:scale-110 transition-transform duration-200 dark:from-slate-700/50 dark:to-slate-800/50">
-                        <IconComponent className="h-6 w-6 text-slate-700 dark:text-slate-300" />
-                      </div>
-                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{feature.title}</h3>
-                      <p className="mt-2 text-sm leading-6 text-muted-foreground group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors duration-200">
-                        {feature.description}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              )
-            })}
-          </div>
-        </motion.div>
-
-        {/* CTA Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="mt-16 text-center"
-        >
-          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.12 }}>
-            <Button asChild size="lg" className="shadow-lg bg-[#9BFF00] hover:bg-[#B7FF45] text-[#11140D] font-semibold active:scale-95 transition-all duration-100 border-none">
-              <Link href="/signup">
-                Enroll Now
-              </Link>
-            </Button>
-          </motion.div>
-        </motion.div>
       </div>
     </section>
   )

@@ -14,11 +14,6 @@ const navPages = [
         description: 'Explore the trading engine, analytics, risk controls, and backtesting suite.',
     },
     {
-        title: 'Services',
-        href: '/services',
-        description: 'See our algo trading, AI signals, custom builds, and academy offerings.',
-    },
-    {
         title: 'Academy',
         href: '/academy',
         description: 'Learn structured trading, automation workflows, and risk management.',

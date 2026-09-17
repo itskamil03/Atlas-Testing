@@ -7,7 +7,6 @@ import StatsSection from "@/components/stats-2";
 import PerformanceSection from "@/components/performance-section";
 import LiveStatsBar from "@/components/live-stats-bar";
 import AboutUs from "@/components/about-us";
-import Services from "@/components/services";
 import Academy from "@/components/academy";
 import ContactSection from "@/components/contact";
 import MarketTicker from "@/components/market-ticker";
@@ -26,7 +25,7 @@ export default function Home() {
       <HeroSection />
       {/* <SectionReveal animation="slide-up"> */}
         <Features />
-        <Services />
+        <PerformanceSection />
         <Academy />
       <SectionReveal animation="zoom">
         <Pricing />
@@ -34,36 +33,16 @@ export default function Home() {
       <SectionReveal animation="zoom">
         <AboutUs />
       </SectionReveal>
-       <SectionReveal animation="fade">
-        <ContactSection />
-      </SectionReveal>
-      {/* </SectionReveal> */}
-      {/* <SectionReveal animation="fade">
-        <MarketTicker />
-      </SectionReveal> */}
-      {/* <SectionReveal animation="zoom">
-        <IndiaAnimatedMap />
-      </SectionReveal> */}
       <SectionReveal animation="slide-right">
         <LiveStatsBar />
       </SectionReveal>
       <SectionReveal animation="zoom">
         <Testimonials />
       </SectionReveal>
-      
-      
-      
-     
-        <PerformanceSection />
-    
-      {/* <SectionReveal animation="slide-right">
-        <IntegrationsSection />
-      </SectionReveal> */}
-      {/* <SectionReveal animation="fade"> */}
-        <StatsSection />
-      {/* </SectionReveal> */}
-     
-     
+      <StatsSection />
+      <SectionReveal animation="fade">
+        <ContactSection />
+      </SectionReveal>
     </div>
   );
 }

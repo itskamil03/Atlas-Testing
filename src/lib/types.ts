@@ -507,11 +507,13 @@ export type UserSettingsUpdateRequest = {
   max_open_positions: number;
 };
 
+export type KYCDocumentType = "aadhaar" | "pan" | "passport" | "driving_license";
+
 export type KYCRecord = {
   id: number;
   user_id: number;
   status: "pending" | "approved" | "rejected";
-  document_type: string;
+  document_type: KYCDocumentType | string;
   document_id: string;
   notes: string | null;
   rejection_reason?: string | null;
@@ -522,7 +524,7 @@ export type KYCRecord = {
 };
 
 export type KYCSubmitRequest = {
-  document_type: string;
+  document_type: KYCDocumentType | string;
   document_id: string;
   notes?: string | null;
 };
