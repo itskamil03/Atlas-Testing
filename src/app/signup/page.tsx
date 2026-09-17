@@ -33,7 +33,7 @@ export default function SignupPage() {
     if (name.length < 4) return 'Username must be at least 4 characters.'
     const numDigits = (name.match(/\d/g) || []).length
     if (numDigits < 2) return 'Username must contain at least 2 numbers.'
-    if (!/[^\w\s]/.test(name)) return 'Username must contain at least 1 special character (!@#$%^&*).'
+    // if (!/[^\w\s]/.test(name)) return 'Username must contain at least 1 special character (!@#$%^&*).'
     return null
   }
 
