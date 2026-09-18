@@ -55,9 +55,7 @@ export function AdminTradesTab({ onMessage }: Props) {
   const manualClose = async (tradeId: number) => {
     setBusyId(tradeId);
     try {
-      const res = await api.post<{ message: string }>(`/admin/trades/${tradeId}/manual-close`, {
-        close_price: null,
-      });
+      const res = await api.post<{ message: string }>(`/admin/trades/${tradeId}/manual-close`, {});
       onMessage?.(res.data.message);
       await load();
     } catch (err: unknown) {

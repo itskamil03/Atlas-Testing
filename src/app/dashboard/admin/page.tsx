@@ -583,6 +583,15 @@ export default function AdminPage() {
         description: strategyForm.description || null,
         logo_url: strategyForm.logo_url || null,
         image_url: strategyForm.image_url || null,
+        tags: Array.isArray(strategyForm.tags)
+          ? strategyForm.tags.filter(Boolean).join(",") || null
+          : strategyForm.tags || null,
+        chart_points: Array.isArray(strategyForm.chart_points)
+          ? strategyForm.chart_points.filter(Boolean).join(",") || null
+          : strategyForm.chart_points || null,
+        academy_slugs: Array.isArray(strategyForm.academy_slugs)
+          ? strategyForm.academy_slugs.filter(Boolean).join(",") || null
+          : strategyForm.academy_slugs || null,
         parameters: Object.fromEntries(
           Object.entries(strategyForm.parameters).map(([key, value]) => [key, Number.isNaN(Number(value)) ? value : Number(value)]),
         ),
