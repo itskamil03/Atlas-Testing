@@ -62,7 +62,27 @@ export const HeroHeader = () => {
 
   useEffect(() => {
     resetIndicatorToActive();
+    setMobileMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
 
   return (
     <header className="atlas-header-wrapper">
@@ -212,9 +232,15 @@ export const HeroHeader = () => {
           box-shadow: 0 0 14px rgba(217, 70, 239, 0.4);
         }
 
-        @media (max-width: 960px) {
+        @media (max-width: 1024px) {
           .atlas-navlinks {
             display: none;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .atlas-nav {
+            padding: 12px 16px;
           }
         }
       `}</style>
@@ -230,13 +256,13 @@ export const HeroHeader = () => {
       {/* Main Navbar */}
       <nav className="atlas-nav">
         {/* Brand */}
-        <Link href="/" className="flex items-center cursor-pointer py-0 overflow-visible" onClick={() => setMobileMenuOpen(false)}>
+        <Link href="/" className="flex items-center cursor-pointer py-0 overflow-visible shrink-0" onClick={() => setMobileMenuOpen(false)}>
           <Image
             src="/LOGO.png?v=4"
             alt="ATLAS"
             width={280}
             height={80}
-            className="h-14 sm:h-15 md:h-16 w-auto object-contain scale-[1.25] sm:scale-[1.32] md:scale-[1.38] origin-left transition-transform duration-200 hover:scale-[1.42]"
+            className="h-11 sm:h-14 md:h-16 w-auto object-contain scale-[1.15] sm:scale-[1.28] md:scale-[1.38] origin-left transition-transform duration-200 hover:scale-[1.42]"
             priority
             unoptimized
           />
@@ -282,78 +308,86 @@ export const HeroHeader = () => {
           </button>
         </div>
 
-        {/* Mobile Hamburger Button */}
+        {/* Mobile Action Controls */}
         <div className="flex items-center gap-2 lg:hidden">
           <button
             type="button"
             onClick={openDemoModal}
-            className="atlas-btn atlas-btn-demo !text-xs !py-1.5 !px-3"
+            className="atlas-btn atlas-btn-demo !text-xs !py-1.5 !px-3 font-semibold shrink-0"
           >
             Book Demo
           </button>
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-[#b6afd6] hover:text-[#f4f1ff] transition rounded-lg border border-[rgba(155,120,255,0.2)] bg-[rgba(18,10,40,0.6)]"
+            className="p-2 text-[#b6afd6] hover:text-[#f4f1ff] transition rounded-lg border border-[rgba(155,120,255,0.2)] bg-[rgba(18,10,40,0.7)] active:scale-95"
             aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
         </div>
-      </nav>
 
-      {/* Mobile Drawer Menu */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-[calc(54px+0.3in)] z-30 bg-[#0c061d]/95 backdrop-blur-2xl border-b border-[rgba(155,120,255,0.25)] px-6 py-6 shadow-2xl animate-in slide-in-from-top-2 duration-200">
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2 pb-4 border-b border-[rgba(155,120,255,0.16)]">
-              {navItems.map((item) => {
-                const active = isActiveLink(item.href);
-                return (
+        {/* Mobile Backdrop & Drawer Menu */}
+        {mobileMenuOpen && (
+          <>
+            <div
+              className="lg:hidden fixed inset-0 top-0 bg-black/60 backdrop-blur-sm z-30 transition-opacity"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-hidden="true"
+            />
+            <div className="lg:hidden absolute inset-x-0 top-full z-40 bg-[#0c061d]/98 backdrop-blur-2xl border-b border-[rgba(155,120,255,0.25)] px-6 py-6 shadow-[0_20px_50px_rgba(0,0,0,0.8)] max-h-[calc(100vh-76px)] overflow-y-auto animate-in slide-in-from-top-2 duration-200">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1.5 pb-4 border-b border-[rgba(155,120,255,0.16)]">
+                  {navItems.map((item) => {
+                    const active = isActiveLink(item.href);
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`py-2.5 px-3.5 rounded-xl text-base font-medium transition duration-150 flex items-center justify-between ${
+                          active
+                            ? 'bg-purple-600/20 text-[#f4f1ff] font-semibold border-l-2 border-fuchsia-400 shadow-sm'
+                            : 'text-[#b6afd6] hover:text-[#f4f1ff] hover:bg-white/5'
+                        }`}
+                      >
+                        <span>{item.name}</span>
+                        {active && <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 shadow-[0_0_8px_#e879f9]" />}
+                      </Link>
+                    );
+                  })}
+                </div>
+                <div className="flex flex-col gap-2.5 pt-1">
                   <Link
-                    key={item.name}
-                    href={item.href}
+                    href="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`py-2 px-3 rounded-lg text-base font-medium transition ${
-                      active
-                        ? 'bg-purple-600/20 text-[#f4f1ff] font-semibold border-l-2 border-fuchsia-400'
-                        : 'text-[#b6afd6] hover:text-[#f4f1ff] hover:bg-white/5'
-                    }`}
+                    className="atlas-btn atlas-btn-ghost w-full justify-center !py-2.5 !text-sm"
                   >
-                    {item.name}
+                    Login
                   </Link>
-                );
-              })}
+                  <Link
+                    href="/signup"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="atlas-btn atlas-btn-brand w-full justify-center !py-2.5 !text-sm"
+                  >
+                    Get Started
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      openDemoModal();
+                    }}
+                    className="atlas-btn atlas-btn-demo w-full justify-center !py-2.5 !text-sm"
+                  >
+                    Book A Demo
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="flex flex-col gap-2.5 pt-2">
-              <Link
-                href="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="atlas-btn atlas-btn-ghost w-full justify-center !py-2.5"
-              >
-                Login
-              </Link>
-              <Link
-                href="/signup"
-                onClick={() => setMobileMenuOpen(false)}
-                className="atlas-btn atlas-btn-brand w-full justify-center !py-2.5"
-              >
-                Get Started
-              </Link>
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  openDemoModal();
-                }}
-                className="atlas-btn atlas-btn-demo w-full justify-center !py-2.5"
-              >
-                Book A Demo
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </nav>
     </header>
   );
 };
