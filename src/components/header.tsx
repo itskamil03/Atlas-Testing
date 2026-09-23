@@ -176,10 +176,41 @@ export const HeroHeader = () => {
           pointer-events: none;
         }
 
-        .atlas-navcta {
-          display: flex;
-          align-items: center;
-          gap: 12px;
+        @media (min-width: 1024px) {
+          .atlas-navlinks {
+            display: flex;
+            gap: 30px;
+            font-size: 15.5px;
+            color: var(--atlas-text-mid);
+            position: relative;
+            font-family: 'Inter', sans-serif;
+          }
+
+          .atlas-navcta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          }
+
+          .atlas-mobile-controls {
+            display: none !important;
+          }
+        }
+
+        @media (max-width: 1023px) {
+          .atlas-navlinks {
+            display: none !important;
+          }
+
+          .atlas-navcta {
+            display: none !important;
+          }
+
+          .atlas-mobile-controls {
+            display: flex !important;
+            align-items: center;
+            gap: 8px;
+          }
         }
 
         .atlas-btn {
@@ -233,9 +264,6 @@ export const HeroHeader = () => {
         }
 
         @media (max-width: 1024px) {
-          .atlas-navlinks {
-            display: none;
-          }
           .atlas-nav {
             padding: 12px 20px;
           }
@@ -295,7 +323,7 @@ export const HeroHeader = () => {
         </div>
 
         {/* Desktop CTAs */}
-        <div className="hidden lg:flex atlas-navcta">
+        <div className="atlas-navcta">
           <Link href="/login" className="atlas-btn atlas-btn-ghost">
             Login
           </Link>
@@ -311,8 +339,8 @@ export const HeroHeader = () => {
           </button>
         </div>
 
-        {/* Mobile Action Controls */}
-        <div className="flex items-center gap-2 lg:hidden shrink-0">
+        {/* Mobile Action Controls (Book Demo + Hamburger Icon) */}
+        <div className="atlas-mobile-controls">
           <button
             type="button"
             onClick={openDemoModal}
@@ -323,17 +351,13 @@ export const HeroHeader = () => {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex items-center justify-center w-10 h-10 rounded-xl border border-purple-500/30 bg-purple-950/40 text-purple-200 hover:text-white hover:border-purple-400/60 hover:bg-purple-900/50 transition-all duration-200 active:scale-95 shrink-0 shadow-[0_0_12px_rgba(139,92,246,0.15)]"
+            className="flex items-center justify-center w-10 h-10 rounded-xl border border-purple-500/40 bg-purple-950/70 text-purple-100 hover:text-white hover:border-fuchsia-400 hover:bg-purple-900/60 transition-all duration-200 active:scale-95 shrink-0 shadow-[0_0_14px_rgba(168,85,247,0.25)]"
             aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
           >
             {mobileMenuOpen ? (
               <X className="w-5 h-5 text-fuchsia-300" strokeWidth={2.5} />
             ) : (
-              <svg className="w-5 h-5 text-purple-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-              </svg>
+              <Menu className="w-5 h-5 text-purple-200" strokeWidth={2.5} />
             )}
           </button>
         </div>
