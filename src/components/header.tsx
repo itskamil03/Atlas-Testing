@@ -236,11 +236,14 @@ export const HeroHeader = () => {
           .atlas-navlinks {
             display: none;
           }
+          .atlas-nav {
+            padding: 12px 20px;
+          }
         }
 
         @media (max-width: 640px) {
           .atlas-nav {
-            padding: 12px 16px;
+            padding: 10px 14px;
           }
         }
       `}</style>
@@ -262,7 +265,7 @@ export const HeroHeader = () => {
             alt="ATLAS"
             width={280}
             height={80}
-            className="h-11 sm:h-14 md:h-16 w-auto object-contain scale-[1.15] sm:scale-[1.28] md:scale-[1.38] origin-left transition-transform duration-200 hover:scale-[1.42]"
+            className="h-10 sm:h-12 md:h-16 w-auto object-contain max-w-[140px] sm:max-w-[200px] md:max-w-none transition-transform duration-200 hover:scale-105"
             priority
             unoptimized
           />
@@ -309,18 +312,18 @@ export const HeroHeader = () => {
         </div>
 
         {/* Mobile Action Controls */}
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-2 lg:hidden shrink-0">
           <button
             type="button"
             onClick={openDemoModal}
-            className="atlas-btn atlas-btn-demo !text-xs !py-1.5 !px-3 font-semibold shrink-0"
+            className="atlas-btn atlas-btn-demo !text-xs !py-1.5 !px-2.5 sm:!px-3 font-semibold shrink-0"
           >
             Book Demo
           </button>
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-[#b6afd6] hover:text-[#f4f1ff] transition rounded-lg border border-[rgba(155,120,255,0.2)] bg-[rgba(18,10,40,0.7)] active:scale-95"
+            className="p-2 text-[#b6afd6] hover:text-[#f4f1ff] transition rounded-lg border border-[rgba(155,120,255,0.2)] bg-[rgba(18,10,40,0.7)] active:scale-95 shrink-0"
             aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}

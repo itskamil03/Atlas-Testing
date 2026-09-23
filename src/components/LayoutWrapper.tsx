@@ -26,7 +26,7 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
       {isDashboard && !isAdminPage ? <Header /> : isAdminPage ? null : <HeroHeader />}
       
       {/* The actual page content */}
-      <main className={`grow ${isDashboard ? '' : 'pt-[98px] sm:pt-[102px] md:pt-[106px]'}`}>
+      <main className={`grow ${isDashboard ? '' : 'pt-[76px] sm:pt-[86px] md:pt-[102px]'}`}>
         <Breadcrumbs />
         {children}
       </main>
