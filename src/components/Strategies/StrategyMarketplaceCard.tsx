@@ -36,7 +36,7 @@ function MiniSparkline({ values, positive }: { values: number[]; positive: boole
     <svg viewBox={`0 0 ${width} ${height}`} className="h-12 w-24">
       <polyline
         fill="none"
-        stroke={positive ? "#9BFF00" : "#FB7185"}
+        stroke={positive ? "#10B981" : "#FB7185"}
         strokeWidth="2"
         points={points}
       />
@@ -65,8 +65,8 @@ export function StrategyMarketplaceCard({
         isLocked
           ? "border-[#3A2A14] opacity-90"
           : highlighted
-            ? "border-[#9BFF00]"
-            : "border-[#1E2731] hover:border-[#9BFF00]/40"
+            ? "border-purple-500 shadow-[0_0_20px_rgba(124,58,237,0.2)]"
+            : "border-[#1E2731] hover:border-purple-500/40"
       }`}
     >
       {isLocked ? (
@@ -86,7 +86,7 @@ export function StrategyMarketplaceCard({
               unoptimized
             />
           ) : (
-            <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#26303A] bg-[#0B1118] text-xs font-bold text-[#9BFF00]">
+            <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#26303A] bg-[#0B1118] text-xs font-bold text-purple-400">
               {strategy.name.slice(0, 2).toUpperCase()}
             </div>
           )}
@@ -101,10 +101,10 @@ export function StrategyMarketplaceCard({
 
       <div className="mt-4 flex items-end justify-between gap-3">
         <div>
-          <p className={`text-2xl font-semibold ${positive ? "text-[#9BFF00]" : "text-[#FB7185]"}`}>
+          <p className={`text-2xl font-semibold ${positive ? "text-emerald-400" : "text-[#FB7185]"}`}>
             {positive ? "+" : "-"}${Math.abs(pnl).toFixed(2)}
           </p>
-          <p className={`text-sm ${positive ? "text-[#9BFF00]" : "text-[#FB7185]"}`}>
+          <p className={`text-sm ${positive ? "text-emerald-400" : "text-[#FB7185]"}`}>
             {positive ? "+" : ""}
             {roi.toFixed(1)}%
           </p>
@@ -125,7 +125,7 @@ export function StrategyMarketplaceCard({
           <p className="text-[11px] uppercase tracking-wide text-[#6B7785]">Win rate</p>
           <div className="mt-1.5 h-1.5 rounded-full bg-[#17202A]">
             <div
-              className="h-full rounded-full bg-[#9BFF00]"
+              className="h-full rounded-full bg-purple-500"
               style={{ width: `${Math.min(winRate, 100)}%` }}
             />
           </div>
@@ -150,8 +150,8 @@ export function StrategyMarketplaceCard({
           isLocked
             ? "border border-[#FFD56A] text-[#FFD56A] hover:bg-[#FFD56A]/10"
             : hasBroker
-              ? "bg-[#9BFF00] text-[#11140D] hover:bg-[#B7FF45]"
-              : "border border-[#9BFF00] text-[#9BFF00] hover:bg-[#9BFF00]/10"
+              ? "bg-purple-600 text-white hover:bg-purple-700 shadow-md shadow-purple-600/25"
+              : "border border-purple-500 text-purple-400 hover:bg-purple-500/10"
         }`}
       >
         {isLocked ? "Upgrade to Unlock" : hasBroker ? "Deploy Strategy" : "Connect to Broker"}

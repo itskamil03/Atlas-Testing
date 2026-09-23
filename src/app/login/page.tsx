@@ -54,6 +54,46 @@ function getTokens(data: LoginVerifyResponse): { accessToken: string; refreshTok
     return { accessToken, refreshToken }
 }
 
+export function normalizeLoginIdentifier(raw: string): string {
+    const trimmed = raw.trim()
+    if (!trimmed) return trimmed
+
+    // If it's an email (contains @), return clean lowercase
+    if (trimmed.includes('@')) {
+        return trimmed.toLowerCase()
+    }
+
+    // Strip spaces, dashes, brackets, dots
+    const clean = trimmed.replace(/[\s\-().]/g, '')
+
+    // If it starts with +: keep + and clean digits
+    if (clean.startsWith('+')) {
+        return '+' + clean.slice(1).replace(/\D/g, '')
+    }
+
+    // If it is purely numeric digits:
+    if (/^\d+$/.test(clean)) {
+        // 10 digits (Standard Indian mobile number) -> prepend +91
+        if (clean.length === 10) {
+            return '+91' + clean
+        }
+        // 11 digits starting with 0 -> e.g. 09876543210 -> +919876543210
+        if (clean.length === 11 && clean.startsWith('0')) {
+            return '+91' + clean.slice(1)
+        }
+        // 12 digits starting with 91 -> prepend +
+        if (clean.length === 12 && clean.startsWith('91')) {
+            return '+' + clean
+        }
+        // General international numbers
+        if (clean.length >= 8 && clean.length <= 15) {
+            return '+' + clean
+        }
+    }
+
+    return clean
+}
+
 export default function LoginPage() {
     const router = useRouter()
     const [identity, setIdentity] = useState('')
@@ -100,23 +140,35 @@ export default function LoginPage() {
             return
         }
 
-        if (!identity.trim() || !password.trim()) {
+        const rawIdentity = identity.trim()
+        if (!rawIdentity || !password.trim()) {
             setError('Please enter your email or mobile number and password.')
             return
         }
 
         // Dummy fallback - check FIRST for instant redirect
-        if (identity.trim().toLowerCase() === 'demo@atlas.com' && DEMO_PASSWORDS.has(password.trim())) {
+        if (rawIdentity.toLowerCase() === 'demo@atlas.com' && DEMO_PASSWORDS.has(password.trim())) {
             setTokens(DEMO_ACCESS_TOKEN, DEMO_REFRESH_TOKEN)
             router.replace('/dashboard')
             return
         }
 
+        // Check if user entered a username instead of email or mobile number
+        const isEmailFormat = rawIdentity.includes('@')
+        const isNumericPhone = /^[+\d\s\-().]+$/.test(rawIdentity) && rawIdentity.replace(/\D/g, '').length >= 7
+
+        if (!isEmailFormat && !isNumericPhone) {
+            setError('Login requires your registered Email address (e.g. you@example.com) or Mobile Number (e.g. +91 98765 43210). Please enter your email or phone to log in.')
+            return
+        }
+
+        const normalizedIdentifier = normalizeLoginIdentifier(rawIdentity)
+
         setLoading(true)
 
         try {
             const { data } = await api.post<LoginChallengeResponse>('/auth/login', {
-                identifier: identity.trim(),
+                identifier: normalizedIdentifier,
                 password: password.trim(),
             }, { timeout: AUTH_REQUEST_TIMEOUT_MS })
             const nextChallengeId = getChallengeId(data)
@@ -129,7 +181,7 @@ export default function LoginPage() {
             setDebugOtp(getDebugOtp(data))
             setMessage(data.message ?? 'OTP sent. Please enter it to continue.')
         } catch (err: unknown) {
-            setError(extractApiErrorMessage(err, 'Invalid credentials. Please check your email and password.'))
+            setError(extractApiErrorMessage(err, 'Invalid credentials. Please check your email/mobile number and password.'))
         } finally {
             setLoading(false)
         }
@@ -191,12 +243,19 @@ export default function LoginPage() {
                                 id="identity"
                                 type="text"
                                 value={identity}
-                                onChange={(event) => setIdentity(event.target.value)}
-                                placeholder="you@example.com or +91 98765 43210"
+                                onChange={(event) => {
+                                    setIdentity(event.target.value)
+                                    if (error) setError('')
+                                }}
+                                placeholder="you@example.com or 98765 43210 / +91 98765 43210"
                                 className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
                                 autoComplete="username"
                                 disabled={!!challengeId || loading}
+                                required
                             />
+                            <p className="text-[11px] text-muted-foreground">
+                                Enter your registered email address or 10-digit mobile number.
+                            </p>
                         </div>
 
                         {challengeId ? (
@@ -238,11 +297,15 @@ export default function LoginPage() {
                                     id="password"
                                     type="password"
                                     value={password}
-                                    onChange={(event) => setPassword(event.target.value)}
+                                    onChange={(event) => {
+                                        setPassword(event.target.value)
+                                        if (error) setError('')
+                                    }}
                                     placeholder="Enter your password"
                                     className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
                                     autoComplete="current-password"
                                     disabled={loading}
+                                    required
                                 />
                             </div>
                         )}
@@ -252,7 +315,7 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white px-4 py-3 text-sm font-semibold transition-all duration-100"
+                            className="w-full rounded-xl bg-purple-600 hover:bg-purple-700 shadow-md shadow-purple-600/25 active:scale-[0.98] text-white px-4 py-3 text-sm font-semibold transition-all duration-100 disabled:opacity-50"
                         >
                             {loading ? 'Please wait...' : challengeId ? 'Verify OTP' : 'Login to Account'}
                         </button>
@@ -269,7 +332,12 @@ export default function LoginPage() {
                         ) : null}
                     </form>
 
-                    {error ? <p className="mt-4 text-sm text-destructive">{error}</p> : null}
+                    {error ? (
+                        <div className="mt-4 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive flex items-center gap-2">
+                            <span>⚠️</span>
+                            <span>{error}</span>
+                        </div>
+                    ) : null}
 
                     <p className="mt-7 text-sm text-foreground/75">
                         New to Atlas?{' '}

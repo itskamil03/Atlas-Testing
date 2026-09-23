@@ -70,7 +70,7 @@ export function AdminUsersTab({
       <section className="mt-5 rounded-[28px] border border-[#1A212A] bg-[#0B1118] p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[#9BFF00]">Accounts</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-purple-400">Accounts</p>
             <h2 className="mt-1 text-xl font-semibold text-[#F3F7FB]">Users Management</h2>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -78,7 +78,7 @@ export function AdminUsersTab({
               value={userSearch}
               onChange={(e) => onUserSearchChange(e.target.value)}
               placeholder="Search users"
-              className="rounded-xl border border-[#242D37] bg-[#050607] px-3 py-2 text-sm text-[#F3F7FB] outline-none focus:border-[#9BFF00]"
+              className="rounded-xl border border-[#242D37] bg-[#050607] px-3 py-2 text-sm text-[#F3F7FB] outline-none focus:border-purple-500"
             />
             <select
               value={kycFilter}
@@ -103,7 +103,7 @@ export function AdminUsersTab({
             <button
               type="button"
               onClick={onApply}
-              className="rounded-xl bg-[#9BFF00] px-4 py-2 text-sm font-semibold text-[#11140D]"
+              className="rounded-xl bg-purple-600 hover:bg-purple-700 px-4 py-2 text-sm font-semibold text-white transition active:scale-95"
             >
               Apply
             </button>
@@ -165,7 +165,7 @@ export function AdminUsersTab({
                       <button
                         type="button"
                         onClick={() => openRiskModal(item)}
-                        className="rounded-lg border border-[#242D37] px-3 py-1.5 text-xs font-medium text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95"
+                        className="rounded-lg border border-[#242D37] px-3 py-1.5 text-xs font-medium text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95"
                       >
                         Risk limits
                       </button>
@@ -175,7 +175,7 @@ export function AdminUsersTab({
                         className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition duration-150 active:scale-95 ${
                           item.is_active
                             ? "border-[#5C2A35] text-[#FFBAC8] hover:border-red-500/40 hover:text-red-400 hover:bg-red-500/10"
-                            : "border-[#2A4A1A] text-[#B7FF45] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5"
+                            : "border-purple-900/40 text-purple-400 hover:border-purple-500/40 hover:text-purple-300 hover:bg-purple-500/10"
                         }`}
                       >
                         {item.is_active ? "Ban" : "Unban"}
@@ -214,7 +214,7 @@ export function AdminUsersTab({
                   step={1}
                   value={maxDailyLoss}
                   onChange={(e) => setMaxDailyLoss(e.target.value)}
-                  className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-[#F3F7FB]"
+                  className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-[#F3F7FB] focus:border-purple-500 focus:outline-none"
                 />
               </label>
               <div className="flex flex-wrap gap-2">
@@ -225,7 +225,7 @@ export function AdminUsersTab({
                     onClick={() => setMaxDailyLoss(String(preset))}
                     className={`rounded-lg border px-3 py-1 text-xs ${
                       maxDailyLoss === String(preset)
-                        ? "border-[#9BFF00] text-[#9BFF00]"
+                        ? "border-purple-500 text-purple-400 bg-purple-950/20"
                         : "border-[#2A3B50] text-[#8E9AAA] hover:border-[#3A4B60]"
                     }`}
                   >
@@ -243,7 +243,7 @@ export function AdminUsersTab({
                   step={1}
                   value={maxTradesPerDay}
                   onChange={(e) => setMaxTradesPerDay(e.target.value)}
-                  className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-[#F3F7FB]"
+                  className="mt-1 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-[#F3F7FB] focus:border-purple-500 focus:outline-none"
                 />
               </label>
             </div>
@@ -261,7 +261,7 @@ export function AdminUsersTab({
                 type="button"
                 onClick={() => void handleSaveRiskLimits()}
                 disabled={saving}
-                className="rounded-lg bg-[#9BFF00] px-4 py-2 text-sm font-semibold text-[#11140D] disabled:opacity-50"
+                className="rounded-lg bg-purple-600 hover:bg-purple-700 px-4 py-2 text-sm font-semibold text-white transition disabled:opacity-50"
               >
                 {saving ? "Saving…" : "Save"}
               </button>

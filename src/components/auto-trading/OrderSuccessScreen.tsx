@@ -21,12 +21,12 @@ type OrderSuccessScreenProps = {
 
 const TONE_STYLES = {
   success: {
-    accent: "#9BFF00",
-    accentSoft: "rgba(155,255,0,0.12)",
-    borderColor: "rgba(155,255,0,0.35)",
-    detailBorder: "#31503A",
-    detailBg: "#142419",
-    detailText: "#AEE7B8",
+    accent: "#8B5CF6",
+    accentSoft: "rgba(139,92,246,0.15)",
+    borderColor: "rgba(139,92,246,0.35)",
+    detailBorder: "#5B21B6",
+    detailBg: "#1E1338",
+    detailText: "#DDD6FE",
   },
   pending: {
     accent: "#38BDF8",
@@ -168,7 +168,7 @@ export function OrderSuccessScreen({
         <div className="grid gap-3 text-sm">
           <div className="flex items-center justify-between gap-3">
             <span className="text-[#6B7785]">Side</span>
-            <span className="font-semibold" style={{ color: isBuy ? "#9BFF00" : "#FB7185" }}>
+            <span className="font-semibold" style={{ color: isBuy ? "#10B981" : "#FB7185" }}>
               {side}
             </span>
           </div>
@@ -220,7 +220,7 @@ export function OrderSuccessScreen({
       {pollTimedOut && outcome === "queued" ? (
         <p className="mt-3 text-xs text-[#7E8B98]">
           Broker is still processing. Check{" "}
-          <Link href="/dashboard/positions" className="text-[#9BFF00] underline">
+          <Link href="/dashboard/positions" className="text-purple-400 underline hover:text-purple-300">
             Open Positions
           </Link>{" "}
           for the latest fill status.
@@ -230,7 +230,7 @@ export function OrderSuccessScreen({
       {outcome === "executed" ? (
         <p className="mt-3 text-xs text-[#7E8B98]">
           View in{" "}
-          <Link href="/dashboard/positions" className="text-[#9BFF00] underline">
+          <Link href="/dashboard/positions" className="text-purple-400 underline hover:text-purple-300">
             Open Positions
           </Link>
           .
@@ -241,7 +241,7 @@ export function OrderSuccessScreen({
         type="button"
         onClick={onDone}
         disabled={polling}
-        className="mt-6 w-full rounded-2xl px-4 py-3 text-sm font-semibold text-[#11140D] transition hover:opacity-90 disabled:opacity-60"
+        className="mt-6 w-full rounded-2xl px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
         style={{ background: styles.accent }}
       >
         {polling ? "Waiting for broker…" : "Done"}

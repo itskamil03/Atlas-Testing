@@ -31,25 +31,25 @@ export default function SignalPerformance() {
                 <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 text-center hover:bg-green-500/20 hover:scale-105 transition-all duration-300 cursor-pointer">
                     <p className="text-sm text-muted-foreground mb-1">Win Rate</p>
                     <p className="text-3xl font-bold text-green-600">{winRate}%</p>
-                    <p className="text-xs text-muted-foreground mt-1">{wins}/{totalSignals} signals</p>
+                    <p className="text-sm text-muted-foreground mt-1">{wins}/{totalSignals} signals</p>
                 </div>
 
                 <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 text-center hover:bg-blue-500/20 hover:scale-105 transition-all duration-300 cursor-pointer">
                     <p className="text-sm text-muted-foreground mb-1">Avg Return</p>
                     <p className="text-3xl font-bold text-blue-600">+{avgReturn}%</p>
-                    <p className="text-xs text-muted-foreground mt-1">per signal</p>
+                    <p className="text-sm text-muted-foreground mt-1">per signal</p>
                 </div>
 
                 <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4 text-center hover:bg-purple-500/20 hover:scale-105 transition-all duration-300 cursor-pointer">
                     <p className="text-sm text-muted-foreground mb-1">Total Pips</p>
                     <p className="text-3xl font-bold text-purple-600">+780</p>
-                    <p className="text-xs text-muted-foreground mt-1">last week</p>
+                    <p className="text-sm text-muted-foreground mt-1">last week</p>
                 </div>
             </div>
 
             {/* Win Rate Bar */}
             <div className="mb-6">
-                <div className="flex justify-between text-xs text-muted-foreground mb-2">
+                <div className="flex justify-between text-sm text-muted-foreground mb-2">
                     <span>Performance Distribution</span>
                     <span>{wins} wins / {totalSignals - wins} loss</span>
                 </div>
@@ -93,7 +93,7 @@ export default function SignalPerformance() {
                             </div>
                             <div>
                                 <p className="font-semibold text-sm">{signal.pair}</p>
-                                <p className="text-xs text-muted-foreground">
+                                <p className="text-sm text-muted-foreground">
                                     {signal.type} @ {signal.entry}
                                 </p>
                             </div>
@@ -105,14 +105,14 @@ export default function SignalPerformance() {
                             } ${hoveredSignal === index ? 'text-base' : ''}`}>
                                 {signal.profit > 0 ? '+' : ''}{signal.profit}%
                             </p>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-sm text-muted-foreground">
                                 {signal.pips > 0 ? '+' : ''}{signal.pips} pips
                             </p>
                         </div>
 
                         <div className="text-right ml-4 min-w-[60px]">
-                            <p className="text-xs text-muted-foreground">{signal.date}</p>
-                            <div className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold mt-1 transition-all ${
+                            <p className="text-sm text-muted-foreground">{signal.date}</p>
+                            <div className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold mt-1 transition-all ${
                                 signal.status === 'win'
                                     ? 'bg-green-500/20 text-green-600'
                                     : 'bg-red-500/20 text-red-600'
@@ -125,7 +125,7 @@ export default function SignalPerformance() {
             </div>
 
             <div className="mt-4 pt-4 border-t text-center">
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                     All signals are historical and based on actual closed positions. Past performance does not guarantee future results.
                 </p>
             </div>

@@ -159,7 +159,7 @@ export default function SubscriptionPage() {
             <button
               type="button"
               onClick={() => router.push("/dashboard/strategies")}
-              className="rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-600 dark:border-[#242D37] dark:text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95"
+              className="rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-600 dark:border-[#242D37] dark:text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95"
             >
               Back to Strategies
             </button>
@@ -175,7 +175,7 @@ export default function SubscriptionPage() {
               </div>
               <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-4 dark:border-[#17202A] dark:bg-[#0B1118]">
                 <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-[#6B7785]">Access</p>
-                <p className="mt-2 text-lg font-semibold text-[#9BFF00]">{status.access_percent}%</p>
+                <p className="mt-2 text-lg font-semibold text-purple-600 dark:text-purple-400">{status.access_percent}%</p>
               </div>
               <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-4 dark:border-[#17202A] dark:bg-[#0B1118]">
                 <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-[#6B7785]">Unlocked strategies</p>
@@ -198,14 +198,14 @@ export default function SubscriptionPage() {
             </div>
           ) : null}
           {success ? (
-            <div className="mt-4 rounded-xl border border-green-200 bg-green-50/50 px-4 py-3 text-sm text-green-700 dark:border-[#2A4A1A] dark:bg-[#142A14] dark:text-[#B7FF45]">
+            <div className="mt-4 rounded-xl border border-purple-200 bg-purple-50/50 px-4 py-3 text-sm text-purple-700 dark:border-purple-900/40 dark:bg-purple-950/20 dark:text-purple-300">
               {success}
             </div>
           ) : null}
         </header>
 
-        {/* Plan Cards Grid */}
-        <section className="grid gap-4 md:grid-cols-3">
+        {/* Pricing Cards Grid */}
+        <section className="grid gap-6 md:grid-cols-3">
           {plans.map((plan) => {
             const isCurrent = status?.plan_name === plan.slug;
             const isHighlighted = plan.slug === "pro";
@@ -215,7 +215,7 @@ export default function SubscriptionPage() {
                 key={plan.slug}
                 className={`rounded-2xl border bg-white p-5 shadow-sm transition dark:bg-[#070A10] ${
                   isCurrent
-                    ? "border-[#9BFF00] shadow-[0_0_0_1px_rgba(155,255,0,0.35)]"
+                    ? "border-purple-500 shadow-[0_0_0_1px_rgba(124,58,237,0.35)]"
                     : "border-gray-200 dark:border-[#1A212A]"
                 }`}
               >
@@ -225,7 +225,7 @@ export default function SubscriptionPage() {
                     <p className="mt-1 text-sm text-gray-500 dark:text-[#8E9AA7]">{plan.description}</p>
                   </div>
                   {isHighlighted ? (
-                    <span className="rounded-full bg-[#9BFF00] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#11140D]">
+                    <span className="rounded-full bg-purple-600 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-white">
                       Popular
                     </span>
                   ) : null}
@@ -257,8 +257,8 @@ export default function SubscriptionPage() {
                   onClick={() => void handleSelectPlan(plan.slug)}
                   className={`mt-6 w-full rounded-xl px-4 py-3 text-sm font-semibold transition active:scale-95 duration-100 disabled:opacity-50 disabled:cursor-not-allowed ${
                     isCurrent
-                      ? "bg-gray-100 text-gray-400 dark:bg-[#10180E] dark:text-[#9BFF00] border border-[#9BFF00]/20"
-                      : "bg-[#9BFF00] text-[#11140D] hover:bg-[#B7FF45]"
+                      ? "bg-gray-100 text-gray-400 dark:bg-purple-950/30 dark:text-purple-400 border border-purple-500/20"
+                      : "bg-purple-600 text-white hover:bg-purple-700 shadow-md shadow-purple-600/25"
                   }`}
                 >
                   {isCurrent ? "Current Plan" : "Pay via UPI"}
@@ -270,7 +270,7 @@ export default function SubscriptionPage() {
 
         {/* Complete Payment Section */}
         {activePayment ? (
-          <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-[#9BFF00]/30 dark:bg-[#070A10] space-y-4">
+          <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-purple-500/30 dark:bg-[#070A10] space-y-4">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-[#F3F7FB]">Complete UPI Payment</h2>
             
             <div className="grid gap-4 text-sm text-gray-700 dark:text-[#C9D4E0] md:grid-cols-2 lg:grid-cols-4">
@@ -302,13 +302,13 @@ export default function SubscriptionPage() {
                 value={upiTxnId}
                 onChange={(event) => setUpiTxnId(event.target.value)}
                 placeholder="UPI transaction ID / UTR reference number"
-                className="flex-1 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-[#9BFF00] dark:border-[#242D37] dark:bg-[#050607] dark:text-[#F3F7FB]"
+                className="flex-1 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-purple-500 dark:border-[#242D37] dark:bg-[#050607] dark:text-[#F3F7FB]"
               />
               <button
                 type="button"
                 disabled={submitting}
                 onClick={() => void handleSubmitPayment()}
-                className="rounded-xl bg-[#9BFF00] px-6 py-3 text-sm font-semibold text-[#11140D] hover:bg-[#B7FF45] transition active:scale-95 duration-100 disabled:opacity-50"
+                className="rounded-xl bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-700 shadow-md shadow-purple-600/25 transition active:scale-95 duration-100 disabled:opacity-50"
               >
                 Submit Payment Proof
               </button>
@@ -368,20 +368,20 @@ export default function SubscriptionPage() {
                 value={mentorSubject}
                 onChange={(event) => setMentorSubject(event.target.value)}
                 placeholder="Subject"
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-[#9BFF00] dark:border-[#242D37] dark:bg-[#050607] dark:text-[#F3F7FB]"
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-purple-500 dark:border-[#242D37] dark:bg-[#050607] dark:text-[#F3F7FB]"
               />
               <textarea
                 value={mentorMessage}
                 onChange={(event) => setMentorMessage(event.target.value)}
                 placeholder="Describe what you need help with"
                 rows={4}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-[#9BFF00] dark:border-[#242D37] dark:bg-[#050607] dark:text-[#F3F7FB]"
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-purple-500 dark:border-[#242D37] dark:bg-[#050607] dark:text-[#F3F7FB]"
               />
               <button
                 type="button"
                 disabled={submitting}
                 onClick={() => void handleMentorRequest()}
-                className="rounded-xl bg-[#9BFF00] px-6 py-3 text-sm font-semibold text-[#11140D] hover:bg-[#B7FF45] transition active:scale-95 duration-100 disabled:opacity-50"
+                className="rounded-xl bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-700 shadow-md shadow-purple-600/25 transition active:scale-95 duration-100 disabled:opacity-50"
               >
                 Request Mentor Support
               </button>
@@ -405,7 +405,7 @@ export default function SubscriptionPage() {
                     <p className="mt-2 text-sm text-gray-600 dark:text-[#8E9AAA]">{request.message}</p>
                     {request.admin_response ? (
                       <div className="mt-3 rounded-lg bg-white p-3 text-sm border border-gray-100 dark:border-[#242D37]/35 dark:bg-[#050607] text-gray-700 dark:text-[#C9D4E0]">
-                        <span className="font-semibold text-[#9BFF00]">Mentor Response:</span> {request.admin_response}
+                        <span className="font-semibold text-purple-400">Mentor Response:</span> {request.admin_response}
                       </div>
                     ) : null}
                   </div>

@@ -201,7 +201,7 @@ export function SendSignalModal({
           <p className="mt-4 rounded-xl border border-[#4A4428] bg-[#2A2414] px-3 py-2.5 text-sm text-[#F5D98B]">
             Auto-trading is not running.{" "}
             {automatedStrategyId ? (
-              <Link href={`/dashboard/automated-strategies/${automatedStrategyId}/dashboard`} className="text-[#9BFF00] underline">
+              <Link href={`/dashboard/automated-strategies/${automatedStrategyId}/dashboard`} className="text-purple-400 underline hover:text-purple-300">
                 Open My Strategies
               </Link>
             ) : null}{" "}
@@ -213,7 +213,7 @@ export function SendSignalModal({
           <p
             className={`mt-4 rounded-xl border px-3 py-2.5 text-sm ${
               feedback.type === "success"
-                ? "border-[#31503A] bg-[#142419] text-[#AEE7B8]"
+                ? "border-purple-900/50 bg-purple-950/20 text-purple-300"
                 : "border-[#4F2A2A] bg-[#2A1414] text-[#FFB4B4]"
             }`}
           >
@@ -241,7 +241,7 @@ export function SendSignalModal({
 
             {automatedStrategyId ? (
               <p className="mt-3 text-center text-xs text-[#6B7785]">
-                <Link href={`/dashboard/automated-strategies/${automatedStrategyId}/dashboard`} className="text-[#9BFF00] hover:underline">
+                <Link href={`/dashboard/automated-strategies/${automatedStrategyId}/dashboard`} className="text-purple-400 hover:underline">
                   Manage deployment & controls →
                 </Link>
               </p>
@@ -251,7 +251,7 @@ export function SendSignalModal({
               type="button"
               disabled={loading || !canSend || sessionRunning === false}
               onClick={() => void requestOtp()}
-              className="mt-5 w-full rounded-2xl bg-[#9BFF00] px-4 py-3 font-semibold text-[#11140D] transition hover:bg-[#B7FF45] disabled:opacity-60"
+              className="mt-5 w-full rounded-2xl bg-purple-600 px-4 py-3 font-semibold text-white transition hover:bg-purple-700 active:scale-95 disabled:opacity-60"
             >
               {loading ? "Sending OTP..." : `Send ${values.side} signal & punch order`}
             </button>

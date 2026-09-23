@@ -11,7 +11,7 @@ type Props = {
 };
 
 function pnlColor(value: string | number) {
-  return Number(value) >= 0 ? "#9BFF00" : "#FB7185";
+  return Number(value) >= 0 ? "#10B981" : "#FB7185";
 }
 
 export function DashboardTradeHistory({ trades, onRefresh, onCloseTrade, closingTradeId }: Props) {
@@ -35,7 +35,7 @@ export function DashboardTradeHistory({ trades, onRefresh, onCloseTrade, closing
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-xl font-semibold" style={{ color: "var(--text-heading)" }}>Trade History</h2>
         <button type="button" onClick={onRefresh}
-          className="rounded-xl bg-[#9BFF00] px-5 py-2 text-sm font-semibold text-[#11140D] transition hover:bg-[#B7FF45]">
+          className="rounded-xl bg-purple-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-purple-700 shadow-md shadow-purple-600/20 active:scale-95">
           Refresh
         </button>
       </div>
@@ -104,7 +104,7 @@ export function DashboardTradeHistory({ trades, onRefresh, onCloseTrade, closing
                       <input type="checkbox" aria-label={`Select ${trade.symbol}`} />
                     </td>
                     <td className="px-3 py-3 font-medium">{trade.symbol}</td>
-                    <td className="px-3 py-3" style={{ color: trade.side === "BUY" ? "#9BFF00" : "#FB7185" }}>
+                    <td className="px-3 py-3 font-medium" style={{ color: trade.side === "BUY" ? "#10B981" : "#FB7185" }}>
                       {trade.side}
                     </td>
                     <td className="px-3 py-3">{trade.quantity}</td>

@@ -58,7 +58,7 @@ export function StrategySignalFields({
           value={values.symbol}
           onChange={(event) => patch({ symbol: event.target.value })}
           required
-          className="mt-1 w-full rounded-xl border border-[#242D37] bg-[#0D1218] px-3 py-2 text-[#E8EEF5] outline-none focus:border-[#9BFF00]"
+          className="mt-1 w-full rounded-xl border border-[#242D37] bg-[#0D1218] px-3 py-2 text-[#E8EEF5] outline-none focus:border-purple-500"
         />
       </label>
 
@@ -67,7 +67,7 @@ export function StrategySignalFields({
         <select
           value={values.side}
           onChange={(event) => patch({ side: event.target.value as "BUY" | "SELL" })}
-          className="mt-1 w-full rounded-xl border border-[#242D37] bg-[#0D1218] px-3 py-2 text-[#E8EEF5] outline-none focus:border-[#9BFF00]"
+          className="mt-1 w-full rounded-xl border border-[#242D37] bg-[#0D1218] px-3 py-2 text-[#E8EEF5] outline-none focus:border-purple-500"
         >
           <option value="BUY">BUY</option>
           <option value="SELL">SELL</option>
@@ -83,7 +83,7 @@ export function StrategySignalFields({
           value={values.quantity}
           onChange={(event) => patch({ quantity: event.target.value })}
           required
-          className="mt-1 w-full rounded-xl border border-[#242D37] bg-[#0D1218] px-3 py-2 text-[#E8EEF5] outline-none focus:border-[#9BFF00]"
+          className="mt-1 w-full rounded-xl border border-[#242D37] bg-[#0D1218] px-3 py-2 text-[#E8EEF5] outline-none focus:border-purple-500"
         />
       </label>
 
@@ -97,7 +97,7 @@ export function StrategySignalFields({
           value={values.confidence}
           onChange={(event) => patch({ confidence: event.target.value })}
           required
-          className="mt-1 w-full rounded-xl border border-[#242D37] bg-[#0D1218] px-3 py-2 text-[#E8EEF5] outline-none focus:border-[#9BFF00]"
+          className="mt-1 w-full rounded-xl border border-[#242D37] bg-[#0D1218] px-3 py-2 text-[#E8EEF5] outline-none focus:border-purple-500"
         />
       </label>
 
@@ -106,7 +106,7 @@ export function StrategySignalFields({
         <select
           value={values.orderType}
           onChange={(event) => patch({ orderType: event.target.value as "MARKET" | "LIMIT" })}
-          className="mt-1 w-full rounded-xl border border-[#242D37] bg-[#0D1218] px-3 py-2 text-[#E8EEF5] outline-none focus:border-[#9BFF00]"
+          className="mt-1 w-full rounded-xl border border-[#242D37] bg-[#0D1218] px-3 py-2 text-[#E8EEF5] outline-none focus:border-purple-500"
         >
           <option value="MARKET">MARKET</option>
           <option value="LIMIT">LIMIT</option>

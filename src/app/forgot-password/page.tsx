@@ -5,6 +5,7 @@ import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { api } from '@/lib/api'
 import { extractApiErrorMessage } from '@/lib/errors'
+import { normalizeLoginIdentifier } from '@/app/login/page'
 
 const AUTH_REQUEST_TIMEOUT_MS = 120000
 
@@ -56,8 +57,8 @@ export default function ForgotPasswordPage() {
             const { data } = await api.post<ForgotPasswordResponse>(
                 '/auth/forgot-password',
                 {
-                    email: email.trim(),
-                    phone: phone.trim(),
+                    email: email.trim().toLowerCase(),
+                    phone: normalizeLoginIdentifier(phone.trim()),
                 },
                 { timeout: AUTH_REQUEST_TIMEOUT_MS },
             )
@@ -211,7 +212,7 @@ export default function ForgotPasswordPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 text-sm font-semibold transition-all duration-100 disabled:opacity-50"
+                                className="w-full rounded-xl bg-purple-600 hover:bg-purple-700 shadow-md shadow-purple-600/25 text-white px-4 py-3 text-sm font-semibold transition-all duration-100 disabled:opacity-50"
                             >
                                 {loading ? 'Sending OTP...' : 'Send OTP'}
                             </button>
@@ -301,7 +302,7 @@ export default function ForgotPasswordPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 text-sm font-semibold transition-all duration-100 disabled:opacity-50"
+                                className="w-full rounded-xl bg-purple-600 hover:bg-purple-700 shadow-md shadow-purple-600/25 text-white px-4 py-3 text-sm font-semibold transition-all duration-100 disabled:opacity-50"
                             >
                                 {loading ? 'Resetting Password...' : 'Reset Password'}
                             </button>

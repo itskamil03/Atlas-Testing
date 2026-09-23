@@ -25,16 +25,50 @@ export default function SignupPage() {
   const [debugPhoneOtp, setDebugPhoneOtp] = useState<string | null>(null)
   const [otpVerified, setOtpVerified] = useState(false)
   const [error, setError] = useState('')
+  const [usernameConflict, setUsernameConflict] = useState(false)
+  const [emailConflict, setEmailConflict] = useState(false)
+  const [usernameUpdated, setUsernameUpdated] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const validateUsername = (name: string): string | null => {
     if (!name) return null
     if (/\s/.test(name)) return 'Username must not contain spaces.'
-    if (name.length < 4) return 'Username must be at least 4 characters.'
-    const numDigits = (name.match(/\d/g) || []).length
-    if (numDigits < 2) return 'Username must contain at least 2 numbers.'
-    // if (!/[^\w\s]/.test(name)) return 'Username must contain at least 1 special character (!@#$%^&*).'
+    if (name.length < 3) return 'Username must be at least 3 characters.'
+    if (name.length > 20) return 'Username cannot exceed 20 characters.'
+    if (!/^[a-zA-Z0-9._]+$/.test(name)) return 'Only letters, numbers, underscores (_), and dots (.) are allowed.'
+    if (/^[._]/.test(name)) return 'Username cannot start with a dot or underscore.'
+    if (/[._]$/.test(name)) return 'Username cannot end with a dot or underscore.'
+    if (/\.\.|__|\._|_\./.test(name)) return 'Username cannot contain consecutive dots or underscores.'
     return null
+  }
+
+  const getUsernameSuggestions = (name: string, fullNameStr: string): string[] => {
+    const seed = (name || fullNameStr || '').toLowerCase().trim()
+    if (!seed) return []
+    const cleanSeed = seed.replace(/\s+/g, '_').replace(/[^a-z0-9_.]/g, '').replace(/^[._]+|[._]+$/g, '')
+    const baseWord = seed.replace(/[^a-z0-9]/g, '')
+    const list: string[] = []
+    
+    const randomNum = Math.floor(10 + Math.random() * 89)
+    if (cleanSeed && cleanSeed.length >= 3 && cleanSeed.length <= 15) {
+      list.push(`${cleanSeed}_${randomNum}`)
+      list.push(`${cleanSeed}.pro`)
+      list.push(`${cleanSeed}_trade`)
+      list.push(`${cleanSeed}99`)
+    }
+    if (baseWord && baseWord.length >= 2) {
+      list.push(`${baseWord.slice(0, 13)}_01`)
+      list.push(`${baseWord.slice(0, 14)}ai`)
+      list.push(`${baseWord.slice(0, 11)}_quant`)
+    }
+    return Array.from(new Set(list)).filter((s) => !validateUsername(s) && s !== name).slice(0, 4)
+  }
+
+  const handleSelectSuggestion = (suggested: string) => {
+    setUsername(suggested)
+    setUsernameConflict(false)
+    setUsernameUpdated(true)
+    setError('')
   }
 
   const validatePassword = (pwd: string): string | null => {
@@ -105,6 +139,9 @@ export default function SignupPage() {
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setError('')
+    setUsernameConflict(false)
+    setEmailConflict(false)
+    setUsernameUpdated(false)
 
     if (usernameError) {
       setError(usernameError)
@@ -160,7 +197,23 @@ export default function SignupPage() {
       setTokens(data.tokens.access_token, data.tokens.refresh_token)
       router.replace('/dashboard')
     } catch (err: unknown) {
-      setError(extractErrorMessage(err))
+      const rawMsg = extractErrorMessage(err)
+      const lower = rawMsg.toLowerCase()
+
+      if (
+        lower.includes('username') ||
+        lower.includes('user already exist') ||
+        lower.includes('already taken') ||
+        lower.includes('user with this username')
+      ) {
+        setUsernameConflict(true)
+        setError(`Username "@${username}" is already taken. Please choose another username from the suggestions below.`)
+      } else if (lower.includes('email already') || lower.includes('account with this email')) {
+        setEmailConflict(true)
+        setError(`An account with email "${email}" already exists. Please login instead.`)
+      } else {
+        setError(rawMsg)
+      }
     } finally {
       setLoading(false)
     }
@@ -174,6 +227,9 @@ export default function SignupPage() {
     setDebugEmailOtp(null)
     setDebugPhoneOtp(null)
     setOtpVerified(false)
+    setUsernameConflict(false)
+    setEmailConflict(false)
+    setUsernameUpdated(false)
     setError('')
   }
 
@@ -272,17 +328,86 @@ export default function SignupPage() {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="username" className="text-sm font-medium">Username</label>
+              <div className="flex items-center justify-between">
+                <label htmlFor="username" className="text-sm font-medium">Username</label>
+                <span className="text-[11px] text-muted-foreground">3–20 chars (letters, numbers, _, .)</span>
+              </div>
               <input
                 id="username"
                 type="text"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Min 4 chars, 1 special char, 2 numbers"
-                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+                onChange={(e) => {
+                  setUsername(e.target.value.toLowerCase())
+                  if (usernameConflict) setUsernameConflict(false)
+                  if (usernameUpdated) setUsernameUpdated(false)
+                  if (error) setError('')
+                }}
+                placeholder="e.g. alex_trader or alex.99"
+                className={`w-full rounded-xl border bg-background px-4 py-3 text-sm outline-none transition focus:ring-2 ${
+                  (username && usernameError) || usernameConflict
+                    ? 'border-destructive focus:border-destructive focus:ring-destructive/30 bg-destructive/5'
+                    : usernameUpdated
+                    ? 'border-emerald-500/60 focus:border-emerald-500 focus:ring-emerald-500/30'
+                    : username && !usernameError
+                    ? 'border-purple-500/60 focus:border-purple-500 focus:ring-purple-500/30'
+                    : 'border-border focus:border-primary focus:ring-primary/30'
+                }`}
                 autoComplete="username"
+                maxLength={20}
+                disabled={!!emailChallengeId && !otpVerified && !usernameConflict}
                 required
               />
+              {usernameConflict ? (
+                <div className="space-y-2 rounded-xl border border-destructive/30 bg-destructive/10 p-3.5 text-xs">
+                  <p className="font-semibold text-destructive flex items-center gap-1.5">
+                    <span>⚠️</span> Username &quot;@{username}&quot; is already taken!
+                  </p>
+                  <p className="text-muted-foreground text-[11px]">
+                    Choose one of these available unique suggestions or type a different username:
+                  </p>
+                  <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                    {getUsernameSuggestions(username, fullName).map((sug) => (
+                      <button
+                        key={sug}
+                        type="button"
+                        onClick={() => handleSelectSuggestion(sug)}
+                        className="rounded-lg border border-purple-500/50 bg-purple-500/20 px-3 py-1 text-xs font-semibold text-purple-600 dark:text-purple-300 hover:bg-purple-500/30 active:scale-95 transition"
+                      >
+                        @{sug}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : usernameUpdated ? (
+                <p className="text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-medium">
+                  <span>✓</span> Username set to @{username}. You can now complete signup!
+                </p>
+              ) : username && usernameError ? (
+                <div className="space-y-1.5 pt-0.5">
+                  <p className="text-xs text-destructive flex items-center gap-1">
+                    <span>⚠️</span> {usernameError}
+                  </p>
+                  {getUsernameSuggestions(username, fullName).length > 0 && (
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1 text-xs">
+                      <span className="text-muted-foreground text-[11px]">Suggestions:</span>
+                      {getUsernameSuggestions(username, fullName).map((sug) => (
+                        <button
+                          key={sug}
+                          type="button"
+                          onClick={() => handleSelectSuggestion(sug)}
+                          className="rounded-lg border border-purple-500/40 bg-purple-500/10 px-2.5 py-0.5 text-xs text-purple-400 hover:bg-purple-500/20 active:scale-95 transition"
+                        >
+                          @{sug}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : username && !usernameError ? (
+                <p className="text-xs text-purple-400 flex items-center gap-1 font-medium">
+                  <span>✓</span> Valid username format
+                </p>
+              ) : null}
             </div>
 
             <div className="space-y-2">
@@ -341,7 +466,7 @@ export default function SignupPage() {
                     required
                   />
                   {debugEmailOtp ? (
-                    <p className="rounded-lg border border-[#9BFF00]/30 bg-[#9BFF00]/10 px-3 py-2 text-xs text-[#9BFF00]">
+                    <p className="rounded-lg border border-purple-500/30 bg-purple-500/10 px-3 py-2 text-xs text-purple-300">
                       Dev email OTP: <span className="font-semibold">{debugEmailOtp}</span>
                     </p>
                   ) : null}
@@ -361,7 +486,7 @@ export default function SignupPage() {
                     required
                   />
                   {debugPhoneOtp ? (
-                    <p className="rounded-lg border border-[#9BFF00]/30 bg-[#9BFF00]/10 px-3 py-2 text-xs text-[#9BFF00]">
+                    <p className="rounded-lg border border-purple-500/30 bg-purple-500/10 px-3 py-2 text-xs text-purple-300">
                       Dev phone OTP: <span className="font-semibold">{debugPhoneOtp}</span>
                     </p>
                   ) : null}
@@ -379,7 +504,7 @@ export default function SignupPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 text-sm font-semibold transition-all duration-100 disabled:opacity-50"
+                    className="w-full rounded-xl bg-purple-600 hover:bg-purple-700 shadow-md shadow-purple-600/25 text-white px-4 py-3 text-sm font-semibold transition-all duration-100 disabled:opacity-50"
                   >
                     {loading ? 'Verifying...' : 'Verify OTP'}
                   </button>
@@ -387,40 +512,104 @@ export default function SignupPage() {
               </>
             ) : emailChallengeId && otpVerified ? (
               <>
-                <div className="rounded-xl border border-green-500/30 bg-green-500/10 p-3 text-xs text-green-400">
+                <div className="rounded-xl border border-purple-500/30 bg-purple-500/10 p-3 text-xs text-purple-300 font-medium">
                   OTP verified successfully!
                 </div>
 
-                <label className="flex items-start gap-3 rounded-xl border border-border bg-background/60 px-4 py-3 text-sm text-foreground/80">
+                <div className="rounded-xl border border-border/80 bg-muted/40 p-3.5 text-xs text-muted-foreground space-y-2.5">
+                  <div className="flex items-center justify-between font-semibold text-foreground/90 border-b border-border/60 pb-2">
+                    <span>Terms & Policy Summary</span>
+                    <span className="text-[10px] uppercase tracking-wider text-purple-400 font-bold bg-purple-500/10 px-2 py-0.5 rounded">Compliance</span>
+                  </div>
+                  <ul className="space-y-1.5 text-[11px] leading-relaxed list-disc list-inside">
+                    <li><strong className="text-foreground/80">Trading Risk:</strong> Financial markets and algorithmic tools carry substantial risk of loss. Past returns do not guarantee future performance.</li>
+                    <li><strong className="text-foreground/80">Service Scope:</strong> ATLAS Trading provides technological automation & intelligence for informational purposes and is not a financial advisor.</li>
+                    <li><strong className="text-foreground/80">Data Protection:</strong> Your credentials and account information are encrypted and handled per our Privacy Policy.</li>
+                    <li><strong className="text-foreground/80">Account Eligibility:</strong> You must be at least 18 years old and comply with your local regulatory laws.</li>
+                  </ul>
+                </div>
+
+                <label className="flex items-start gap-3 rounded-xl border border-border bg-background/60 p-3.5 text-xs sm:text-sm text-foreground/80 hover:bg-background/80 transition-colors cursor-pointer">
                   <input
                     type="checkbox"
-                    className="mt-1"
+                    className="mt-1 h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 cursor-pointer"
                     checked={termsAccepted}
                     onChange={(e) => setTermsAccepted(e.target.checked)}
                     required
                   />
-                  <span>I agree to the Terms & Conditions and Privacy Policy.</span>
+                  <span className="leading-snug">
+                    I agree to the{' '}
+                    <Link
+                      href="/terms-and-conditions"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold text-purple-400 hover:text-purple-300 underline underline-offset-2"
+                    >
+                      Terms & Conditions
+                    </Link>{' '}
+                    and{' '}
+                    <Link
+                      href="/privacy-policy"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold text-purple-400 hover:text-purple-300 underline underline-offset-2"
+                    >
+                      Privacy Policy
+                    </Link>.
+                  </span>
                 </label>
 
-                <button
-                  type="submit"
-                  disabled={loading || !termsAccepted}
-                  className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 text-sm font-semibold transition-all duration-100 disabled:opacity-50"
-                >
-                  {loading ? 'Creating Account...' : 'Create Account'}
-                </button>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <button
+                    type="button"
+                    onClick={() => setOtpVerified(false)}
+                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm font-semibold transition hover:bg-muted sm:w-auto"
+                    disabled={loading}
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading || !termsAccepted || !!usernameError}
+                    className="w-full rounded-xl bg-purple-600 hover:bg-purple-700 shadow-md shadow-purple-600/25 text-white px-4 py-3 text-sm font-semibold transition-all duration-100 disabled:opacity-50"
+                  >
+                    {loading ? 'Creating Account...' : 'Create Account'}
+                  </button>
+                </div>
               </>
             ) : (
               <button
                 type="submit"
-                disabled={loading || !!passwordError || !!confirmError}
-                className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 text-sm font-semibold transition-all duration-100 disabled:opacity-50"
+                disabled={loading || !!passwordError || !!confirmError || !!usernameError}
+                className="w-full rounded-xl bg-purple-600 hover:bg-purple-700 shadow-md shadow-purple-600/25 text-white px-4 py-3 text-sm font-semibold transition-all duration-100 disabled:opacity-50"
               >
                 {loading ? 'Sending OTP...' : 'Send OTP'}
               </button>
             )}
 
-            {error ? <p className="mt-2 text-sm text-destructive">{error}</p> : null}
+            {emailConflict ? (
+              <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5 text-xs text-foreground space-y-2.5">
+                <p className="font-semibold text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+                  <span>⚠️</span> An account with this email already exists.
+                </p>
+                <div className="flex flex-wrap items-center gap-2 pt-1">
+                  <Link
+                    href="/login"
+                    className="rounded-lg bg-purple-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-purple-700 transition"
+                  >
+                    Login to Existing Account
+                  </Link>
+                  <Link
+                    href="/forgot-password"
+                    className="rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-semibold hover:bg-muted transition"
+                  >
+                    Reset Password
+                  </Link>
+                </div>
+              </div>
+            ) : error && !usernameConflict ? (
+              <p className="mt-2 text-sm text-destructive">{error}</p>
+            ) : null}
           </form>
 
           <p className="mt-7 text-sm text-foreground/75">

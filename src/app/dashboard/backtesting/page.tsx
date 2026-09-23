@@ -71,8 +71,8 @@ export default function BacktestingPage() {
             <h1 className="mt-1 text-2xl font-semibold text-gray-900 dark:text-[#F6FAFF]">Strategy Simulation</h1>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => router.push("/dashboard")} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Dashboard</button>
-            <button onClick={onLogout} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Sign Out</button>
+            <button onClick={() => router.push("/dashboard")} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Dashboard</button>
+            <button onClick={onLogout} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Sign Out</button>
           </div>
         </header>
 
@@ -81,13 +81,13 @@ export default function BacktestingPage() {
         <section className="rounded-2xl border border-gray-200 dark:border-[#1A1E23] bg-white dark:bg-[#0A0D13] p-5">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-[#F3F7FB]">Run Backtest</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <label className="text-sm text-gray-500 dark:text-[#9AA5B1]">Strategy Tag<input value={form.strategy_tag} onChange={(e) => setForm((p) => ({ ...p, strategy_tag: e.target.value }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF]" /></label>
-            <label className="text-sm text-gray-500 dark:text-[#9AA5B1]">Symbol<input value={form.symbol} onChange={(e) => setForm((p) => ({ ...p, symbol: e.target.value.toUpperCase() }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF]" /></label>
-            <label className="text-sm text-gray-500 dark:text-[#9AA5B1]">Timeframe<input value={form.timeframe} onChange={(e) => setForm((p) => ({ ...p, timeframe: e.target.value }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF]" /></label>
-            <label className="text-sm text-gray-500 dark:text-[#9AA5B1]">Periods<input type="number" min={50} max={5000} value={form.periods} onChange={(e) => setForm((p) => ({ ...p, periods: Number(e.target.value) }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF]" /></label>
-            <label className="text-sm text-gray-500 dark:text-[#9AA5B1] sm:col-span-2">Initial Capital<input type="number" min={1} value={form.initial_capital} onChange={(e) => setForm((p) => ({ ...p, initial_capital: Number(e.target.value) }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF]" /></label>
+            <label className="text-sm text-gray-500 dark:text-[#9AA5B1]">Strategy Tag<input value={form.strategy_tag} onChange={(e) => setForm((p) => ({ ...p, strategy_tag: e.target.value }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF] focus:border-purple-500 focus:outline-none" /></label>
+            <label className="text-sm text-gray-500 dark:text-[#9AA5B1]">Symbol<input value={form.symbol} onChange={(e) => setForm((p) => ({ ...p, symbol: e.target.value.toUpperCase() }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF] focus:border-purple-500 focus:outline-none" /></label>
+            <label className="text-sm text-gray-500 dark:text-[#9AA5B1]">Timeframe<input value={form.timeframe} onChange={(e) => setForm((p) => ({ ...p, timeframe: e.target.value }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF] focus:border-purple-500 focus:outline-none" /></label>
+            <label className="text-sm text-gray-500 dark:text-[#9AA5B1]">Periods<input type="number" min={50} max={5000} value={form.periods} onChange={(e) => setForm((p) => ({ ...p, periods: Number(e.target.value) }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF] focus:border-purple-500 focus:outline-none" /></label>
+            <label className="text-sm text-gray-500 dark:text-[#9AA5B1] sm:col-span-2">Initial Capital<input type="number" min={1} value={form.initial_capital} onChange={(e) => setForm((p) => ({ ...p, initial_capital: Number(e.target.value) }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF] focus:border-purple-500 focus:outline-none" /></label>
           </div>
-          <button onClick={runBacktest} disabled={running} className="mt-5 rounded-lg bg-[#9BFF00] px-4 py-2 font-semibold text-[#11140D] disabled:opacity-60">{running ? "Running..." : "Run Backtest"}</button>
+          <button onClick={runBacktest} disabled={running} className="mt-5 rounded-lg bg-purple-600 hover:bg-purple-700 px-4 py-2 font-semibold text-white transition disabled:opacity-60">{running ? "Running..." : "Run Backtest"}</button>
         </section>
 
         {result ? (

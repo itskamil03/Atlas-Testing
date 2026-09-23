@@ -85,7 +85,7 @@ export function SendStrategySignalForm({
           <button
             type="submit"
             disabled={loading || !strategyTag}
-            className="w-full rounded-2xl bg-[#9BFF00] px-4 py-3 text-sm font-semibold text-[#11140D] transition hover:bg-[#B7FF45] disabled:opacity-60"
+            className="w-full rounded-2xl bg-purple-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-purple-700 active:scale-95 disabled:opacity-60"
           >
             {loading ? "Sending signal..." : "Send signal & punch order"}
           </button>
@@ -96,7 +96,7 @@ export function SendStrategySignalForm({
         <p
           className={`mt-4 rounded-xl border px-3 py-2.5 text-sm ${
             feedback.type === "success"
-              ? "border-[#31503A] bg-[#142419] text-[#AEE7B8]"
+              ? "border-purple-900/50 bg-purple-950/20 text-purple-300"
               : "border-[#4F2A2A] bg-[#2A1414] text-[#FFB4B4]"
           }`}
         >

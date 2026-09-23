@@ -10,7 +10,7 @@ export default function AboutUs() {
   const fadeUp = { hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0 } }
 
   return (
-    <section id="about" className="py-16 md:py-20" style={{ zoom: 0.77 }}>
+    <section id="about" className="py-16 md:py-20">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial="hidden"
@@ -56,7 +56,7 @@ export default function AboutUs() {
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">
                             <div>
-                              <div className="text-xs font-medium text-muted-foreground">Signals Delivered</div>
+                              <div className="text-sm font-medium text-muted-foreground">Signals Delivered</div>
                               <div className="mt-1 text-lg font-semibold">1,200 / mo</div>
                             </div>
                             <div className="text-emerald-500">▲</div>
@@ -70,7 +70,7 @@ export default function AboutUs() {
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">
                             <div>
-                              <div className="text-xs font-medium text-muted-foreground">Markets Covered</div>
+                              <div className="text-sm font-medium text-muted-foreground">Markets Covered</div>
                               <div className="mt-1 text-lg font-semibold">FX · Crypto · Commodities</div>
                             </div>
                             <div className="text-cyan-500">●</div>
@@ -123,7 +123,7 @@ export default function AboutUs() {
 
             <div className="mt-6">
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.12 }}>
-                <Button asChild className="shadow-md bg-[#9BFF00] hover:bg-[#B7FF45] text-[#11140D] font-semibold active:scale-95 transition-all duration-100 border-none">
+                <Button asChild className="shadow-md bg-purple-600 hover:bg-purple-700 text-white font-semibold active:scale-95 transition-all duration-100 border-none">
                   <Link href="/academy">Explore Our Research</Link>
                 </Button>
               </motion.div>

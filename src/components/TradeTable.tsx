@@ -41,7 +41,7 @@ export function TradeTable({ trades, showFailureReason = false }: Props) {
                 <td className={`px-4 py-3 ${trade.side === "BUY" ? "text-[#67E8A5]" : "text-[#FB7185]"}`}>{trade.side}</td>
                 <td className="px-4 py-3">{trade.quantity}</td>
                 <td className="px-4 py-3">{trade.price}</td>
-                <td className={`px-4 py-3 ${Number(trade.pnl) >= 0 ? "text-[#9BFF00]" : "text-[#FB7185]"}`}>{trade.pnl}</td>
+                <td className={`px-4 py-3 ${Number(trade.pnl) >= 0 ? "text-emerald-400" : "text-[#FB7185]"}`}>{trade.pnl}</td>
                 <td className={`px-4 py-3 ${tradeStatusClass(trade.status)}`}>{trade.status}</td>
                 {showFailureReason ? (
                   <td className="px-4 py-3 text-[#93A0AE]">{trade.failure_reason ?? "-"}</td>

@@ -46,7 +46,7 @@ export function ConfirmModal({
             className={`rounded-2xl px-5 py-2.5 text-sm font-semibold transition disabled:opacity-60 ${
               destructive
                 ? "bg-[#4F2A2A] text-[#FFB4B4] hover:bg-[#653535]"
-                : "bg-[#9BFF00] text-[#11140D] hover:bg-[#B7FF45]"
+                : "bg-purple-600 text-white hover:bg-purple-700 active:scale-95"
             }`}
           >
             {loading ? "Please wait..." : confirmLabel}

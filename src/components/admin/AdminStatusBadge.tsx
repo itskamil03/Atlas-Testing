@@ -3,13 +3,13 @@
 type BadgeTone = "success" | "warning" | "danger" | "info" | "neutral" | "elite" | "pro" | "basic";
 
 const TONE_STYLES: Record<BadgeTone, string> = {
-  success: "border-[#2A4A1A] bg-[#142A14] text-[#B7FF45]",
+  success: "border-emerald-900/50 bg-emerald-950/30 text-emerald-400",
   warning: "border-[#5A4A1A] bg-[#1A1508] text-[#FFD56A]",
   danger: "border-[#5A2A2A] bg-[#2A1414] text-[#FFB4B4]",
   info: "border-[#1A3A4A] bg-[#0E1A22] text-[#7DD3FC]",
   neutral: "border-[#242D37] bg-[#0E141B] text-[#8E9AAA]",
   elite: "border-[#4A3A14] bg-[#1A1508] text-[#FFD56A]",
-  pro: "border-[#1A3A2A] bg-[#0E1A14] text-[#9BFF00]",
+  pro: "border-purple-900/50 bg-purple-950/30 text-purple-300",
   basic: "border-[#242D37] bg-[#10151D] text-[#C9D4E0]",
 };
 

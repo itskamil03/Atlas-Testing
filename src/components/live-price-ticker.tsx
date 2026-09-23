@@ -31,17 +31,19 @@ export default function LivePriceTicker() {
     const duplicatedMarkets = [...markets, ...markets]
 
     return (
-        <div className="bg-muted/50 border-y overflow-hidden py-3">
+        <div className="bg-[#FAF9FF]/90 border-y border-[#E9E3F5] dark:bg-muted/50 dark:border-border overflow-hidden py-2.5 transition-colors">
             <div className="flex items-center gap-4" style={{ animation: 'scroll 40s linear infinite' }}>
                 {duplicatedMarkets.map((market, index) => (
                     <div
                         key={`${index}-${animationKey}`}
-                        className="flex items-center gap-2 px-4 hover:bg-background/50 rounded-lg transition-colors cursor-pointer whitespace-nowrap"
+                        className="flex items-center gap-2 px-3 py-1 hover:bg-purple-100/40 dark:hover:bg-background/50 rounded-lg transition-colors cursor-pointer whitespace-nowrap"
                     >
-                        <span className="font-semibold text-sm">{market.symbol}</span>
-                        <span className="text-sm">{market.price}</span>
-                        <span className={`text-xs font-semibold flex items-center gap-1 ${
-                            market.trend === 'up' ? 'text-green-600' : 'text-red-600'
+                        <span className="font-semibold text-sm text-[#171329] dark:text-foreground">{market.symbol}</span>
+                        <span className="text-sm text-[#4B465C] dark:text-muted-foreground font-medium">{market.price}</span>
+                        <span className={`text-xs font-semibold flex items-center gap-1 px-1.5 py-0.5 rounded ${
+                            market.trend === 'up'
+                                ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10'
+                                : 'text-rose-600 dark:text-rose-400 bg-rose-500/10'
                         }`}>
                             {market.trend === 'up' ? (
                                 <TrendingUp className="size-3" />
@@ -50,7 +52,7 @@ export default function LivePriceTicker() {
                             )}
                             {market.change}%
                         </span>
-                        <div className="size-1 rounded-full bg-muted-foreground/30 ml-2" />
+                        <div className="size-1 rounded-full bg-purple-300/50 dark:bg-muted-foreground/30 ml-2" />
                     </div>
                 ))}
             </div>

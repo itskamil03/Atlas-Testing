@@ -60,7 +60,7 @@ function AutomatedStrategiesPageContent() {
       ) : strategies.length === 0 ? (
         <div className="rounded-3xl border border-[#1A212A] bg-[#070A10] px-5 py-10 text-[#A3AFBC]">
           No automated strategies yet. Deploy one from the{" "}
-          <Link href="/dashboard/strategies" className="text-[#9BFF00] hover:underline">
+          <Link href="/dashboard/strategies" className="text-purple-400 hover:underline">
             marketplace
           </Link>
           .
@@ -107,7 +107,7 @@ function AutomatedStrategiesPageContent() {
               <div className="mt-5 grid grid-cols-2 gap-2">
                 <Link
                   href={`/dashboard/automated-strategies/${strategy.id}/dashboard`}
-                  className="rounded-2xl bg-[#9BFF00] px-4 py-3 text-center text-sm font-semibold text-[#11140D] transition hover:bg-[#B7FF45]"
+                  className="rounded-2xl bg-purple-600 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-purple-700 shadow-md shadow-purple-600/20 active:scale-95"
                 >
                   View Dashboard
                 </Link>

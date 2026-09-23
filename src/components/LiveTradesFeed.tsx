@@ -47,7 +47,7 @@ export function LiveTradesFeed() {
         {items.map((item, index) => (
           <div key={`${item.symbol}-${index}`} className="flex items-center justify-between rounded-lg border border-[#242C35] bg-[#0E141B] px-3 py-2 text-sm">
             <span className="text-[#E8ECEF]">{item.symbol}</span>
-            <span className="font-semibold text-[#9BFF00]">{item.price}</span>
+            <span className="font-semibold text-emerald-400">{item.price}</span>
           </div>
         ))}
       </div>

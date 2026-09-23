@@ -58,7 +58,7 @@ export function SignalForm({ onSignalAccepted }: Props) {
           <option value="binance">Binance</option>
         </select>
         <input className="sm:col-span-2 rounded-lg border border-[#242C35] bg-[#0E141B] px-3 py-2 text-[#E8ECEF]" value={strategyTag} onChange={(e) => setStrategyTag(e.target.value)} placeholder="strategy_tag" />
-        <button className="sm:col-span-2 rounded-lg bg-[#9BFF00] px-4 py-2 font-semibold text-[#10130D] transition hover:bg-[#B7FF45] disabled:opacity-60" type="submit" disabled={loading}>
+        <button className="sm:col-span-2 rounded-lg bg-purple-600 px-4 py-2 font-semibold text-white transition hover:bg-purple-700 shadow-md shadow-purple-600/20 disabled:opacity-60" type="submit" disabled={loading}>
           {loading ? "Sending..." : "Send Signal"}
         </button>
       </form>

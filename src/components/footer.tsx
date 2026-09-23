@@ -4,23 +4,23 @@ import Link from 'next/link'
 const links = [
     {
         title: 'Features',
-        href: '#features',
+        href: '/features',
     },
     {
         title: 'How It Works',
-        href: '#how-it-works',
+        href: '/about',
     },
     {
         title: 'Pricing',
-        href: '#pricing',
+        href: '/pricing',
     },
     {
         title: 'FAQ',
-        href: '#',
+        href: '/contact',
     },
     {
         title: 'Support',
-        href: '#',
+        href: '/contact',
     },
     {
         title: 'Terms & Conditions',
@@ -34,14 +34,22 @@ const links = [
 
 export default function FooterSection() {
     return (
-        <footer className="py-16 md:py-32">
-            <div className="mx-auto max-w-5xl px-6">
-                <Link
-                    href="/"
-                    aria-label="go home"
-                    className="mx-auto block size-fit">
-                    <Logo />
-                </Link>
+        <footer className="relative bg-[#07030f] border-t border-purple-900/20 py-16 md:py-28 overflow-hidden">
+            {/* Ambient Background Glow */}
+            <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[250px] bg-purple-900/15 rounded-full blur-[140px]" />
+            </div>
+
+            <div className="relative z-10 mx-auto max-w-5xl px-6">
+                {/* Logo Section with seamless dark blending */}
+                <div className="flex justify-center mb-8">
+                    <Link
+                        href="/"
+                        aria-label="go home"
+                        className="group inline-flex items-center justify-center p-3 sm:p-4 rounded-2xl bg-black/90 border border-purple-500/15 shadow-[0_0_35px_rgba(0,0,0,0.9)] transition-all duration-300 hover:border-purple-500/40 hover:shadow-[0_0_40px_rgba(139,92,246,0.25)]">
+                        <Logo className="h-24 sm:h-28 md:h-32 lg:h-36 w-auto object-contain mix-blend-screen transition-transform duration-300 group-hover:scale-105" />
+                    </Link>
+                </div>
 
                 <div className="my-8 flex flex-wrap justify-center gap-6 text-sm">
                     {links.map((link, index) => (

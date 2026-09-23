@@ -31,7 +31,7 @@ function StatTile({
   tone: "green" | "blue" | "amber";
 }) {
   const styles = {
-    green: "border-[#9BFF00]/30 bg-[linear-gradient(145deg,#0D140A,#0A0A0A)]",
+    green: "border-purple-500/30 bg-[linear-gradient(145deg,#130D24,#0A0A0A)]",
     blue: "border-[#60A5FA]/25 bg-[linear-gradient(145deg,#0A1018,#0A0A0A)]",
     amber: "border-[#F59E0B]/25 bg-[linear-gradient(145deg,#141008,#0A0A0A)]",
   };
@@ -140,7 +140,7 @@ export default function BrokerPage() {
   return (
     <div className="relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-16 top-0 h-64 w-64 rounded-full bg-[#9BFF00]/10 blur-[90px]" />
+        <div className="absolute -left-16 top-0 h-64 w-64 rounded-full bg-purple-600/15 blur-[90px]" />
         <div className="absolute right-0 top-24 h-72 w-72 rounded-full bg-[#3B82F6]/10 blur-[110px]" />
       </div>
 
@@ -152,7 +152,7 @@ export default function BrokerPage() {
         
         <section className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <span className="inline-flex rounded-full border border-[#9BFF00]/25 bg-[#9BFF00]/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.12em] text-[#9BFF00]">
+            <span className="inline-flex rounded-full border border-purple-500/25 bg-purple-500/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.12em] text-purple-400">
               Exchange connection
             </span>
             <h1 className="mt-3 text-[15px] font-semibold text-[#F3F7FB] sm:text-[32px]">Broker</h1>
@@ -161,7 +161,7 @@ export default function BrokerPage() {
             <button
               type="button"
               onClick={() => router.push("/strategies")}
-              className="rounded-xl bg-[#9BFF00] px-5 py-2.5 text-sm font-semibold text-[#11140D] hover:bg-[#B7FF45]"
+              className="rounded-xl bg-purple-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-purple-700 shadow-md shadow-purple-600/25 transition active:scale-95"
             >
               Browse strategies →
             </button>
@@ -217,7 +217,7 @@ export default function BrokerPage() {
                   type="button"
                   onClick={refreshAll}
                   disabled={snapshotQuery.isFetching || accountsQuery.isFetching}
-                  className="rounded-xl border border-[#26303A] px-3 py-2 text-xs text-[#C1CBD8] hover:border-[#9BFF00]/30 disabled:opacity-60"
+                  className="rounded-xl border border-[#26303A] px-3 py-2 text-xs text-[#C1CBD8] hover:border-purple-500/40 hover:text-purple-300 disabled:opacity-60 transition"
                 >
                   {snapshotQuery.isFetching || accountsQuery.isFetching ? "Refreshing..." : "Refresh"}
                 </button>
@@ -228,11 +228,11 @@ export default function BrokerPage() {
                   accountsQuery.data.map((account) => (
                     <article
                       key={account.id}
-                      className="rounded-2xl border border-[#242C35] bg-[#0E141B] p-4 transition hover:border-[#9BFF00]/20"
+                      className="rounded-2xl border border-[#242C35] bg-[#0E141B] p-4 transition hover:border-purple-500/30"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-start gap-3">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#9BFF00]/15 text-sm font-bold uppercase text-[#9BFF00]">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/15 text-sm font-bold uppercase text-purple-400">
                             {account.broker_name.slice(0, 2)}
                           </div>
                           <div>
@@ -248,7 +248,7 @@ export default function BrokerPage() {
                         <span
                           className={`rounded-full px-2.5 py-1 text-[11px] font-medium ${
                             account.is_active
-                              ? "bg-[#15251A] text-[#9BFF00]"
+                              ? "bg-purple-950/40 text-purple-400 border border-purple-500/30"
                               : "bg-[#2A1414] text-[#FFB4B4]"
                           }`}
                         >
@@ -303,7 +303,7 @@ export default function BrokerPage() {
                           <td className="px-3 py-2.5">{position.quantity}</td>
                           <td
                             className={`px-3 py-2.5 font-medium ${
-                              Number(position.unrealized_pnl) >= 0 ? "text-[#9BFF00]" : "text-[#FB7185]"
+                              Number(position.unrealized_pnl) >= 0 ? "text-emerald-400" : "text-[#FB7185]"
                             }`}
                           >
                             {position.unrealized_pnl}

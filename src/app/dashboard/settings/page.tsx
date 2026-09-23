@@ -90,28 +90,21 @@ export default function SettingsPage() {
         <header className="mb-6 flex items-center justify-between rounded-2xl border border-[#1A1E23] bg-[#090B0F] px-5 py-4">
           <div>
             <p className="text-xs uppercase tracking-[0.14em] text-[#8B95A1]">Settings</p>
-            <h1 className="mt-1 text-2xl font-semibold text-[#F6FAFF]">Theme, Alerts & Risk</h1>
+            <h1 className="mt-1 text-2xl font-semibold text-[#F6FAFF]">Alerts & Risk</h1>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => router.push("/dashboard")} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Dashboard</button>
-            <button onClick={onLogout} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Sign Out</button>
+            <button onClick={() => router.push("/dashboard")} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Dashboard</button>
+            <button onClick={onLogout} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Sign Out</button>
           </div>
         </header>
 
         {loading ? <p className="text-sm text-[#9AA5B1]">Loading settings...</p> : null}
         {error ? <p className="mb-3 rounded-lg border border-[#4F2A2A] bg-[#2A1414] px-3 py-2 text-sm text-[#FFB4B4]">{error}</p> : null}
-        {message ? <p className="mb-3 rounded-lg border border-[#31503A] bg-[#142419] px-3 py-2 text-sm text-[#AEE7B8]">{message}</p> : null}
+        {message ? <p className="mb-3 rounded-lg border border-purple-900/50 bg-purple-950/20 px-3 py-2 text-sm text-purple-300">{message}</p> : null}
 
         <section className="rounded-2xl border border-[#1A1E23] bg-[#0A0D13] p-5">
           <h2 className="text-lg font-semibold text-[#F3F7FB]">UI & Notifications</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <label className="text-sm text-[#9AA5B1]">
-              Theme
-              <select value={form.theme} onChange={(e) => setForm((p) => ({ ...p, theme: e.target.value as "dark" | "light" }))} className="mt-1 w-full rounded-lg border border-[#26303B] bg-[#0E141B] px-3 py-2">
-                <option value="dark">Dark</option>
-                <option value="light">Light</option>
-              </select>
-            </label>
 
             <label className="text-sm text-[#9AA5B1]">
               Accent Color
@@ -135,7 +128,7 @@ export default function SettingsPage() {
             <label className="flex items-center gap-2"><input type="checkbox" checked={form.notify_system_alerts} onChange={(e) => setForm((p) => ({ ...p, notify_system_alerts: e.target.checked }))} /> System alerts</label>
           </div>
 
-          <button onClick={saveSettings} disabled={saving} className="mt-5 rounded-lg bg-[#9BFF00] px-4 py-2 font-semibold text-[#11140D] disabled:opacity-60">{saving ? "Saving..." : "Save Settings"}</button>
+          <button onClick={saveSettings} disabled={saving} className="mt-5 rounded-lg bg-purple-600 hover:bg-purple-700 px-4 py-2 font-semibold text-white transition disabled:opacity-60">{saving ? "Saving..." : "Save Settings"}</button>
         </section>
 
         <section className="mt-5 rounded-2xl border border-[#1A1E23] bg-[#0A0D13] p-5">
@@ -150,7 +143,7 @@ export default function SettingsPage() {
               <input type="number" value={riskForm.max_trades_per_day} min={1} onChange={(e) => setRiskForm((p) => ({ ...p, max_trades_per_day: Number(e.target.value) }))} className="mt-1 w-full rounded-lg border border-[#26303B] bg-[#0E141B] px-3 py-2" />
             </label>
           </div>
-          <button onClick={saveRisk} disabled={saving} className="mt-5 rounded-lg bg-[#9BFF00] px-4 py-2 font-semibold text-[#11140D] disabled:opacity-60">Update Risk</button>
+          <button onClick={saveRisk} disabled={saving} className="mt-5 rounded-lg bg-purple-600 hover:bg-purple-700 px-4 py-2 font-semibold text-white transition disabled:opacity-60">Update Risk</button>
         </section>
       </div>
     </main>

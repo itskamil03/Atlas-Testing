@@ -72,7 +72,7 @@ export default function Services() {
   const header = useInView()
 
   return (
-    <section id="services" className="bg-muted/10 py-16 md:py-10" style={{ zoom: 0.67 }}>
+    <section id="services" className="bg-muted/10 py-16 md:py-10">
       <div className="mx-auto max-w-6xl px-6">
         <div
           ref={header.ref}

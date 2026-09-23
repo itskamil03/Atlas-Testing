@@ -7,6 +7,7 @@ import ProgressBar from "@/components/ProgressBar";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import FooterSection from "@/components/footer";
 import Providers from "@/providers/Providers";
+import { BookDemoModal } from "@/components/BookDemoModal";
 
 const libreBaskerville = Libre_Baskerville({
   subsets: ["latin"],
@@ -38,18 +39,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${libreBaskerville.className} antialiased overflow-x-hidden`}>
+    <html lang="en" className="dark" style={{ colorScheme: "dark" }} suppressHydrationWarning>
+      <body className={`${libreBaskerville.className} antialiased overflow-x-hidden bg-background text-foreground`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
+          forcedTheme="dark"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <Providers>
             <LayoutWrapper>{children}</LayoutWrapper>
             <FooterSection />
             <ProgressBar/>
+            <BookDemoModal />
           </Providers>
         </ThemeProvider>
       </body>

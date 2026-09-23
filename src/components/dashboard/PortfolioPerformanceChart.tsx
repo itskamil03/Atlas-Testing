@@ -116,7 +116,7 @@ export function PortfolioPerformanceChart({ series, mode, onModeChange, emptyAct
   const baselineY = valueToY(0, yMin, yMax);
 
   const isPositive = (points[points.length - 1]?.value ?? 0) >= 0;
-  const themeColor = isPositive ? "#9BFF00" : "#FB7185";
+  const themeColor = isPositive ? "#10B981" : "#FB7185";
 
   const areaPath = useMemo(() => {
     if (!points.length) return "";
@@ -165,7 +165,7 @@ export function PortfolioPerformanceChart({ series, mode, onModeChange, emptyAct
                 onClick={() => onModeChange(m)}
                 className={`rounded-lg px-3 py-1.5 font-medium transition duration-150 ${
                   isActive
-                    ? "bg-[#9BFF00]/15 text-[#9BFF00] border border-[#9BFF00]/30 shadow-sm"
+                    ? "bg-purple-600 text-white shadow-sm shadow-purple-600/30 font-semibold"
                     : "text-[#8E9AAA] hover:text-[#F3F7FB] border border-transparent"
                 }`}
               >
@@ -189,7 +189,7 @@ export function PortfolioPerformanceChart({ series, mode, onModeChange, emptyAct
               <button
                 type="button"
                 onClick={emptyAction.onClick}
-                className="mt-3 rounded-full bg-[#9BFF00] px-4 py-2 text-sm font-semibold text-[#11140D] hover:bg-[#86dd00] transition active:scale-95"
+                className="mt-3 rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700 shadow-md shadow-purple-600/20 transition active:scale-95"
               >
                 {emptyAction.label}
               </button>
@@ -320,7 +320,7 @@ export function PortfolioPerformanceChart({ series, mode, onModeChange, emptyAct
               >
                 <p
                   className={`text-base font-bold ${
-                    hoveredPoint.value >= 0 ? "text-[#9BFF00]" : "text-[#FB7185]"
+                    hoveredPoint.value >= 0 ? "text-emerald-400" : "text-[#FB7185]"
                   }`}
                 >
                   {formatTooltipValue(hoveredPoint.value, mode)}

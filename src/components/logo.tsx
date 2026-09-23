@@ -1,62 +1,31 @@
 "use client"
 
-import { useEffect, useState } from 'react'
-import { useTheme } from 'next-themes'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 
 export const Logo = ({ className, uniColor }: { className?: string; uniColor?: boolean }) => {
-    const { resolvedTheme } = useTheme()
-    const [mounted, setMounted] = useState(false)
-
-    useEffect(() => {
-        setMounted(true)
-    }, [])
-
-    // Don't render anything on server to prevent hydration mismatch
-    if (!mounted) {
-        return (
-            <div className={cn('h-28 w-auto', className)} style={{ minWidth: 200 }} />
-        )
-    }
-
-    const isDark = resolvedTheme === 'dark'
-
     return (
         <Image
-            src={isDark ? '/atlasgif.gif' : '/atlas_logo_d.gif'}
+            src="/LOGO.png?v=4"
             alt="Atlas Fintech"
-            width={200}
-            height={200}
-            className={cn('h-28 w-auto', className)}
+            width={400}
+            height={120}
+            className={cn('h-14 sm:h-16 w-auto object-contain', className)}
             priority
+            unoptimized
         />
     )
 }
 
 export const LogoIcon = ({ className }: { className?: string }) => {
-    const { resolvedTheme } = useTheme()
-    const [mounted, setMounted] = useState(false)
-
-    useEffect(() => {
-        setMounted(true)
-    }, [])
-
-    if (!mounted) {
-        return (
-            <div className={cn('size-8', className)} />
-        )
-    }
-
-    const isDark = resolvedTheme === 'dark'
-
     return (
         <Image
-            src={isDark ? '/atlasgif.gif' : '/atlas_logo_d.gif'}
+            src="/LOGO.png?v=4"
             alt="Atlas Logo"
-            width={40}
-            height={40}
-            className={cn('size-8', className)}
+            width={60}
+            height={60}
+            className={cn('size-10 sm:size-12 object-contain', className)}
+            unoptimized
         />
     )
 }

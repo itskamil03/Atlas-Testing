@@ -174,9 +174,9 @@ function MonthPanel({
               onClick={() => onSelectDay(day)}
               className={`h-8 rounded-md text-xs transition ${
                 isSelected
-                  ? "bg-[#9BFF00] font-semibold text-[#11140D]"
+                  ? "bg-purple-600 font-semibold text-white shadow-sm shadow-purple-600/30"
                   : inRange
-                    ? "bg-[#9BFF00]/15 text-[#D5DEE8]"
+                    ? "bg-purple-600/20 text-purple-200"
                     : "text-[#C9D4E0] hover:bg-[#1A212A]"
               }`}
             >
@@ -341,7 +341,7 @@ export function DateRangePicker({ open, value, onClose, onApply }: DateRangePick
               <button
                 type="button"
                 onClick={handleApply}
-                className="rounded-xl bg-[#9BFF00] px-5 py-2 text-sm font-semibold text-[#11140D] hover:bg-[#B7FF45]"
+                className="rounded-xl bg-purple-600 px-5 py-2 text-sm font-semibold text-white hover:bg-purple-700 shadow-md shadow-purple-600/20 active:scale-95 transition"
               >
                 Apply
               </button>

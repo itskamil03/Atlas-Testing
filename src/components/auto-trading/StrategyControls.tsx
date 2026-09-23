@@ -75,7 +75,7 @@ export function StrategyControls({
           <button
             disabled={loading}
             onClick={onStart}
-            className="rounded-2xl bg-[#9BFF00] px-5 py-3 font-semibold text-[#11140D] transition hover:bg-[#B7FF45] disabled:opacity-60"
+            className="rounded-2xl bg-purple-600 px-5 py-3 font-semibold text-white transition hover:bg-purple-700 active:scale-95 disabled:opacity-60"
           >
             Start
           </button>

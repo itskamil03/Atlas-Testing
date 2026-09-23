@@ -88,22 +88,22 @@ export default function NotificationsPage() {
             <h1 className="mt-1 text-2xl font-semibold text-gray-900 dark:text-[#F6FAFF]">Alerts & Updates</h1>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => router.push("/dashboard")} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Dashboard</button>
-            <button onClick={onLogout} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Sign Out</button>
+            <button onClick={() => router.push("/dashboard")} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Dashboard</button>
+            <button onClick={onLogout} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Sign Out</button>
           </div>
         </header>
 
         {error ? <p className="mb-3 rounded-lg border border-red-300 dark:border-[#4F2A2A] bg-red-50 dark:bg-[#2A1414] px-3 py-2 text-sm text-red-600 dark:text-[#FFB4B4]">{error}</p> : null}
-        {message ? <p className="mb-3 rounded-lg border border-green-300 dark:border-[#31503A] bg-green-50 dark:bg-[#142419] px-3 py-2 text-sm text-green-700 dark:text-[#AEE7B8]">{message}</p> : null}
+        {message ? <p className="mb-3 rounded-lg border border-purple-300 dark:border-purple-900/50 bg-purple-50 dark:bg-purple-950/20 px-3 py-2 text-sm text-purple-700 dark:text-purple-300">{message}</p> : null}
 
         <section className="rounded-2xl border border-gray-200 dark:border-[#1A1E23] bg-white dark:bg-[#0A0D13] p-5">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-[#F3F7FB]">Create Notification</h2>
-            <button onClick={markAllRead} disabled={saving} className="rounded-lg bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-3 py-2 text-xs font-semibold transition-all duration-100 disabled:opacity-50">Mark all read</button>
+            <button onClick={markAllRead} disabled={saving} className="rounded-lg bg-purple-600 hover:bg-purple-700 active:scale-95 text-white px-3 py-2 text-xs font-semibold transition-all duration-100 disabled:opacity-50">Mark all read</button>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="text-sm text-gray-500 dark:text-[#9AA5B1] flex flex-col">Category
-              <select value={form.category} onChange={(e) => setForm((p) => ({ ...p, category: e.target.value }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] hover:border-[#4ADE80] focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF] outline-none transition-colors duration-150 cursor-pointer">
+              <select value={form.category} onChange={(e) => setForm((p) => ({ ...p, category: e.target.value }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] hover:border-purple-400 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF] outline-none transition-colors duration-150 cursor-pointer">
                 <option value="system" className="bg-[#0F1B2B] text-white">System</option>
                 <option value="admin" className="bg-[#0F1B2B] text-white">Admin</option>
                 <option value="telegram" className="bg-[#0F1B2B] text-white">Telegram</option>
@@ -111,13 +111,13 @@ export default function NotificationsPage() {
               </select>
             </label>
             <label className="text-sm text-gray-500 dark:text-[#9AA5B1] flex flex-col">Title
-              <input value={form.title} onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF] focus:border-emerald-500 focus:outline-none transition-colors duration-150" />
+              <input value={form.title} onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF] focus:border-purple-500 focus:outline-none transition-colors duration-150" />
             </label>
             <label className="text-sm text-gray-500 dark:text-[#9AA5B1] sm:col-span-2 flex flex-col">Message
-              <textarea rows={3} value={form.message} onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF] focus:border-emerald-500 focus:outline-none transition-colors duration-150" />
+              <textarea rows={3} value={form.message} onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))} className="mt-1 w-full rounded-lg border border-gray-300 dark:border-[#26303B] bg-gray-50 dark:bg-[#0E141B] px-3 py-2 text-gray-900 dark:text-[#E8ECEF] focus:border-purple-500 focus:outline-none transition-colors duration-150" />
             </label>
           </div>
-          <button onClick={createNotification} disabled={saving || !form.title || !form.message} className="mt-4 rounded-lg bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-5 py-2 font-semibold transition-all duration-100 disabled:opacity-60">{saving ? "Saving..." : "Create"}</button>
+          <button onClick={createNotification} disabled={saving || !form.title || !form.message} className="mt-4 rounded-lg bg-purple-600 hover:bg-purple-700 active:scale-95 text-white px-5 py-2 font-semibold transition-all duration-100 disabled:opacity-60">{saving ? "Saving..." : "Create"}</button>
         </section>
 
         <section className="mt-5 rounded-2xl border border-gray-200 dark:border-[#1A1E23] bg-white dark:bg-[#0A0D13] p-5">
@@ -131,7 +131,7 @@ export default function NotificationsPage() {
                     <h3 className="text-base font-semibold text-gray-800 dark:text-[#EFF4FA]">{item.title}</h3>
                     <p className="text-xs text-gray-500 dark:text-[#8D9AAA]">{item.category} • {new Date(item.created_at).toLocaleString()}</p>
                   </div>
-                  <span className={`rounded-full px-2 py-1 text-xs ${item.is_read ? "bg-gray-200 dark:bg-[#19222D] text-gray-500 dark:text-[#8FA0B2]" : "bg-green-100 dark:bg-[#24391E] text-green-700 dark:text-[#9BFF00]"}`}>{item.is_read ? "Read" : "Unread"}</span>
+                  <span className={`rounded-full px-2 py-1 text-xs font-medium ${item.is_read ? "bg-gray-200 dark:bg-[#19222D] text-gray-500 dark:text-[#8FA0B2]" : "bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300"}`}>{item.is_read ? "Read" : "Unread"}</span>
                 </div>
                 <p className="mt-2 text-sm text-gray-600 dark:text-[#B8C2CF]">{item.message}</p>
               </article>

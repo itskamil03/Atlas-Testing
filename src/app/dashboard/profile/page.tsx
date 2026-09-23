@@ -717,7 +717,7 @@ function ProfilePageInner() {
                   <button
                     onClick={saveProfile}
                     disabled={savingProfile || loadingProfile}
-                    className="rounded-lg bg-[#9BFF00] px-6 py-2 font-semibold text-[#11140D] shadow-[0_10px_30px_rgba(155,255,0,0.2)] hover:bg-[#B7FF45] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="rounded-lg bg-purple-600 px-6 py-2 font-semibold text-white shadow-[0_10px_30px_rgba(124,58,237,0.3)] hover:bg-purple-700 active:scale-95 transition disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {savingProfile ? "Saving..." : "Save Changes"}
                   </button>
@@ -811,7 +811,7 @@ function ProfilePageInner() {
                         <button
                           onClick={() => void connectSelectedBroker()}
                           disabled={connectingBroker}
-                          className="rounded-lg bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-5 py-2 font-semibold transition-all duration-100 disabled:opacity-60"
+                          className="rounded-lg bg-purple-600 hover:bg-purple-700 active:scale-95 text-white px-5 py-2 font-semibold transition-all duration-100 disabled:opacity-60"
                         >
                           {connectingBroker ? "Connecting..." : "Connect"}
                         </button>
@@ -914,7 +914,7 @@ function ProfilePageInner() {
                             <button
                               onClick={() => void connectSelectedBroker()}
                               disabled={connectingBroker}
-                              className="rounded-lg bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-5 py-2 font-semibold transition-all duration-100 disabled:opacity-60"
+                              className="rounded-lg bg-purple-600 hover:bg-purple-700 active:scale-95 text-white px-5 py-2 font-semibold transition-all duration-100 disabled:opacity-60"
                             >
                               {connectingBroker ? "Connecting..." : "Connect"}
                             </button>
@@ -925,12 +925,12 @@ function ProfilePageInner() {
                     
                     <div className="mt-6 rounded-2xl border border-[#242C35] bg-[#0E141B] px-4 py-3 text-sm text-[#AAB4C0]">
                       <div className="flex items-center justify-between">
-                        <div>Don't have a <span className="text-[#9BFF00] font-medium">Delta Exchange</span> account? Create one via our <span className="text-[#9BFF00] font-medium">partner link</span>.</div>
+                        <div>Don't have a <span className="text-purple-400 font-medium">Delta Exchange</span> account? Create one via our <span className="text-purple-400 font-medium">partner link</span>.</div>
                         <a 
                           href="https://www.delta.exchange/app/signup" 
                           target="_blank" 
                           rel="noopener noreferrer" 
-                          className="rounded-full bg-[#9BFF00] px-4 py-2 text-sm font-semibold text-[#11140D] hover:bg-[#B7FF45] transition"
+                          className="rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700 active:scale-95 transition"
                         >
                           Create Account
                         </a>
@@ -946,7 +946,7 @@ function ProfilePageInner() {
                       <div className="mt-6 flex items-center justify-end">
                         <button
                           onClick={openAddAccountCatalog}
-                          className="rounded-full bg-[#9BFF00] px-5 py-2 text-sm font-semibold text-[#11140D] hover:bg-[#B7FF45]"
+                          className="rounded-full bg-purple-600 px-5 py-2 text-sm font-semibold text-white hover:bg-purple-700 active:scale-95 transition"
                         >
                           + Add Account
                         </button>
@@ -978,7 +978,7 @@ function ProfilePageInner() {
                         return (
                           <div key={account.id} className="flex flex-wrap items-center justify-between gap-4 px-5 py-5">
                             <div className="flex items-center gap-4">
-                              <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#27303A] bg-[#111822] text-sm font-semibold text-[#9BFF00]">
+                              <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#27303A] bg-[#111822] text-sm font-semibold text-purple-400">
                                 {account.broker_name.charAt(0).toUpperCase()}
                               </div>
                               <div>
@@ -1074,7 +1074,7 @@ function ProfilePageInner() {
                   <button
                     onClick={savePassword}
                     disabled={updatingPassword}
-                    className="rounded-lg bg-[#9BFF00] px-5 py-2 font-semibold text-[#11140D] hover:bg-[#B7FF45] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="rounded-lg bg-purple-600 px-5 py-2 font-semibold text-white hover:bg-purple-700 active:scale-95 transition disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {updatingPassword ? "Updating..." : "Update Password"}
                   </button>

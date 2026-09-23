@@ -129,7 +129,7 @@ export default function AutomatedStrategyDetailPage() {
               </div>
               <Link
                 href={`/dashboard/automated-strategies/${strategyId}/dashboard`}
-                className="mt-5 inline-flex rounded-2xl bg-[#9BFF00] px-5 py-3 font-semibold text-[#11140D] transition hover:bg-[#B7FF45]"
+                className="mt-5 inline-flex rounded-2xl bg-purple-600 px-5 py-3 font-semibold text-white transition hover:bg-purple-700 active:scale-95"
               >
                 Open dashboard
               </Link>

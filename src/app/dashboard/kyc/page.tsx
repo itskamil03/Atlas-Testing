@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Upload, FileText, X } from "lucide-react";
 
 import { api } from "@/lib/api";
 import { clearTokens, getAccessToken } from "@/lib/auth";
@@ -54,6 +55,7 @@ export default function KYCPage() {
   const router = useRouter();
   const [kyc, setKyc] = useState<KYCRecord | null>(null);
   const [form, setForm] = useState<KYCSubmitRequest>(DEFAULT_FORM);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -61,13 +63,33 @@ export default function KYCPage() {
 
   const docValidationError = validateDocumentId(form.document_type, form.document_id);
 
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      setError("File size exceeds 10MB limit.");
+      return;
+    }
+    setSelectedFile(file);
+    setError(null);
+  };
+
   const loadStatus = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await api.get<KYCRecord | null>("/kyc/status");
       setKyc(res.data);
     } catch {
-      setError("Unable to load KYC status.");
+      // If no KYC documents are uploaded yet, backend returns 404 or empty.
+      // Treat as no record yet without displaying an error message.
+      setKyc(null);
     } finally {
       setLoading(false);
     }
@@ -127,16 +149,36 @@ export default function KYCPage() {
     setMessage(null);
     setError(null);
     try {
-      const payload: KYCSubmitRequest = {
-        document_type: form.document_type,
-        document_id: form.document_type === "pan" || form.document_type === "passport" 
-          ? form.document_id.trim().toUpperCase() 
-          : form.document_id.trim(),
-        notes: form.notes?.trim() || null,
-      };
-      const res = await api.post<KYCRecord>("/kyc/submit", payload);
+      let res;
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("document_type", form.document_type);
+        formData.append(
+          "document_id",
+          form.document_type === "pan" || form.document_type === "passport"
+            ? form.document_id.trim().toUpperCase()
+            : form.document_id.trim()
+        );
+        if (form.notes?.trim()) {
+          formData.append("notes", form.notes.trim());
+        }
+        formData.append("file", selectedFile);
+        formData.append("document", selectedFile);
+        res = await api.post<KYCRecord>("/kyc/submit", formData);
+      } else {
+        const payload: KYCSubmitRequest = {
+          document_type: form.document_type,
+          document_id:
+            form.document_type === "pan" || form.document_type === "passport"
+              ? form.document_id.trim().toUpperCase()
+              : form.document_id.trim(),
+          notes: form.notes?.trim() || null,
+        };
+        res = await api.post<KYCRecord>("/kyc/submit", payload);
+      }
       setKyc(res.data);
       setMessage("KYC submitted successfully.");
+      setSelectedFile(null);
     } catch (err: unknown) {
       setError(extractApiErrorMessage(err, "KYC submit failed."));
     } finally {
@@ -170,8 +212,8 @@ export default function KYCPage() {
             <h1 className="mt-1 text-2xl font-semibold text-[#F6FAFF]">KYC Verification</h1>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => router.push("/dashboard")} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Dashboard</button>
-            <button onClick={onLogout} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Sign Out</button>
+            <button onClick={() => router.push("/dashboard")} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Dashboard</button>
+            <button onClick={onLogout} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Sign Out</button>
           </div>
         </header>
 
@@ -183,6 +225,18 @@ export default function KYCPage() {
           <h2 className="text-lg font-semibold text-[#F3F7FB]">Current Status</h2>
           <p className="mt-2 text-sm text-[#AEB9C6]">{kyc ? `Status: ${kyc.status.toUpperCase()} (${formatDocType(kyc.document_type)})` : "No KYC record yet"}</p>
           {kyc ? <p className="mt-1 text-xs text-[#7F8A97]">Last updated: {new Date(kyc.updated_at).toLocaleString()}</p> : null}
+          {kyc?.document_url ? (
+            <p className="mt-2 text-xs">
+              <a
+                href={kyc.document_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-purple-400 hover:underline"
+              >
+                View Uploaded Document ↗
+              </a>
+            </p>
+          ) : null}
           {kyc?.status === "rejected" && kyc.rejection_reason ? (
             <p className="mt-2 text-xs text-[#FFB4B4] bg-[#2A1414] p-2 rounded-lg border border-[#4F2A2A]">
               Reason for rejection: {kyc.rejection_reason}
@@ -198,7 +252,7 @@ export default function KYCPage() {
               <select
                 value={form.document_type}
                 onChange={(e) => handleDocumentTypeChange(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-[#26303B] bg-[#0E141B] px-3 py-2 text-[#F6FAFF] focus:border-[#9BFF00]/60 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-[#26303B] bg-[#0E141B] px-3 py-2 text-[#F6FAFF] focus:border-purple-500/60 focus:outline-none"
               >
                 <option value="aadhaar">Aadhaar Card</option>
                 <option value="pan">PAN Card</option>
@@ -217,13 +271,61 @@ export default function KYCPage() {
                   className={`mt-1 w-full rounded-lg border bg-[#0E141B] px-3 py-2 text-[#F6FAFF] placeholder-[#5A6876] focus:outline-none ${
                     docValidationError && form.document_id
                       ? "border-[#E5484D] focus:border-[#E5484D]"
-                      : "border-[#26303B] focus:border-[#9BFF00]/60"
+                      : "border-[#26303B] focus:border-purple-500/60"
                   }`}
                 />
               </label>
               {docValidationError && form.document_id ? (
                 <p className="mt-1 text-xs text-[#FFB4B4]">{docValidationError}</p>
               ) : null}
+            </div>
+
+            {/* Document File Upload */}
+            <div className="sm:col-span-2">
+              <label className="mb-1.5 block text-sm text-[#9AA5B1]">
+                Upload Document Proof (PDF, PNG, JPG - max 10MB)
+              </label>
+              {!selectedFile ? (
+                <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#26303B] bg-[#0E141B]/80 px-6 py-6 text-center transition-all hover:border-purple-500/50 hover:bg-[#0E141B]">
+                  <Upload className="mb-2 h-6 w-6 text-[#8B95A1] transition-transform duration-200" />
+                  <span className="text-sm font-medium text-[#D0DAE5]">
+                    Click or drag & drop to upload document proof
+                  </span>
+                  <span className="mt-1 text-xs text-[#6A7888]">
+                    Supports PDF, PNG, JPG up to 10MB
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg,application/pdf"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                </label>
+              ) : (
+                <div className="flex items-center justify-between rounded-xl border border-[#2E3D4D] bg-[#0F1722] p-3.5">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/10 text-purple-400">
+                      <FileText className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-[#F6FAFF] truncate max-w-xs sm:max-w-md">
+                        {selectedFile.name}
+                      </p>
+                      <p className="text-xs text-[#8B95A1]">
+                        {formatFileSize(selectedFile.size)} • Ready to upload
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedFile(null)}
+                    className="rounded-lg p-1.5 text-[#8B95A1] hover:bg-[#1A2330] hover:text-[#FFB4B4] transition"
+                    title="Remove file"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
             </div>
 
             <label className="text-sm text-[#9AA5B1] sm:col-span-2">
@@ -233,7 +335,7 @@ export default function KYCPage() {
                 value={form.notes || ""}
                 onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))}
                 placeholder="Add any additional notes (optional)..."
-                className="mt-1 w-full rounded-lg border border-[#26303B] bg-[#0E141B] px-3 py-2 text-[#F6FAFF] placeholder-[#5A6876] focus:border-[#9BFF00]/60 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-[#26303B] bg-[#0E141B] px-3 py-2 text-[#F6FAFF] placeholder-[#5A6876] focus:border-purple-500/60 focus:outline-none"
               />
             </label>
           </div>
@@ -241,7 +343,7 @@ export default function KYCPage() {
           <button
             onClick={submit}
             disabled={isSubmitDisabled}
-            className="mt-5 rounded-lg bg-[#9BFF00] px-5 py-2.5 font-semibold text-[#11140D] transition-all hover:bg-[#A8FF1E] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-5 rounded-lg bg-purple-600 px-5 py-2.5 font-semibold text-white transition-all hover:bg-purple-700 shadow-md shadow-purple-600/25 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? "Submitting..." : "Submit KYC"}
           </button>

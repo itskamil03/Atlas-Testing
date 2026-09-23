@@ -271,9 +271,9 @@ export function DeployStrategyModal({
                   <span
                     className={`rounded-full px-3 py-1 text-xs font-medium ${
                       active
-                        ? "bg-[#9BFF00]/15 text-[#9BFF00]"
+                        ? "bg-purple-950/40 text-purple-300 ring-1 ring-purple-500/40"
                         : complete
-                          ? "bg-[#1A212A] text-[#9BFF00]"
+                          ? "bg-purple-950/20 text-purple-400"
                           : "bg-[#1A212A] text-[#6B7785]"
                     }`}
                   >
@@ -316,7 +316,7 @@ export function DeployStrategyModal({
                   min="0"
                   step="0.01"
                   placeholder="e.g. 500"
-                  className="mt-1 w-full rounded-2xl border border-[#242D37] bg-[#0D1218] px-3 py-2 text-[#E8EEF5] outline-none focus:border-[#9BFF00]"
+                  className="mt-1 w-full rounded-2xl border border-[#242D37] bg-[#0D1218] px-3 py-2 text-[#E8EEF5] outline-none focus:border-purple-500"
                 />
               </label>
               <label className="block text-sm text-[#9AA5B1]">
@@ -328,7 +328,7 @@ export function DeployStrategyModal({
                   min="0"
                   step="0.01"
                   placeholder={accountDailyLossLimit ? String(accountDailyLossLimit) : "e.g. 500"}
-                  className="mt-1 w-full rounded-2xl border border-[#242D37] bg-[#0D1218] px-3 py-2 text-[#E8EEF5] outline-none focus:border-[#9BFF00]"
+                  className="mt-1 w-full rounded-2xl border border-[#242D37] bg-[#0D1218] px-3 py-2 text-[#E8EEF5] outline-none focus:border-purple-500"
                 />
               </label>
               {accountDailyLossLimit !== null ? (
@@ -345,7 +345,7 @@ export function DeployStrategyModal({
             </div>
 
             {platformEngine ? (
-              <p className="mt-3 rounded-xl border border-[#31503A] bg-[#142419] px-3 py-2.5 text-xs leading-5 text-[#AEE7B8]">
+              <p className="mt-3 rounded-xl border border-purple-900/50 bg-purple-950/20 px-3 py-2.5 text-xs leading-5 text-purple-300">
                 Auto-trading uses strategy config: symbol {defaultSymbol}, quantity {defaultQuantity}. No manual trade is needed at deploy.
               </p>
             ) : null}
@@ -354,7 +354,7 @@ export function DeployStrategyModal({
               type="button"
               disabled={!canProceedStep1 || lossExceedsAccountLimit || isBusy}
               onClick={() => (platformEngine ? void handlePlatformDeploy() : setStep(2))}
-              className="mt-6 w-full rounded-2xl bg-[#9BFF00] px-4 py-3 font-semibold text-[#11140D] transition hover:bg-[#B7FF45] disabled:opacity-60"
+              className="mt-6 w-full rounded-2xl bg-purple-600 px-4 py-3 font-semibold text-white transition hover:bg-purple-700 active:scale-95 disabled:opacity-60"
             >
               {platformEngine ? (isBusy ? "Deploying..." : "Deploy & Start Auto Trading") : "Next →"}
             </button>
@@ -378,7 +378,7 @@ export function DeployStrategyModal({
                 type="button"
                 disabled={isBusy || !canDeploy || lossExceedsAccountLimit}
                 onClick={() => void handleDeployAndRequestOtp()}
-                className="w-full rounded-2xl bg-[#9BFF00] px-4 py-3 font-semibold text-[#11140D] transition hover:bg-[#B7FF45] disabled:opacity-60"
+                className="w-full rounded-2xl bg-purple-600 px-4 py-3 font-semibold text-white transition hover:bg-purple-700 active:scale-95 disabled:opacity-60"
               >
                 {isBusy ? "Deploying..." : "Deploy & Auto Trading"}
               </button>

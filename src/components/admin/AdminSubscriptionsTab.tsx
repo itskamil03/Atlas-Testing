@@ -115,7 +115,7 @@ export function AdminSubscriptionsTab({ onMessage, onError }: AdminSubscriptions
     <section className="mt-5 space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-[28px] border border-[#1A212A] bg-[linear-gradient(180deg,#0D1218,#090D12)] p-6">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[#9BFF00]">Billing</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-purple-400">Billing</p>
           <h2 className="mt-1 text-2xl font-semibold text-[#F3F7FB]">Subscription Management</h2>
           <p className="mt-1 text-sm text-[#8E9AAA]">
             Verify UPI payments, manage mentor support, and recalculate strategy access.
@@ -124,7 +124,7 @@ export function AdminSubscriptionsTab({ onMessage, onError }: AdminSubscriptions
         <button
           type="button"
           onClick={() => void handleRecalculateAll()}
-          className="rounded-2xl border border-[#9BFF00]/40 px-4 py-2.5 text-sm font-semibold text-[#9BFF00] transition hover:bg-[#9BFF00]/10"
+          className="rounded-2xl border border-purple-500/40 px-4 py-2.5 text-sm font-semibold text-purple-400 transition hover:bg-purple-500/10 active:scale-95"
         >
           Recalculate All Access
         </button>
@@ -137,7 +137,7 @@ export function AdminSubscriptionsTab({ onMessage, onError }: AdminSubscriptions
             <select
               value={paymentFilter}
               onChange={(e) => setPaymentFilter(e.target.value)}
-              className="rounded-xl border border-[#242D37] bg-[#050607] px-3 py-2 text-sm text-[#F3F7FB] outline-none focus:border-[#9BFF00]/40 transition duration-150"
+              className="rounded-xl border border-[#242D37] bg-[#050607] px-3 py-2 text-sm text-[#F3F7FB] outline-none focus:border-purple-500/40 transition duration-150"
             >
               <option value="all">All statuses</option>
               <option value="submitted">Submitted</option>
@@ -149,7 +149,7 @@ export function AdminSubscriptionsTab({ onMessage, onError }: AdminSubscriptions
             <button
               type="button"
               onClick={() => void loadData()}
-              className="rounded-xl border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95"
+              className="rounded-xl border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95"
             >
               Refresh
             </button>
@@ -194,7 +194,7 @@ export function AdminSubscriptionsTab({ onMessage, onError }: AdminSubscriptions
                             type="button"
                             disabled={actingId === payment.id}
                             onClick={() => void handleVerify(payment.id)}
-                            className="rounded-lg bg-[#9BFF00] px-3 py-1.5 text-xs font-semibold text-[#11140D] disabled:opacity-50"
+                            className="rounded-lg bg-purple-600 hover:bg-purple-700 px-3 py-1.5 text-xs font-semibold text-white transition disabled:opacity-50 active:scale-95"
                           >
                             Verify
                           </button>
@@ -252,7 +252,7 @@ export function AdminSubscriptionsTab({ onMessage, onError }: AdminSubscriptions
                 </div>
                 <p className="mt-3 text-sm text-[#C9D4E0]">{request.message}</p>
                 {request.admin_response ? (
-                  <p className="mt-3 rounded-xl bg-[#0B1118] p-3 text-sm text-[#9BFF00]">
+                  <p className="mt-3 rounded-xl border border-purple-900/50 bg-purple-950/20 p-3 text-sm text-purple-300">
                     Response: {request.admin_response}
                   </p>
                 ) : null}
@@ -263,7 +263,7 @@ export function AdminSubscriptionsTab({ onMessage, onError }: AdminSubscriptions
                   }
                   placeholder="Admin response to user"
                   rows={2}
-                  className="mt-3 w-full rounded-xl border border-[#242D37] bg-[#0B1118] px-3 py-2 text-sm text-[#F3F7FB]"
+                  className="mt-3 w-full rounded-xl border border-[#242D37] bg-[#0B1118] px-3 py-2 text-sm text-[#F3F7FB] focus:border-purple-500 focus:outline-none"
                 />
                 <div className="mt-3 flex flex-wrap gap-2">
                   {(["in_progress", "resolved", "closed"] as const).map((status) => (
@@ -272,7 +272,7 @@ export function AdminSubscriptionsTab({ onMessage, onError }: AdminSubscriptions
                       type="button"
                       disabled={actingId === request.id}
                       onClick={() => void handleMentorUpdate(request.id, status)}
-                      className="rounded-lg border border-[#242D37] px-3 py-1.5 text-xs capitalize text-[#C9D4E0] hover:border-[#9BFF00]/40 disabled:opacity-50"
+                      className="rounded-lg border border-[#242D37] px-3 py-1.5 text-xs capitalize text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-300 transition disabled:opacity-50"
                     >
                       Mark {status.replace("_", " ")}
                     </button>

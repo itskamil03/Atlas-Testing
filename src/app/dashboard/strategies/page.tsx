@@ -109,7 +109,7 @@ export default function StrategiesPage() {
   return (
     <div className="relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-20 top-0 h-72 w-72 rounded-full bg-[#9BFF00]/10 blur-[100px]" />
+        <div className="absolute -left-20 top-0 h-72 w-72 rounded-full bg-purple-600/15 blur-[100px]" />
         <div className="absolute right-0 top-32 h-80 w-80 rounded-full bg-[#3B82F6]/10 blur-[120px]" />
       </div>
 
@@ -128,7 +128,7 @@ export default function StrategiesPage() {
           <div className={hasSubscription ? "" : "pointer-events-none select-none blur-[5px]"}>
             <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
               <div>
-                <span className="inline-flex rounded-full border border-[#9BFF00]/25 bg-[#9BFF00]/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.12em] text-[#9BFF00]">
+                <span className="inline-flex rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.12em] text-purple-400">
                   Marketplace
                 </span>
                 <h1 className="mt-3 text-[15px] font-semibold text-[#F3F7FB] sm:text-[32px]">
@@ -154,7 +154,7 @@ export default function StrategiesPage() {
                   void loadStrategies({ search: event.target.value });
                 }}
                 placeholder="Search strategies..."
-                className="min-w-[220px] flex-1 rounded-xl border border-[#26303A] bg-[#0E141B] px-4 py-2.5 text-sm text-[#E8EEF5] placeholder:text-[#617184] focus:border-[#9BFF00]/40 focus:outline-none"
+                className="min-w-[220px] flex-1 rounded-xl border border-[#26303A] bg-[#0E141B] px-4 py-2.5 text-sm text-[#E8EEF5] placeholder:text-[#617184] focus:border-purple-500/50 focus:outline-none"
               />
               <select
                 value={filters.exchange ?? ""}
@@ -185,7 +185,7 @@ export default function StrategiesPage() {
                 <button
                   type="button"
                   onClick={() => scrollCarousel("left")}
-                  className="absolute -left-3 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#26303A] bg-[#0A0A0A] text-[#C9D4E0] shadow-lg hover:border-[#9BFF00]/40 md:flex"
+                  className="absolute -left-3 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#26303A] bg-[#0A0A0A] text-[#C9D4E0] shadow-lg hover:border-purple-500/50 hover:text-purple-300 md:flex transition"
                   aria-label="Scroll left"
                 >
                   ←
@@ -193,7 +193,7 @@ export default function StrategiesPage() {
                 <button
                   type="button"
                   onClick={() => scrollCarousel("right")}
-                  className="absolute -right-3 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#26303A] bg-[#0A0A0A] text-[#C9D4E0] shadow-lg hover:border-[#9BFF00]/40 md:flex"
+                  className="absolute -right-3 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#26303A] bg-[#0A0A0A] text-[#C9D4E0] shadow-lg hover:border-purple-500/50 hover:text-purple-300 md:flex transition"
                   aria-label="Scroll right"
                 >
                   →
@@ -232,7 +232,7 @@ export default function StrategiesPage() {
                 <button
                   type="button"
                   onClick={() => router.push("/dashboard/subscription")}
-                  className="mt-5 rounded-xl bg-[#9BFF00] px-5 py-3 text-sm font-semibold text-[#11140D] transition hover:bg-[#B7FF45]"
+                  className="mt-5 rounded-xl bg-purple-600 px-5 py-3 text-sm font-semibold text-white shadow-md shadow-purple-600/25 transition hover:bg-purple-700 active:scale-95"
                 >
                   Go to Subscription Plan
                 </button>

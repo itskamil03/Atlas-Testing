@@ -42,7 +42,7 @@ export function StrategyDateFilterBar({
           onClick={() => onPickerOpenChange(true)}
           className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs transition ${
             useCustomDateRange
-              ? "border-[#9BFF00]/40 bg-[#9BFF00]/10 text-[#D5DEE8]"
+              ? "border-purple-500/50 bg-purple-500/15 text-purple-300"
               : "border-[#26303A] text-[#A3AFBD] hover:text-[#D5DEE8]"
           }`}
         >
@@ -79,7 +79,7 @@ export function StrategyDateFilterBar({
           }}
           className={`rounded-lg px-3 py-2 text-xs font-medium transition ${
             !useCustomDateRange && datePreset === preset
-              ? "bg-[#9BFF00] text-[#11140D]"
+              ? "bg-purple-600 text-white shadow-sm shadow-purple-600/30 font-semibold"
               : "border border-[#26303A] text-[#A3AFBD] hover:text-[#D5DEE8]"
           }`}
         >

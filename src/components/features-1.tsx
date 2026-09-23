@@ -28,42 +28,42 @@ const featureCards = [
         title: 'Algorithmic Trading Engine',
         description:
             'Automated execution algorithms designed to identify and act on high-probability opportunities across global markets.',
-        accent: 'from-emerald-400/30 to-cyan-400/10',
+        accent: 'from-purple-500/30 to-indigo-500/10',
     },
     {
         icon: Sparkles,
         title: 'Forex Intelligence Suite',
         description:
             'AI-driven currency market signals, macro analysis, and volatility-aware strategies built for FX traders.',
-        accent: 'from-cyan-400/30 to-sky-400/10',
+        accent: 'from-indigo-500/30 to-blue-500/10',
     },
     {
         icon: TrendingUp,
         title: 'Crypto Quant Engine',
         description:
             'Quantitative crypto strategies with momentum, mean-reversion, and risk-managed execution for digital asset markets.',
-        accent: 'from-fuchsia-400/30 to-violet-400/10',
+        accent: 'from-violet-500/30 to-fuchsia-500/10',
     },
     {
         icon: ShieldCheck,
         title: 'Risk Management Engine',
         description:
             'Integrated risk controls, position sizing, and drawdown management to protect capital while trading aggressively.',
-        accent: 'from-amber-400/30 to-orange-400/10',
+        accent: 'from-purple-600/30 to-pink-500/10',
     },
     {
         icon: BarChart2,
         title: 'Portfolio & Performance Dashboard',
         description:
             'Track trading performance, risk metrics, and portfolio allocations with intuitive analytics designed for professional traders.',
-        accent: 'from-lime-400/30 to-emerald-400/10',
+        accent: 'from-indigo-600/30 to-purple-400/10',
     },
     {
         icon: Database,
-        title: 'Advanced Backtesting Suite',
+        title: 'Proven Backtesting Data Uploaded',
         description:
-            'Historical data analysis, Monte Carlo simulations, and strategy optimization for professional traders and institutions.',
-        accent: 'from-indigo-400/30 to-slate-400/10',
+            'Verified historical backtesting datasets, Monte Carlo simulations, and real strategy performance models uploaded for full transparency.',
+        accent: 'from-purple-400/30 to-slate-400/10',
     },
 ]
 
@@ -105,14 +105,14 @@ function PulseCard({ pulse, index, enableMotion }: { pulse: MarketPulse; index: 
             }}
             className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white/90 p-4 text-center text-slate-950 shadow-2xl shadow-slate-900/10 md:max-w-none md:text-left dark:border-white/10 dark:bg-slate-950/80 dark:text-white dark:shadow-black/20 "
         >
-            <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
+            <div className="flex items-center justify-between text-sm font-medium text-slate-600 dark:text-slate-400">
                 <span>{pulse.label}</span>
                 <motion.span
                     key={pulse.delta}
                     initial={{ opacity: 0, y: -6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, ease: 'easeOut' }}
-                    className={pulse.direction === 'up' ? 'text-emerald-600 dark:text-emerald-300' : 'text-rose-600 dark:text-rose-300'}
+                    className={pulse.direction === 'up' ? 'text-emerald-500 dark:text-emerald-400 font-semibold text-sm' : 'text-rose-500 dark:text-rose-400 font-semibold text-sm'}
                 >
                     {pulse.delta}
                 </motion.span>
@@ -128,10 +128,10 @@ function PulseCard({ pulse, index, enableMotion }: { pulse: MarketPulse; index: 
                     >
                         {pulse.value}
                     </motion.p>
-                    <p className="text-[10px] uppercase tracking-[0.25em] text-slate-500 dark:text-slate-500">live feed</p>
+                    <p className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 font-medium">live feed</p>
                 </div>
                 <ArrowUpRight
-                    className={pulse.direction === 'up' ? 'size-4 text-emerald-600 dark:text-emerald-300' : 'size-4 rotate-90 text-rose-600 dark:text-rose-300'}
+                    className={pulse.direction === 'up' ? 'size-4 text-emerald-500 dark:text-emerald-400' : 'size-4 rotate-90 text-rose-500 dark:text-rose-400'}
                     aria-hidden
                 />
             </div>
@@ -151,23 +151,23 @@ function FeatureCard({ item, index, enableMotion }: { item: typeof featureCards[
                 ease: [0.22, 1, 0.36, 1],
             }}
             whileHover={enableMotion ? {
-                y: -6,
-                scale: 1.018,
-                transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] },
+                y: -4,
+                scale: 1.012,
+                transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] },
             } : undefined}
         >
-            <Card className="group relative h-full overflow-hidden border border-slate-200 bg-white/90 text-slate-950 shadow-2xl shadow-slate-900/10 backdrop-blur-xl transition-colors duration-300 hover:border-emerald-400/30 dark:border-white/10 dark:bg-white/5 dark:text-white dark:shadow-black/20">
+            <Card className="group relative h-full overflow-hidden rounded-2xl border border-slate-200 bg-white/90 text-slate-950 shadow-lg shadow-slate-900/10 backdrop-blur-xl transition-colors duration-300 hover:border-purple-500/40 dark:border-white/10 dark:bg-white/5 dark:text-white dark:shadow-black/20">
                 <div className={`absolute inset-0 bg-linear-to-br ${item.accent} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
 
-                <CardHeader className="relative pb-4 pt-8 text-center md:text-center">
+                <CardHeader className="relative pb-1 pt-4 px-5 text-center md:text-center">
                     <CardDecorator animate={enableMotion}>
-                        <item.icon className="size-6" aria-hidden />
+                        <item.icon className="size-4 text-purple-400" aria-hidden />
                     </CardDecorator>
-                    <h3 className="mt-6 text-xl font-semibold text-slate-950 dark:text-white">{item.title}</h3>
+                    <h3 className="mt-2 text-base font-semibold text-slate-950 dark:text-white">{item.title}</h3>
                 </CardHeader>
 
-                <CardContent className="relative pb-8 px-6 text-center">
-                    <p className="text-base leading-7 text-slate-600 dark:text-slate-300">{item.description}</p>
+                <CardContent className="relative pb-4 pt-1 px-5 text-center">
+                    <p className="text-sm leading-normal text-slate-600 dark:text-slate-300">{item.description}</p>
                 </CardContent>
             </Card>
         </motion.div>
@@ -177,21 +177,21 @@ function FeatureCard({ item, index, enableMotion }: { item: typeof featureCards[
 // ─── Card decorator ───────────────────────────────────────────────────────────
 
 const CardDecorator = ({ children, animate = true }: { children: ReactNode; animate?: boolean }) => (
-    <div className="mask-radial-from-40% mask-radial-to-60% relative mx-auto size-32 [--color-border:color-mix(in_oklab,var(--color-white)12%,transparent)] group-hover:[--color-border:color-mix(in_oklab,var(--color-white)22%,transparent)]">
+    <div className="mask-radial-from-40% mask-radial-to-60% relative mx-auto size-14 [--color-border:color-mix(in_oklab,var(--color-white)12%,transparent)] group-hover:[--color-border:color-mix(in_oklab,var(--color-white)22%,transparent)]">
         <div
             aria-hidden
-            className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-size-[24px_24px] opacity-60"
+            className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-size-[12px_12px] opacity-60"
         />
 
         {animate && (
             <div
                 aria-hidden
-                className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(16,185,129,0.2),transparent_60%)] blur-xl animate-[spin_10s_linear_infinite]"
+                className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(124,58,237,0.25),transparent_60%)] blur-md animate-[spin_10s_linear_infinite]"
             />
         )}
 
         <div
-            className={`bg-white/95 absolute inset-0 m-auto flex size-14 items-center justify-center rounded-2xl border border-slate-200 shadow-lg shadow-slate-900/10 dark:bg-background/95 dark:border-white/10 dark:shadow-emerald-950/20
+            className={`bg-white/95 absolute inset-0 m-auto flex size-8 items-center justify-center rounded-lg border border-slate-200 shadow-sm shadow-slate-900/10 dark:bg-background/95 dark:border-white/10 dark:shadow-purple-950/20
             ${animate ? 'animate-[breathe_1.6s_ease-in-out_infinite]' : ''}`}
         >
             {children}
@@ -246,23 +246,22 @@ export default function Features() {
     return (
         <section
             id="features"
-            className="relative overflow-hidden bg-slate-50 py-20 text-slate-950 md:py-24 dark:bg-slate-950 dark:text-white mt-4"
-            style={{ zoom: 0.67, MozTransform: 'scale(0.67)', MozTransformOrigin: 'top center' } as React.CSSProperties}
+            className="relative overflow-hidden bg-slate-50 py-16 text-slate-950 md:py-20 dark:bg-slate-950 dark:text-white mt-4"
         >
             <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.12),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.08),transparent_28%),linear-gradient(180deg,rgba(248,250,252,0.96),rgba(241,245,249,0.9))] dark:bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.18),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.12),transparent_28%),linear-gradient(180deg,rgba(2,6,23,0.96),rgba(2,6,23,0.82))]"
+                className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(124,58,237,0.12),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(99,102,241,0.08),transparent_28%),linear-gradient(180deg,rgba(248,250,252,0.96),rgba(241,245,249,0.9))] dark:bg-[radial-gradient(circle_at_top,rgba(124,58,237,0.22),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(99,102,241,0.15),transparent_28%),linear-gradient(180deg,rgba(5,5,9,0.96),rgba(10,10,18,0.85))]"
             />
 
             {enableMotion && (
                 <>
                     <div
                         aria-hidden
-                        className="pointer-events-none absolute -left-24 top-12 size-72 rounded-full bg-emerald-400/10 blur-3xl animate-[floatA_12s_ease-in-out_infinite]"
+                        className="pointer-events-none absolute -left-24 top-12 size-72 rounded-full bg-purple-500/10 blur-3xl animate-[floatA_12s_ease-in-out_infinite]"
                     />
                     <div
                         aria-hidden
-                        className="pointer-events-none absolute -right-24 bottom-0 size-80 rounded-full bg-cyan-400/10 blur-3xl animate-[floatB_14s_ease-in-out_infinite]"
+                        className="pointer-events-none absolute -right-24 bottom-0 size-80 rounded-full bg-indigo-500/10 blur-3xl animate-[floatB_14s_ease-in-out_infinite]"
                     />
                 </>
             )}
@@ -277,14 +276,14 @@ export default function Features() {
                     transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
                     className="mx-auto max-w-3xl text-center"
                 >
-                    <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-xs font-medium text-emerald-700 backdrop-blur dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-200">
-                        <Activity className="size-4 animate-pulse" aria-hidden />
+                    <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-purple-500/20 bg-purple-500/10 px-4 py-2 text-sm font-medium text-purple-700 backdrop-blur dark:border-purple-400/20 dark:bg-purple-400/10 dark:text-purple-300">
+                        <Activity className="size-4 animate-pulse text-purple-500 dark:text-purple-400" aria-hidden />
                         Live market intelligence
                     </div>
                     <h2 className="text-3xl font-semibold tracking-tight text-slate-950 lg:text-5xl dark:text-white">
                         What ATLAS Does
                     </h2>
-                    <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-slate-600 md:text-base dark:text-slate-300">
+                    <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-slate-600 dark:text-slate-300">
                         A next-generation algorithmic trading platform for Forex, Crypto, and Indices. We combine
                         quantitative models, AI-driven signals, and automated execution with a sleek, real-time
                         market experience.
@@ -296,7 +295,7 @@ export default function Features() {
                     variants={{ hidden: {}, visible: {} }}
                     initial="hidden"
                     animate={pulsesInView ? 'visible' : 'hidden'}
-                    className="mx-auto mt-10 grid max-w-4xl grid-cols-1 justify-items-center gap-4 rounded-3xl border border-slate-200 bg-white/70 p-4 backdrop-blur-xl md:grid-cols-3 dark:border-white/10 dark:bg-white/5"
+                    className="mx-auto mt-8 grid max-w-3xl grid-cols-1 justify-items-center gap-3.5 rounded-2xl border border-slate-200 bg-white/70 p-3 backdrop-blur-xl md:grid-cols-3 dark:border-white/10 dark:bg-white/5"
                 >
                     {pulses.map((pulse, i) => (
                         <PulseCard
@@ -313,7 +312,7 @@ export default function Features() {
                     variants={{ hidden: {}, visible: {} }}
                     initial="hidden"
                     animate={cardsInView ? 'visible' : 'hidden'}
-                    className="mx-auto mt-6 grid max-w-sm gap-8 *:text-center md:max-w-none md:grid-cols-2 lg:grid-cols-3 lg:max-w-6xl"
+                    className="mx-auto mt-6 grid max-w-sm gap-4 sm:gap-5 *:text-center md:max-w-none md:grid-cols-2 lg:grid-cols-3 max-w-6xl xl:max-w-7xl"
                 >
                     {featureCards.map((item, i) => (
                         <FeatureCard

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { clearTokens, getAccessToken } from "@/lib/auth";
 import { Logo } from "@/components/logo";
-import { ThemeToggleButton } from "@/components/ThemeToggleButton";
+import { BookDemoButton } from "@/components/BookDemoButton";
 import { api } from "@/lib/api";
 import { getAdminRoute, setAdminViewMode } from "@/lib/adminRoutes";
 import type { UserProfile } from "@/lib/types";
@@ -105,10 +105,10 @@ export default function Header({ displayName = "Trader" }: HeaderProps) {
           ))}
         </nav>
 
-        {/* Right Section - Theme Toggle, User Menu, Mobile Toggle */}
-        <div className="relative flex items-center gap-2">
-          {/* Dark/Light Mode Toggle */}
-          <ThemeToggleButton />
+        {/* Right Section - Book Demo, User Menu, Mobile Toggle */}
+        <div className="relative flex items-center gap-2 sm:gap-3">
+          {/* Book Demo Unique Button */}
+          <BookDemoButton size="sm" />
 
           {/* User Icon */}
           <button
@@ -164,7 +164,7 @@ export default function Header({ displayName = "Trader" }: HeaderProps) {
                       }
                       router.push("/dashboard/admin");
                     }}
-                    className="mt-1 w-full rounded-lg px-3 py-2 text-left text-sm font-bold text-[#9BFF00] hover:bg-gray-100 dark:hover:bg-[#111822] transition-colors duration-200"
+                    className="mt-1 w-full rounded-lg px-3 py-2 text-left text-sm font-bold text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/30 transition-colors duration-200"
                   >
                     Admin Panel
                   </button>
@@ -223,7 +223,7 @@ export default function Header({ displayName = "Trader" }: HeaderProps) {
               onClick={() => setShowMobileMenu(false)}
               className={`transition-colors duration-200 py-2 px-3 rounded-lg text-sm ${
                 isLinkActive(link.name, link.path)
-                  ? "font-semibold bg-emerald-600/10 text-emerald-400"
+                  ? "font-semibold bg-purple-600/15 text-purple-600 dark:text-purple-400"
                   : "text-gray-500 dark:text-[#8D98A5] hover:bg-gray-100 dark:hover:bg-[#111822] hover:text-gray-700 dark:hover:text-[#DEE6EE]"
               }`}
             >

@@ -36,9 +36,9 @@ export function WorkflowBanner({ activeStep = "broker" }: WorkflowBannerProps) {
                 href={step.href}
                 className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm transition ${
                   isActive
-                    ? "border-[#9BFF00]/40 bg-[#10150E] text-[#DFFFAB]"
+                    ? "border-purple-500/50 bg-purple-950/40 text-purple-200 shadow-sm shadow-purple-500/20"
                     : isComplete
-                      ? "border-[#2B3440] bg-[#0D1218] text-[#9BFF00]"
+                      ? "border-purple-500/30 bg-[#0D1218] text-purple-400"
                       : "border-[#242D37] bg-[#0D1218] text-[#B7C2CF] hover:border-[#33404D]"
                 }`}
               >

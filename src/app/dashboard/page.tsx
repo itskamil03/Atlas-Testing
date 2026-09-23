@@ -288,8 +288,8 @@ export default function DashboardPage() {
                   onClick={() => setDatePickerOpen(true)}
                   className={`flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs transition duration-200 ${
                     useCustomDateRange
-                      ? "border-[#9BFF00] bg-[#9BFF00]/10 text-emerald-400"
-                      : "border-gray-200 dark:border-white/10 bg-transparent dark:bg-white/[0.03] text-gray-500 dark:text-[#A8B3BF] hover:dark:border-emerald-500/30 hover:dark:text-emerald-400"
+                      ? "border-purple-500 bg-purple-500/10 text-purple-400"
+                      : "border-gray-200 dark:border-white/10 bg-transparent dark:bg-white/[0.03] text-gray-500 dark:text-[#A8B3BF] hover:dark:border-purple-500/30 hover:dark:text-purple-400"
                   }`}
                 >
                   <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
@@ -325,8 +325,8 @@ export default function DashboardPage() {
                       }}
                       className={`rounded px-2 py-1 transition-all duration-100 ${
                         active
-                          ? "bg-emerald-600 font-semibold text-white"
-                          : "hover:text-emerald-500 dark:hover:text-emerald-400"
+                          ? "bg-purple-600 font-semibold text-white shadow-sm shadow-purple-600/30"
+                          : "hover:text-purple-500 dark:hover:text-purple-400"
                       }`}
                     >
                       {preset}

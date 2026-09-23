@@ -11,6 +11,7 @@ import { AdminSubscriptionsTab } from "@/components/admin/AdminSubscriptionsTab"
 import { AdminUsersTab } from "@/components/admin/AdminUsersTab";
 import { AdminKYCTab } from "@/components/admin/AdminKYCTab";
 import { AdminTradesTab } from "@/components/admin/AdminTradesTab";
+import { AdminRatingsTab } from "@/components/admin/AdminRatingsTab";
 import { parametersFromDefaults, StrategyParameterFields } from "@/components/admin/StrategyParameterFields";
 import { api, getStrategyTypeDefinitions } from "@/lib/api";
 import { clearTokens, getAccessToken } from "@/lib/auth";
@@ -42,6 +43,7 @@ type AdminTab =
   | "subscriptions"
   | "performance"
   | "academy"
+  | "ratings"
   | "users"
   | "kyc"
   | "trades"
@@ -116,6 +118,7 @@ const tabs: { id: AdminTab; label: string }[] = [
   { id: "overview", label: "Overview" },
   { id: "strategies", label: "Strategies" },
   { id: "subscriptions", label: "Subscriptions" },
+  { id: "ratings", label: "Indian Ratings" },
   { id: "users", label: "Users" },
   { id: "kyc", label: "KYC" },
   { id: "trades", label: "Trades" },
@@ -767,7 +770,7 @@ export default function AdminPage() {
         <header className="rounded-[28px] border border-[#1A212A] bg-[linear-gradient(180deg,#0D1218,#090D12)] p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-[#9BFF00]">Admin Console</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-purple-400">Admin Console</p>
               <h1 className="mt-1 text-3xl font-semibold text-[#F3F7FB]">Atlas Control Center</h1>
               <p className="mt-1 text-sm text-[#8E9AAA]">
                 Signed in as {profile?.full_name ?? "Admin"} · {profile?.email}
@@ -777,7 +780,7 @@ export default function AdminPage() {
               <button
                 type="button"
                 onClick={() => void loadAll()}
-                className="rounded-xl bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-4 py-2 text-sm font-semibold transition-all duration-100"
+                className="rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100"
               >
                 Refresh
               </button>
@@ -789,14 +792,14 @@ export default function AdminPage() {
                   }
                   router.push("/dashboard");
                 }}
-                className="rounded-xl bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-4 py-2 text-sm font-semibold transition-all duration-100"
+                className="rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100"
               >
                 Trader Dashboard
               </button>
               <button
                 type="button"
                 onClick={onLogout}
-                className="rounded-xl bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-4 py-2 text-sm font-semibold transition-all duration-100"
+                className="rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100"
               >
                 Logout
               </button>
@@ -808,7 +811,7 @@ export default function AdminPage() {
           <p className="mt-4 rounded-2xl border border-[#5A2A2A] bg-[#2A1414] px-4 py-3 text-sm text-[#FFB4B4]">{error}</p>
         ) : null}
         {message ? (
-          <p className="mt-4 rounded-2xl border border-[#2A4A1A] bg-[#142A14] px-4 py-3 text-sm text-[#B7FF45]">{message}</p>
+          <p className="mt-4 rounded-2xl border border-purple-900/50 bg-purple-950/20 px-4 py-3 text-sm text-purple-300">{message}</p>
         ) : null}
 
         <nav className="sticky top-3 z-20 mt-5 flex gap-1 overflow-x-auto rounded-[24px] border border-[#1A212A] bg-[#0B1118]/95 p-1.5 backdrop-blur">
@@ -819,7 +822,7 @@ export default function AdminPage() {
               onClick={() => setTab(tab.id)}
               className={`whitespace-nowrap rounded-[18px] px-4 py-2.5 text-sm font-medium transition active:scale-95 duration-100 ${
                 activeTab === tab.id
-                  ? "bg-[#9BFF00] text-[#11140D]"
+                  ? "bg-purple-600 text-white"
                   : "text-[#8E9AAA] hover:bg-[#121820] hover:text-[#F3F7FB]"
               }`}
             >
@@ -839,7 +842,7 @@ export default function AdminPage() {
               ].map((card) => (
                 <div
                   key={card.label}
-                  className="rounded-[24px] border border-[#1A212A] bg-[#0B1118] p-5 transition hover:border-[#9BFF00]/30"
+                  className="rounded-[24px] border border-[#1A212A] bg-[#0B1118] p-5 transition hover:border-purple-500/30"
                 >
                   <p className="text-xs uppercase tracking-wide text-[#6B7785]">{card.label}</p>
                   <p className="mt-3 text-3xl font-semibold text-[#F3F7FB]">{card.value}</p>
@@ -859,7 +862,7 @@ export default function AdminPage() {
                   className="rounded-[24px] border border-[#1A212A] bg-[#0B1118] p-5"
                 >
                   <p className="text-xs uppercase tracking-wide text-[#6B7785]">{card.label}</p>
-                  <p className="mt-3 text-2xl font-semibold text-[#9BFF00]">{card.value}</p>
+                  <p className="mt-3 text-2xl font-semibold text-purple-400">{card.value}</p>
                 </div>
               ))}
             </div>
@@ -874,7 +877,7 @@ export default function AdminPage() {
                     return (
                       <div key={point.label} className="group flex flex-1 flex-col items-center gap-1">
                         <div
-                          className="w-full rounded-md bg-gradient-to-t from-[#9BFF00]/30 to-[#9BFF00] transition group-hover:to-[#B7FF45]"
+                          className="w-full rounded-md bg-gradient-to-t from-purple-600/30 to-purple-500 transition group-hover:to-purple-400"
                           style={{ height: `${Math.max(height, 8)}%` }}
                         />
                         <span className="text-[10px] text-[#6B7785]">{point.label}</span>
@@ -910,7 +913,7 @@ export default function AdminPage() {
                   key={action.tab}
                   type="button"
                   onClick={() => setTab(action.tab)}
-                  className="rounded-2xl border border-[#242D37] bg-[#0B1118] px-4 py-4 text-left text-sm font-medium text-[#F3F7FB] transition hover:border-[#9BFF00]/40"
+                  className="rounded-2xl border border-[#242D37] bg-[#0B1118] px-4 py-4 text-left text-sm font-medium text-[#F3F7FB] transition hover:border-purple-500/40"
                 >
                   {action.label}
                 </button>
@@ -934,16 +937,16 @@ export default function AdminPage() {
                   <h2 className="text-lg font-semibold">Strategy Management</h2>
                   <div className="flex gap-2">
                     <input value={strategySearch} onChange={(e) => setStrategySearch(e.target.value)} placeholder="Search strategy" className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm text-white" />
-                    <button onClick={searchStrategies} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Search</button>
+                    <button onClick={searchStrategies} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Search</button>
                   </div>
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <button onClick={() => runBulkAction("publish")} className="rounded-md border border-[#242D37] px-3 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Publish</button>
-                  <button onClick={() => runBulkAction("unpublish")} className="rounded-md border border-[#242D37] px-3 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Unpublish</button>
-                  <button onClick={() => runBulkAction("feature")} className="rounded-md border border-[#242D37] px-3 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Feature</button>
-                  <button onClick={() => runBulkAction("archive")} className="rounded-md border border-[#242D37] px-3 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Archive</button>
-                  <button onClick={() => runBulkAction("duplicate")} className="rounded-md border border-[#242D37] px-3 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Duplicate</button>
+                  <button onClick={() => runBulkAction("publish")} className="rounded-md border border-[#242D37] px-3 py-1 text-xs text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Publish</button>
+                  <button onClick={() => runBulkAction("unpublish")} className="rounded-md border border-[#242D37] px-3 py-1 text-xs text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Unpublish</button>
+                  <button onClick={() => runBulkAction("feature")} className="rounded-md border border-[#242D37] px-3 py-1 text-xs text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Feature</button>
+                  <button onClick={() => runBulkAction("archive")} className="rounded-md border border-[#242D37] px-3 py-1 text-xs text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Archive</button>
+                  <button onClick={() => runBulkAction("duplicate")} className="rounded-md border border-[#242D37] px-3 py-1 text-xs text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Duplicate</button>
                   <button onClick={() => runBulkAction("delete")} className="rounded-md border border-[#5C2A35] px-3 py-1 text-xs text-[#FFC2CC] hover:border-red-500/40 hover:text-red-400 hover:bg-red-500/10 transition duration-150 active:scale-95">Delete</button>
                 </div>
 
@@ -972,11 +975,11 @@ export default function AdminPage() {
                           </div>
                         </label>
                         <div className="flex flex-wrap gap-2">
-                          <button onClick={() => startEditStrategy(item)} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Edit</button>
-                          <button onClick={() => runStrategyAction(item.id, "publish")} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Publish</button>
-                          <button onClick={() => runStrategyAction(item.id, "unpublish")} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Unpublish</button>
-                          <button onClick={() => runStrategyAction(item.id, "feature")} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Feature</button>
-                          <button onClick={() => runStrategyAction(item.id, "archive")} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Archive</button>
+                          <button onClick={() => startEditStrategy(item)} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Edit</button>
+                          <button onClick={() => runStrategyAction(item.id, "publish")} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Publish</button>
+                          <button onClick={() => runStrategyAction(item.id, "unpublish")} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Unpublish</button>
+                          <button onClick={() => runStrategyAction(item.id, "feature")} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Feature</button>
+                          <button onClick={() => runStrategyAction(item.id, "archive")} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Archive</button>
                           <button onClick={() => deleteStrategy(item.id)} className="rounded-md border border-[#5C2A35] px-2 py-1 text-xs text-[#FFBAC8] hover:border-red-500/40 hover:text-red-400 hover:bg-red-500/10 transition duration-150 active:scale-95">Delete</button>
                         </div>
                       </div>
@@ -1150,7 +1153,7 @@ export default function AdminPage() {
                       }
                       setTagInput("");
                     }}
-                    className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95"
+                    className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95"
                   >
                     Add Tag
                   </button>
@@ -1167,8 +1170,8 @@ export default function AdminPage() {
                 </div>
 
                 <div className="mt-4 flex gap-2">
-                  <button onClick={saveStrategy} disabled={saving} className="rounded-xl bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-4 py-2 text-sm font-semibold transition-all duration-100 disabled:opacity-60">{saving ? "Saving..." : editingStrategyId ? "Update Strategy" : "Create Strategy"}</button>
-                  {editingStrategyId ? <button onClick={resetStrategyForm} className="rounded-xl border border-[#242D37] px-4 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Cancel</button> : null}
+                  <button onClick={saveStrategy} disabled={saving} className="rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100 disabled:opacity-60">{saving ? "Saving..." : editingStrategyId ? "Update Strategy" : "Create Strategy"}</button>
+                  {editingStrategyId ? <button onClick={resetStrategyForm} className="rounded-xl border border-[#242D37] px-4 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Cancel</button> : null}
                 </div>
 
                 {editingStrategyId ? (
@@ -1197,7 +1200,7 @@ export default function AdminPage() {
                     <Image src={strategyForm.image_url} alt="strategy-cover" fill sizes="(max-width: 768px) 100vw, 400px" className="object-cover" unoptimized />
                   </div>
                 ) : (
-                  <div className="h-36 bg-gradient-to-r from-[#1E3A8A] via-[#0EA5E9] to-[#10B981]" />
+                  <div className="h-36 bg-gradient-to-r from-purple-800 via-indigo-700 to-purple-600" />
                 )}
                 <div className="p-4">
                   <div className="flex items-center gap-3">
@@ -1242,7 +1245,7 @@ export default function AdminPage() {
                     {performanceData.equity_curve.map((point) => {
                       const max = Math.max(...performanceData.equity_curve.map((item) => Number(item.value || 0)), 1);
                       const height = (Number(point.value) / max) * 100;
-                      return <div key={point.label} className="flex-1 rounded bg-gradient-to-t from-[#0EA5E9] to-[#22D3EE]" style={{ height: `${Math.max(height, 8)}%` }} />;
+                      return <div key={point.label} className="flex-1 rounded bg-gradient-to-t from-indigo-500 to-purple-400" style={{ height: `${Math.max(height, 8)}%` }} />;
                     })}
                   </div>
                 </div>
@@ -1285,8 +1288,8 @@ export default function AdminPage() {
                 <textarea value={articleForm.content_markdown} onChange={(e) => setArticleForm((prev) => ({ ...prev, content_markdown: e.target.value }))} placeholder="Markdown content" rows={8} className="w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 font-mono text-sm" />
                 <label className="flex items-center gap-2 text-sm text-[#A8C2DE]"><input type="checkbox" checked={articleForm.is_published} onChange={(e) => setArticleForm((prev) => ({ ...prev, is_published: e.target.checked }))} />Publish</label>
                 <div className="flex gap-2">
-                  <button onClick={saveArticle} className="rounded-xl bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-4 py-2 text-sm font-semibold transition-all duration-100 disabled:opacity-60">{editingArticleId ? "Update" : "Create"} Article</button>
-                  {editingArticleId ? <button onClick={() => { setEditingArticleId(null); setArticleForm(emptyArticle); }} className="rounded-xl border border-[#242D37] px-4 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Cancel</button> : null}
+                  <button onClick={saveArticle} className="rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100 disabled:opacity-60">{editingArticleId ? "Update" : "Create"} Article</button>
+                  {editingArticleId ? <button onClick={() => { setEditingArticleId(null); setArticleForm(emptyArticle); }} className="rounded-xl border border-[#242D37] px-4 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Cancel</button> : null}
                 </div>
               </div>
             </div>
@@ -1305,7 +1308,7 @@ export default function AdminPage() {
                         <p className="text-xs text-[#8EA8C7]">{item.slug} - {item.is_published ? "Published" : "Draft"}</p>
                       </div>
                       <div className="flex gap-2">
-                        <button onClick={() => { setEditingArticleId(item.id); setArticleForm({ title: item.title, slug: item.slug, category: item.category, summary: item.summary, content_markdown: item.content_markdown, is_published: item.is_published }); }} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Edit</button>
+                        <button onClick={() => { setEditingArticleId(item.id); setArticleForm({ title: item.title, slug: item.slug, category: item.category, summary: item.summary, content_markdown: item.content_markdown, is_published: item.is_published }); }} className="rounded-md border border-[#242D37] px-2 py-1 text-xs text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Edit</button>
                         <button onClick={() => removeArticle(item.id)} className="rounded-md border border-[#5C2A35] px-2 py-1 text-xs text-[#FFBAC8] hover:border-red-500/40 hover:text-red-400 hover:bg-red-500/10 transition duration-150 active:scale-95">Delete</button>
                       </div>
                     </div>
@@ -1315,6 +1318,8 @@ export default function AdminPage() {
             </div>
           </section>
         ) : null}
+
+        {activeTab === "ratings" ? <AdminRatingsTab onMessage={setMessage} /> : null}
 
         {activeTab === "users" ? (
           <AdminUsersTab
@@ -1349,7 +1354,7 @@ export default function AdminPage() {
               </select>
             </div>
              <textarea value={notificationMessage} onChange={(e) => setNotificationMessage(e.target.value)} placeholder="Notification message" rows={4} className="mt-3 w-full rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-white" />
-            <button onClick={broadcastNotification} className="mt-3 rounded-xl bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-4 py-2 text-sm font-semibold transition-all duration-100">Broadcast to Users</button>
+            <button onClick={broadcastNotification} className="mt-3 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Broadcast to Users</button>
           </section>
         ) : null}
 
@@ -1368,7 +1373,7 @@ export default function AdminPage() {
                 <label className="flex items-center gap-2 text-sm text-[#A8C2DE]"><input type="checkbox" checked={platformSettings.maintenance_mode} onChange={(e) => setPlatformSettings((prev) => (prev ? { ...prev, maintenance_mode: e.target.checked } : prev))} />Maintenance Mode</label>
               </div>
             ) : null}
-            <button onClick={saveSettings} className="mt-4 rounded-xl bg-[#9BFF00] hover:bg-[#B7FF45] active:scale-95 text-[#11140D] px-4 py-2 text-sm font-semibold transition-all duration-100">Save Settings</button>
+            <button onClick={saveSettings} className="mt-4 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-95 text-white px-4 py-2 text-sm font-semibold transition-all duration-100">Save Settings</button>
           </section>
         ) : null}
 
@@ -1377,13 +1382,13 @@ export default function AdminPage() {
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-lg font-semibold">Audit & Security Logs</h2>
               <div className="flex gap-2">
-                <select value={auditSeverity} onChange={(e) => setAuditSeverity(e.target.value)} className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm text-white outline-none focus:border-[#9BFF00]/40 transition duration-150">
+                <select value={auditSeverity} onChange={(e) => setAuditSeverity(e.target.value)} className="rounded-lg border border-[#2A3B50] bg-[#0F1B2B] px-3 py-2 text-sm text-white outline-none focus:border-purple-500/40 transition duration-150">
                   <option value="all">All severity</option>
                   <option value="info">Info</option>
                   <option value="warning">Warning</option>
                   <option value="error">Error</option>
                 </select>
-                <button onClick={() => void loadAudit()} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Filter</button>
+                <button onClick={() => void loadAudit()} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Filter</button>
               </div>
             </div>
 

@@ -98,7 +98,7 @@ export function AdminKYCTab({ onMessage }: Props) {
                 <p className="mt-1 text-xs text-[#8E9AAA]">Status: {record.status}</p>
                 {record.notes ? <p className="mt-1 text-xs text-[#AAB4C0]">{record.notes}</p> : null}
                 {"document_url" in record && record.document_url ? (
-                  <a href={record.document_url} target="_blank" rel="noreferrer" className="mt-2 inline-block text-xs text-[#9BFF00] underline">
+                  <a href={record.document_url} target="_blank" rel="noreferrer" className="mt-2 inline-block text-xs text-purple-400 underline hover:text-purple-300">
                     View document
                   </a>
                 ) : null}
@@ -109,14 +109,14 @@ export function AdminKYCTab({ onMessage }: Props) {
                     value={rejectReason[record.user_id] || ""}
                     onChange={(e) => setRejectReason((prev) => ({ ...prev, [record.user_id]: e.target.value }))}
                     placeholder="Rejection reason"
-                    className="rounded-lg border border-[#24303A] bg-[#0A0D13] px-3 py-2 text-sm text-[#F3F7FB]"
+                    className="rounded-lg border border-[#24303A] bg-[#0A0D13] px-3 py-2 text-sm text-[#F3F7FB] focus:border-purple-500 focus:outline-none"
                   />
                   <div className="flex gap-2">
                     <button
                       type="button"
                       disabled={busyId === record.user_id}
                       onClick={() => void approve(record.user_id)}
-                      className="rounded-lg bg-[#9BFF00] px-3 py-2 text-sm font-semibold text-[#11140D]"
+                      className="rounded-lg bg-purple-600 hover:bg-purple-700 px-3 py-2 text-sm font-semibold text-white transition disabled:opacity-50 active:scale-95"
                     >
                       Approve
                     </button>

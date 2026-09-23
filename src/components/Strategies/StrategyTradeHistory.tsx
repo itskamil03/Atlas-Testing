@@ -10,7 +10,7 @@ type StrategyTradeHistoryProps = {
 };
 
 function pnlClass(value: string | number) {
-  return Number(value) >= 0 ? "text-[#9BFF00]" : "text-[#FB7185]";
+  return Number(value) >= 0 ? "text-emerald-400" : "text-rose-400";
 }
 
 function formatDateHeader(value: string) {
@@ -66,8 +66,8 @@ export function StrategyTradeHistory({ trades, exchange }: StrategyTradeHistoryP
           <button
             type="button"
             onClick={() => setView("open")}
-            className={`rounded-lg px-4 py-1.5 font-medium ${
-              view === "open" ? "bg-[#9BFF00] text-[#11140D]" : "text-[#A3AFBD]"
+            className={`rounded-lg px-4 py-1.5 font-medium transition ${
+              view === "open" ? "bg-purple-600 text-white shadow-sm shadow-purple-600/30" : "text-[#A3AFBD] hover:text-white"
             }`}
           >
             Open
@@ -75,8 +75,8 @@ export function StrategyTradeHistory({ trades, exchange }: StrategyTradeHistoryP
           <button
             type="button"
             onClick={() => setView("closed")}
-            className={`rounded-lg px-4 py-1.5 font-medium ${
-              view === "closed" ? "bg-[#9BFF00] text-[#11140D]" : "text-[#A3AFBD]"
+            className={`rounded-lg px-4 py-1.5 font-medium transition ${
+              view === "closed" ? "bg-purple-600 text-white shadow-sm shadow-purple-600/30" : "text-[#A3AFBD] hover:text-white"
             }`}
           >
             Closed
@@ -114,8 +114,8 @@ export function StrategyTradeHistory({ trades, exchange }: StrategyTradeHistoryP
                         <span
                           className={`rounded-md px-2 py-0.5 text-[11px] font-medium ${
                             trade.side === "BUY"
-                              ? "bg-[#9BFF00]/15 text-[#9BFF00]"
-                              : "bg-[#FB7185]/15 text-[#FB7185]"
+                              ? "bg-emerald-500/15 text-emerald-400"
+                              : "bg-rose-500/15 text-rose-400"
                           }`}
                         >
                           {trade.side === "BUY" ? "Long" : "Short"}

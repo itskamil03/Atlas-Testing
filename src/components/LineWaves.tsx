@@ -1,7 +1,6 @@
 "use client"
 
 import React from 'react'
-import { useTheme } from 'next-themes'
 
 import { cn } from '@/lib/utils'
 
@@ -35,8 +34,7 @@ type MouseState = {
 }
 
 const defaultColors = {
-    light: ['#0d9e6e', '#16c47f', '#a7f3d0'],  // vivid mid-greens + mint highlight
-    dark:  ['#1a6c51', '#0c7b57', '#ffffff'],
+    dark:  ['#7C3AED', '#6366F1', '#C084FC'],
 }
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
@@ -98,14 +96,11 @@ export default function LineWaves({
     const mouseRef = React.useRef<MouseState>({ x: 0.5, y: 0.5, active: false })
     // Smoothed mouse — lerped each frame so warp eases in/out instead of snapping
     const smoothMouseRef = React.useRef<{ x: number; y: number }>({ x: 0.5, y: 0.5 })
-    const { resolvedTheme, theme } = useTheme()
-
-    const isDark = (resolvedTheme ?? theme ?? 'light') === 'dark'
 
     const palette = React.useMemo(() => {
-        const defaults = isDark ? defaultColors.dark : defaultColors.light
+        const defaults = defaultColors.dark
         return [color1 ?? defaults[0], color2 ?? defaults[1], color3 ?? defaults[2]].map(parseHexColor)
-    }, [color1, color2, color3, isDark])
+    }, [color1, color2, color3])
 
     React.useEffect(() => {
         const container = containerRef.current
@@ -243,12 +238,12 @@ export default function LineWaves({
             context.clearRect(0, 0, width, height)
 
             const baseGradient = context.createRadialGradient(
-                width * 0.5, height * (isDark ? 0.4 : 0.45), 0,
+                width * 0.5, height * 0.4, 0,
                 width * 0.5, height * 0.45, Math.max(width, height),
             )
-            baseGradient.addColorStop(0, isDark ? 'rgba(13, 78, 58, 0.22)' : 'rgba(190, 248, 214, 0.42)')
-            baseGradient.addColorStop(0.45, isDark ? 'rgba(8, 24, 17, 0.18)' : 'rgba(255, 255, 255, 0.12)')
-            baseGradient.addColorStop(1, isDark ? 'rgba(0, 0, 0, 0.96)' : 'rgba(247, 255, 250, 0.98)')
+            baseGradient.addColorStop(0, 'rgba(124, 58, 237, 0.22)')
+            baseGradient.addColorStop(0.45, 'rgba(30, 27, 75, 0.25)')
+            baseGradient.addColorStop(1, 'rgba(5, 5, 9, 0.98)')
             context.fillStyle = baseGradient
             context.fillRect(0, 0, width, height)
 
@@ -256,12 +251,12 @@ export default function LineWaves({
             context.translate(width / 2, height / 2)
             context.rotate((rotation * Math.PI) / 180)
             context.translate(-width / 2, -height / 2)
-            context.globalCompositeOperation = isDark ? 'screen' : 'source-over'
+            context.globalCompositeOperation = 'screen'
 
-            // Inner layer: thick prominent lines — higher opacity for both modes
-            drawLineLayer(innerLineCount, isDark ? 0.90 : 0.75, isDark ? 2.8 : 2.4, time, height * 0.055, 1.15, 0.25)
+            // Inner layer: thick prominent lines
+            drawLineLayer(innerLineCount, 0.90, 2.8, time, height * 0.055, 1.15, 0.25)
             // Outer layer: medium lines for depth
-            drawLineLayer(outerLineCount, isDark ? 0.55 : 0.48, isDark ? 1.8 : 1.6, time * 0.9, height * 0.09, 0.8, -0.4)
+            drawLineLayer(outerLineCount, 0.55, 1.8, time * 0.9, height * 0.09, 0.8, -0.4)
 
             context.restore()
 
@@ -311,7 +306,7 @@ export default function LineWaves({
             window.removeEventListener('pointerleave', handlePointerLeave)
             stopAnimation()
         }
-    }, [brightness, colorCycleSpeed, enableMouseInteraction, innerLineCount, isDark, mouseInfluence, outerLineCount, palette, rotation, speed, warpIntensity, edgeFadeWidth])
+    }, [brightness, colorCycleSpeed, enableMouseInteraction, innerLineCount, mouseInfluence, outerLineCount, palette, rotation, speed, warpIntensity, edgeFadeWidth])
 
     return (
         <div ref={containerRef} aria-hidden className={cn('pointer-events-none absolute inset-0 overflow-hidden', className)}>
@@ -320,12 +315,7 @@ export default function LineWaves({
                 className='absolute inset-0 h-full w-full'
                 style={{ willChange: 'transform' }}
             />
-            <div className={cn(
-                'absolute inset-0',
-                isDark
-                    ? 'bg-[radial-gradient(100%_80%_at_50%_10%,rgba(34,197,94,0.12)_0%,rgba(0,0,0,0)_58%)]'
-                    : 'bg-[radial-gradient(100%_80%_at_50%_10%,rgba(16,185,129,0.14)_0%,rgba(255,255,255,0)_58%)]',
-            )} />
+            <div className='absolute inset-0 bg-[radial-gradient(100%_80%_at_50%_10%,rgba(124,58,237,0.18)_0%,rgba(0,0,0,0)_58%)]' />
         </div>
     )
 }

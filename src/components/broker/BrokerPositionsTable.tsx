@@ -42,11 +42,11 @@ function isRejectedStatus(status: string) {
 }
 
 function pnlClass(value: string | number) {
-  return Number(value) >= 0 ? "text-[#9BFF00]" : "text-[#FB7185]";
+  return Number(value) >= 0 ? "text-emerald-400" : "text-rose-400";
 }
 
 function sideClass(side: string) {
-  return side.toUpperCase() === "BUY" ? "text-[#9BFF00]" : "text-[#FB7185]";
+  return side.toUpperCase() === "BUY" ? "text-emerald-400" : "text-rose-400";
 }
 
 function exportTradesCsv(trades: Trade[]) {
@@ -85,7 +85,7 @@ function SummaryCard({
 }) {
   const borderClass =
     tone === "green"
-      ? "border-[#9BFF00]/40 bg-[#0A1208]"
+      ? "border-emerald-500/40 bg-[#0A1208]"
       : tone === "orange"
         ? "border-[#F59E0B]/40 bg-[#141008]"
         : "border-[#FB7185]/35 bg-[#140A0A]";
@@ -93,7 +93,7 @@ function SummaryCard({
   return (
     <article
       className={`rounded-2xl border px-5 py-4 transition ${borderClass} ${
-        active ? "ring-1 ring-[#9BFF00]/50" : ""
+        active ? "ring-1 ring-emerald-500/50" : ""
       }`}
     >
       <p className="text-sm text-[#8E9AAA]">{label}</p>
@@ -275,7 +275,7 @@ export function BrokerPositionsTable({
             type="button"
             onClick={onRefresh}
             disabled={loading}
-            className="rounded-xl bg-[#9BFF00] px-5 py-2 text-xs font-semibold text-[#11140D] disabled:opacity-60"
+            className="rounded-xl bg-purple-600 hover:bg-purple-700 px-5 py-2 text-xs font-semibold text-white transition disabled:opacity-60 active:scale-95"
           >
             {loading ? "Refreshing..." : "Refresh"}
           </button>
@@ -285,7 +285,7 @@ export function BrokerPositionsTable({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Order ID, Trade ID"
-              className="min-w-[180px] rounded-lg border border-[#26303A] bg-[#070A10] px-3 py-2 text-xs text-[#D5DEE8] placeholder:text-[#5C6775]"
+              className="min-w-[180px] rounded-lg border border-[#26303A] bg-[#070A10] px-3 py-2 text-xs text-[#D5DEE8] placeholder:text-[#5C6775] focus:border-purple-500 focus:outline-none"
             />
             <button
               type="button"
@@ -308,7 +308,7 @@ export function BrokerPositionsTable({
                   <input type="checkbox" aria-label="Select all" />
                 </th>
                 <th className="px-3 py-3">
-                  Symbol <span className="text-[#9BFF00]">{filtered.length}</span>
+                  Symbol <span className="text-purple-400 font-semibold">{filtered.length}</span>
                 </th>
                 <th className="px-3 py-3">Trade type</th>
                 <th className="px-3 py-3">Qty</th>

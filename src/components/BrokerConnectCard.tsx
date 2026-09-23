@@ -146,8 +146,8 @@ export function BrokerConnectCard({ onConnected }: Props) {
       </div>
 
       {serverWhitelistIp ? (
-        <div className="mb-5 rounded-2xl border border-[#9BFF00]/20 bg-[#9BFF00]/5 p-4">
-          <p className="text-xs font-medium uppercase tracking-wide text-[#9BFF00]">Whitelist this IP on Delta</p>
+        <div className="mb-5 rounded-2xl border border-purple-500/20 bg-purple-500/5 p-4">
+          <p className="text-xs font-medium uppercase tracking-wide text-purple-400">Whitelist this IP on Delta</p>
           <div className="mt-2 flex items-center gap-2">
             <code className="flex-1 overflow-x-auto rounded-xl border border-[#26303A] bg-[#0A0A0A] px-3 py-2 text-sm text-[#D5DEE8]">
               {serverWhitelistIp}
@@ -155,7 +155,7 @@ export function BrokerConnectCard({ onConnected }: Props) {
             <button
               type="button"
               onClick={() => void navigator.clipboard?.writeText(serverWhitelistIp)}
-              className="rounded-xl border border-[#26303A] px-3 py-2 text-sm text-[#C1CBD8] hover:border-[#9BFF00]/40"
+              className="rounded-xl border border-[#26303A] px-3 py-2 text-sm text-[#C1CBD8] hover:border-purple-500/40 hover:text-purple-300"
             >
               Copy
             </button>
@@ -169,13 +169,13 @@ export function BrokerConnectCard({ onConnected }: Props) {
             type="checkbox"
             checked={useTestnet}
             onChange={(event) => setUseTestnet(event.target.checked)}
-            className="rounded border-[#242C35] accent-[#9BFF00]"
+            className="rounded border-[#242C35] accent-purple-600"
           />
           Use Delta testnet (testnet-api.delta.exchange)
         </label>
 
         <input
-          className="w-full rounded-xl border border-[#26303A] bg-[#0E141B] px-4 py-3 text-sm text-[#E8ECEF] placeholder:text-[#5C6775] focus:border-[#9BFF00]/40 focus:outline-none"
+          className="w-full rounded-xl border border-[#26303A] bg-[#0E141B] px-4 py-3 text-sm text-[#E8ECEF] placeholder:text-[#5C6775] focus:border-purple-500/50 focus:outline-none"
           value={apiKey}
           onChange={(event) => setApiKey(event.target.value)}
           placeholder="API Key"
@@ -183,21 +183,21 @@ export function BrokerConnectCard({ onConnected }: Props) {
         />
         <input
           type="password"
-          className="w-full rounded-xl border border-[#26303A] bg-[#0E141B] px-4 py-3 text-sm text-[#E8ECEF] placeholder:text-[#5C6775] focus:border-[#9BFF00]/40 focus:outline-none"
+          className="w-full rounded-xl border border-[#26303A] bg-[#0E141B] px-4 py-3 text-sm text-[#E8ECEF] placeholder:text-[#5C6775] focus:border-purple-500/50 focus:outline-none"
           value={apiSecret}
           onChange={(event) => setApiSecret(event.target.value)}
           placeholder="API Secret"
           required
         />
         <input
-          className="w-full rounded-xl border border-[#26303A] bg-[#0E141B] px-4 py-3 text-sm text-[#E8ECEF] placeholder:text-[#5C6775] focus:border-[#9BFF00]/40 focus:outline-none"
+          className="w-full rounded-xl border border-[#26303A] bg-[#0E141B] px-4 py-3 text-sm text-[#E8ECEF] placeholder:text-[#5C6775] focus:border-purple-500/50 focus:outline-none"
           value={passphrase}
           onChange={(event) => setPassphrase(event.target.value)}
           placeholder="Passphrase (optional)"
         />
 
         <button
-          className="w-full rounded-xl bg-[#9BFF00] px-4 py-3 text-sm font-semibold text-[#11140D] transition hover:bg-[#B7FF45] disabled:opacity-60"
+          className="w-full rounded-xl bg-purple-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-purple-700 shadow-md shadow-purple-600/20 disabled:opacity-60"
           type="submit"
           disabled={loading}
         >

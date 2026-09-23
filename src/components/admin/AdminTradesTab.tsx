@@ -72,7 +72,7 @@ export function AdminTradesTab({ onMessage }: Props) {
           <h2 className="text-lg font-semibold text-[#F3F7FB]">Trade Management</h2>
           <p className="mt-1 text-sm text-[#8E9AAA]">Monitor platform trades, sync broker status, and force-close positions.</p>
         </div>
-        <button type="button" onClick={() => void syncTrades()} className="rounded-xl bg-[#9BFF00] px-4 py-2 text-sm font-semibold text-[#11140D]">
+        <button type="button" onClick={() => void syncTrades()} className="rounded-xl bg-purple-600 hover:bg-purple-700 px-4 py-2 text-sm font-semibold text-white transition active:scale-95">
           Sync with Broker
         </button>
       </div>
@@ -82,12 +82,12 @@ export function AdminTradesTab({ onMessage }: Props) {
           value={search}
           onChange={(e) => setSearch(e.target.value.toUpperCase())}
           placeholder="Search symbol or strategy"
-          className="rounded-xl border border-[#24303A] bg-[#0E141B] px-3 py-2 text-sm text-[#F3F7FB] outline-none focus:border-[#9BFF00]/40 transition duration-150"
+          className="rounded-xl border border-[#24303A] bg-[#0E141B] px-3 py-2 text-sm text-[#F3F7FB] outline-none focus:border-purple-500/40 transition duration-150"
         />
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="rounded-xl border border-[#24303A] bg-[#0E141B] px-3 py-2 text-sm text-[#F3F7FB] outline-none focus:border-[#9BFF00]/40 transition duration-150"
+          className="rounded-xl border border-[#24303A] bg-[#0E141B] px-3 py-2 text-sm text-[#F3F7FB] outline-none focus:border-purple-500/40 transition duration-150"
         >
           <option value="">All statuses</option>
           <option value="OPEN">OPEN</option>
@@ -96,7 +96,7 @@ export function AdminTradesTab({ onMessage }: Props) {
           <option value="FAILED">FAILED</option>
           <option value="CANCELLED">CANCELLED</option>
         </select>
-        <button type="button" onClick={() => void load()} className="rounded-xl border border-[#242D37] px-4 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">
+        <button type="button" onClick={() => void load()} className="rounded-xl border border-[#242D37] px-4 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">
           Refresh
         </button>
       </div>

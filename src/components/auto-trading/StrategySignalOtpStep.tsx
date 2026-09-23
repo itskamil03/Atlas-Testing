@@ -51,12 +51,12 @@ export function StrategySignalOtpStep({
           inputMode="numeric"
           autoComplete="one-time-code"
           placeholder="6-digit OTP"
-          className="mt-1 w-full rounded-2xl border border-[#242D37] bg-[#0D1218] px-3 py-3 text-center text-lg tracking-[0.35em] text-[#E8EEF5] outline-none focus:border-[#9BFF00]"
+          className="mt-1 w-full rounded-2xl border border-[#242D37] bg-[#0D1218] px-3 py-3 text-center text-lg tracking-[0.35em] text-[#E8EEF5] outline-none focus:border-purple-500"
         />
       </label>
 
       {debugOtp ? (
-        <p className="rounded-xl border border-[#31503A] bg-[#142419] px-3 py-2 text-xs text-[#AEE7B8]">
+        <p className="rounded-xl border border-purple-900/50 bg-purple-950/20 px-3 py-2 text-xs text-purple-300">
           Dev OTP: <span className="font-semibold">{debugOtp}</span>
         </p>
       ) : null}
@@ -76,7 +76,7 @@ export function StrategySignalOtpStep({
           type="button"
           disabled={loading || otp.length !== 6}
           onClick={onVerify}
-          className="w-full rounded-2xl bg-[#9BFF00] px-4 py-3 font-semibold text-[#11140D] transition hover:bg-[#B7FF45] disabled:opacity-60"
+          className="w-full rounded-2xl bg-purple-600 px-4 py-3 font-semibold text-white transition hover:bg-purple-700 active:scale-95 disabled:opacity-60"
         >
           {loading ? "Verifying..." : submitLabel ?? "Verify OTP & punch order"}
         </button>
@@ -86,7 +86,7 @@ export function StrategySignalOtpStep({
         type="button"
         disabled={loading || resendLoading}
         onClick={onResend}
-        className="w-full text-sm text-[#9BFF00] hover:underline disabled:opacity-60"
+        className="w-full text-sm text-purple-400 hover:underline disabled:opacity-60"
       >
         {resendLoading ? "Resending OTP..." : "Resend OTP"}
       </button>

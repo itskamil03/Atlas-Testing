@@ -28,7 +28,7 @@ export default function Academy() {
   }
 
   return (
-    <section id="academy" className="py-20 md:py-28" style={{ zoom: 0.70 }}>
+    <section id="academy" className="py-14 md:py-20">
       <div className="mx-auto max-w-7xl px-6">
         {/* Header */}
         <motion.div
@@ -37,14 +37,14 @@ export default function Academy() {
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           variants={fadeUp}
-          className="mb-14 text-center"
+          className="mb-12 text-center"
         >
           <div className="flex flex-col items-center justify-center">
-            <motion.p className="text-xs font-semibold uppercase tracking-widest text-[#9BFF00] dark:text-[#9BFF00]">
+            <motion.p className="text-sm font-semibold uppercase tracking-widest text-purple-400 dark:text-purple-400">
               ATLAS Academy
             </motion.p>
-            <h2 className="mt-3 text-4xl font-bold sm:text-5xl lg:text-6xl">Master Trading Program</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
+            <h2 className="mt-3 text-3xl font-bold sm:text-4xl lg:text-5xl">Master Trading Program</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-sm sm:text-base text-muted-foreground leading-relaxed">
               Institutional-grade learning designed for traders and quantitative strategists seeking disciplined execution across global markets.
             </p>
 
@@ -55,7 +55,7 @@ export default function Academy() {
               whileTap={{ scale: 0.98 }} 
               transition={{ duration: 0.12 }}
             >
-              <Button asChild size="lg" className="rounded-xl px-8 py-6 text-base shadow-lg bg-[#9BFF00] hover:bg-[#B7FF45] text-[#11140D] font-bold active:scale-95 transition-all duration-100 border-none shadow-[#9BFF00]/20">
+              <Button asChild size="lg" className="rounded-xl px-7 py-5 text-sm sm:text-base shadow-lg bg-purple-600 hover:bg-purple-700 text-white font-bold active:scale-95 transition-all duration-100 border-none shadow-purple-600/25">
                 <Link href="/signup">
                   Enroll Now
                 </Link>
@@ -65,7 +65,7 @@ export default function Academy() {
         </motion.div>
 
         {/* Two Column: Description + Modules */}
-        <div className="grid gap-8 lg:grid-cols-3 lg:gap-10">
+        <div className="grid gap-6 lg:grid-cols-3 lg:gap-8">
           {/* Left: Description + Focus */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -73,18 +73,18 @@ export default function Academy() {
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.15 }}
           >
-            <Card className="h-full border bg-white/50 backdrop-blur-sm dark:bg-slate-900/40">
-              <CardContent className="p-8">
-                <p className="text-lg leading-8 text-muted-foreground">
+            <Card className="h-full border bg-card/60 backdrop-blur-sm rounded-2xl">
+              <CardContent className="p-6 sm:p-7">
+                <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
                   ATLAS Academy combines market theory, technical mastery, algo design, and risk management to help traders build and execute professional-grade systems.
                 </p>
                 <motion.div
                   whileHover={{ y: -4, boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}
                   transition={{ duration: 0.2 }}
-                  className="mt-6 rounded-2xl bg-linear-to-br from-cyan-50/50 to-blue-50/50 p-6 dark:from-cyan-900/20 dark:to-blue-900/20"
+                  className="mt-6 rounded-2xl bg-linear-to-br from-purple-500/10 to-indigo-500/10 p-5 dark:from-purple-900/20 dark:to-indigo-900/20 border border-purple-500/15"
                 >
-                  <h3 className="text-xl font-semibold">Program Focus</h3>
-                  <p className="mt-3 text-sm text-muted-foreground">
+                  <h3 className="text-lg font-semibold">Program Focus</h3>
+                  <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
                     Trade with discipline. Build algos that adapt to market conditions. Deploy automation for retail and institutional workflows.
                   </p>
                 </motion.div>
@@ -100,25 +100,25 @@ export default function Academy() {
             variants={containerVariants}
             className="lg:col-span-2"
           >
-            <h3 className="mb-6 text-2xl font-bold">Core Modules</h3>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <h3 className="mb-4 text-xl font-bold">Core Modules</h3>
+            <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
               {modules.map((module, index) => {
                 const IconComponent = moduleIcons[index]
                 return (
                   <motion.div
                     key={module}
                     variants={fadeUp}
-                    whileHover={{ y: -6, boxShadow: '0 12px 24px -5px rgba(0,0,0,0.15)' }}
+                    whileHover={{ y: -4, boxShadow: '0 12px 24px -5px rgba(124,58,237,0.15)' }}
                     whileTap={{ scale: 0.98 }}
                     transition={{ type: 'spring', stiffness: 300 }}
                   >
-                    <Card className="group h-full cursor-pointer border bg-linear-to-br from-slate-50 to-slate-50/50 transition-all duration-200 dark:from-slate-800/40 dark:to-slate-900/40">
-                      <CardContent className="p-6">
-                        <div className="flex items-start gap-4">
-                          <div className="rounded-lg bg-linear-to-br from-cyan-100 to-blue-100 p-3 group-hover:scale-110 transition-transform duration-200 dark:from-cyan-900/30 dark:to-blue-900/30">
-                            <IconComponent className="h-6 w-6 text-cyan-600 dark:text-cyan-400" />
+                    <Card className="group h-full cursor-pointer border bg-card/50 rounded-2xl transition-all duration-200 hover:border-purple-500/40">
+                      <CardContent className="p-4 sm:p-5">
+                        <div className="flex items-center gap-3.5">
+                          <div className="rounded-xl bg-linear-to-br from-purple-500/15 to-indigo-500/15 p-2.5 group-hover:scale-110 transition-transform duration-200">
+                            <IconComponent className="size-5 text-purple-400" />
                           </div>
-                          <p className="font-semibold text-slate-900 dark:text-white group-hover:text-cyan-600 transition-colors duration-200 dark:group-hover:text-cyan-400">
+                          <p className="text-sm sm:text-base font-semibold text-foreground group-hover:text-purple-400 transition-colors duration-200">
                             {module}
                           </p>
                         </div>
@@ -128,7 +128,7 @@ export default function Academy() {
                 )
               })}
             </div>
-            <p className="mt-6 text-sm text-muted-foreground">
+            <p className="mt-5 text-sm text-muted-foreground leading-relaxed">
               Designed for traders preparing to trade with institutional discipline, prop desk precision, and automated execution workflows.
             </p>
           </motion.div>

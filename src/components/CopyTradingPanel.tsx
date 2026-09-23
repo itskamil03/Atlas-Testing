@@ -61,7 +61,7 @@ export function CopyTradingPanel({ stats, onFollowChange }: Props) {
       <form onSubmit={follow} className="mt-4 space-y-3">
         <input className="w-full rounded-lg border border-[#242C35] bg-[#0E141B] px-3 py-2 text-[#E8ECEF]" type="number" min="1" value={leaderId} onChange={(e) => setLeaderId(e.target.value)} placeholder="Leader ID" />
         <div className="flex gap-3">
-          <button className="flex-1 rounded-lg bg-[#9BFF00] px-4 py-2 font-semibold text-[#10130D] transition hover:bg-[#B7FF45]" type="submit">Follow</button>
+          <button className="flex-1 rounded-lg bg-purple-600 px-4 py-2 font-semibold text-white transition hover:bg-purple-700 shadow-md shadow-purple-600/20" type="submit">Follow</button>
           <button className="flex-1 rounded-lg border border-[#242C35] bg-[#0E141B] px-4 py-2 font-semibold text-[#E8ECEF]" type="button" onClick={unfollow}>Unfollow</button>
         </div>
       </form>

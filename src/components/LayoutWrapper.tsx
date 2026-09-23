@@ -4,6 +4,7 @@
 import Header from '@/app/Header';
 import { usePathname } from 'next/navigation';
 import { HeroHeader } from './header';
+import Breadcrumbs from './Breadcrumbs';
 
 // 1. Define the interface for your props
 interface LayoutWrapperProps {
@@ -25,7 +26,8 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
       {isDashboard && !isAdminPage ? <Header /> : isAdminPage ? null : <HeroHeader />}
       
       {/* The actual page content */}
-      <main className={`grow ${isDashboard ? '' : 'pt-18 sm:pt-20 md:pt-22 lg:pt-22'}`}>
+      <main className={`grow ${isDashboard ? '' : 'pt-[98px] sm:pt-[102px] md:pt-[106px]'}`}>
+        <Breadcrumbs />
         {children}
       </main>
 

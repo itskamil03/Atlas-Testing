@@ -3,7 +3,8 @@ import FooterSection from "@/components/footer";
 import HeroSection from "@/components/hero-section";
 import IntegrationsSection from "@/components/integrations-4";
 import Pricing from "@/components/pricing";
-import StatsSection from "@/components/stats-2";
+import WhyChooseAtlas from "@/components/why-choose-atlas";
+import FAQSection from "@/components/faq";
 import PerformanceSection from "@/components/performance-section";
 import LiveStatsBar from "@/components/live-stats-bar";
 import AboutUs from "@/components/about-us";
@@ -16,7 +17,7 @@ import SectionReveal from "@/components/ui/section-reveal";
 
 export default function Home() {
   return (
-    <div style={{ zoom: 0.90 }}>
+    <div>
       {/* <div className="bg-amber-50 dark:bg-amber-950/30 border-b border-amber-200 dark:border-amber-900/50 px-4 py-3">
         <p className="text-center text-sm font-semibold text-amber-900 dark:text-amber-100">
           🚧 This site is currently under construction. We're building something amazing for you!
@@ -24,8 +25,8 @@ export default function Home() {
       </div> */}
       <HeroSection />
       {/* <SectionReveal animation="slide-up"> */}
-        <Features />
         <PerformanceSection />
+        <Features />
         <Academy />
       <SectionReveal animation="zoom">
         <Pricing />
@@ -39,7 +40,12 @@ export default function Home() {
       <SectionReveal animation="zoom">
         <Testimonials />
       </SectionReveal>
-      <StatsSection />
+      <SectionReveal animation="fade">
+        <WhyChooseAtlas />
+      </SectionReveal>
+      <SectionReveal animation="fade">
+        <FAQSection />
+      </SectionReveal>
       <SectionReveal animation="fade">
         <ContactSection />
       </SectionReveal>

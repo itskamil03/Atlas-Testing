@@ -1,140 +1,359 @@
-'use client'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Logo } from '@/components/logo'
-import { Menu, X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import React from 'react'
-import { cn } from '@/lib/utils'
-import { ThemeToggleButton } from './ThemeToggleButton'
+'use client';
 
+import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import { Menu, X } from 'lucide-react';
+import { useBookDemoStore } from '@/store/useBookDemoStore';
 
-const menuItems = [
-    { name: 'Features', href: '/features' },
-    { name: 'Academy', href: '/academy' },
-    { name: 'Pricing', href: '/pricing' },
-    { name: 'About', href: '/about' },
-    { name: 'Contact', href: '/contact' },
-]
+const navItems = [
+  { name: 'Home', href: '/' },
+  { name: 'Engine AI', href: '/engine' },
+  { name: 'Features', href: '/features' },
+  { name: 'Academy', href: '/academy' },
+  { name: 'Pricing', href: '/pricing' },
+  { name: 'About', href: '/about' },
+  { name: 'Contact', href: '/contact' },
+];
 
 export const HeroHeader = () => {
-    const [menuState, setMenuState] = React.useState(false)
-    const [isScrolled, setIsScrolled] = React.useState(false)
-    const [scrollProgress, setScrollProgress] = React.useState(0)
-    const pathname = usePathname()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const pathname = usePathname();
+  const openDemoModal = useBookDemoStore((s) => s.openDemoModal);
 
-    const isActiveLink = (href: string) => pathname === href || pathname.startsWith(`${href}/`)
+  const linksContainerRef = useRef<HTMLDivElement>(null);
+  const indicatorRef = useRef<HTMLSpanElement>(null);
 
-    React.useEffect(() => {
-        const handleScroll = () => {
-            const currentScrollY = window.scrollY
-            const totalHeight = document.documentElement.scrollHeight - window.innerHeight
-            setScrollProgress(totalHeight > 0 ? (currentScrollY / totalHeight) * 100 : 0)
-            setIsScrolled(currentScrollY > 50)
+  const isActiveLink = (href: string) => {
+    if (href === '/') return pathname === '/';
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
+  const moveIndicatorTo = (el: HTMLElement) => {
+    if (!linksContainerRef.current || !indicatorRef.current) return;
+    const containerRect = linksContainerRef.current.getBoundingClientRect();
+    const targetRect = el.getBoundingClientRect();
+    indicatorRef.current.style.left = `${targetRect.left - containerRect.left}px`;
+    indicatorRef.current.style.width = `${targetRect.width}px`;
+    indicatorRef.current.style.opacity = '1';
+  };
+
+  const resetIndicatorToActive = () => {
+    if (!linksContainerRef.current || !indicatorRef.current) return;
+    const activeEl = linksContainerRef.current.querySelector<HTMLElement>('[data-active="true"]');
+    if (activeEl) {
+      moveIndicatorTo(activeEl);
+    } else {
+      indicatorRef.current.style.opacity = '0';
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(totalHeight > 0 ? (currentScrollY / totalHeight) * 100 : 0);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    resetIndicatorToActive();
+  }, [pathname]);
+
+  return (
+    <header className="atlas-header-wrapper">
+      <style jsx global>{`
+        :root {
+          --atlas-bg-void: #07030f;
+          --atlas-bg-panel: #120a28;
+          --atlas-bg-panel-2: #170e33;
+          --atlas-line: rgba(155, 120, 255, 0.16);
+          --atlas-line-strong: rgba(170, 130, 255, 0.32);
+          --atlas-violet: #8b5cf6;
+          --atlas-magenta: #d946ef;
+          --atlas-gold: #f2b544;
+          --atlas-up: #34d399;
+          --atlas-down: #f87171;
+          --atlas-text-hi: #f4f1ff;
+          --atlas-text-mid: #b6afd6;
+          --atlas-text-lo: #7c7599;
+          --atlas-grad-brand: linear-gradient(133deg, #7c3aed 0%, #c026d3 100%);
         }
-        window.addEventListener('scroll', handleScroll)
-        return () => window.removeEventListener('scroll', handleScroll)
-    }, [])
-    return (
-        <header>
-            {/* Scroll progress bar */}
-            <div className="fixed top-0 left-0 z-50 h-0.75 w-full bg-transparent">
-                <div
-                    className="h-full bg-linear-to-r from-green-400 to-emerald-500 transition-all duration-75 ease-out"
-                    style={{ width: `${scrollProgress}%` }}
-                />
+
+        .atlas-header-wrapper {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          width: 100%;
+          z-index: 50;
+        }
+
+        .atlas-nav {
+          position: relative;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: calc(4px + 0.15in) clamp(20px, 4.5vw, 64px);
+          background: rgba(7, 3, 15, 0.92);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border-bottom: 1px solid var(--atlas-line);
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+        }
+
+        .atlas-brand {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font-weight: 500;
+          font-size: 22px;
+          letter-spacing: 0.05em;
+          color: var(--atlas-text-hi);
+          font-family: 'Bodoni Moda', 'Times New Roman', serif;
+          cursor: pointer;
+          user-select: none;
+        }
+
+        .atlas-navlinks {
+          display: flex;
+          gap: 30px;
+          font-size: 15.5px;
+          color: var(--atlas-text-mid);
+          position: relative;
+          font-family: 'Inter', sans-serif;
+        }
+
+        .atlas-navlinks a {
+          position: relative;
+          padding-bottom: 4px;
+          transition: color 0.2s;
+          color: var(--atlas-text-mid);
+          text-decoration: none;
+        }
+
+        .atlas-navlinks a:hover,
+        .atlas-navlinks a[data-active="true"] {
+          color: var(--atlas-text-hi);
+        }
+
+        .atlas-nav-indicator {
+          position: absolute;
+          bottom: -1px;
+          height: 2px;
+          border-radius: 2px;
+          background: var(--atlas-grad-brand);
+          box-shadow: 0 0 10px rgba(190, 90, 240, 0.8);
+          transition: left 0.28s cubic-bezier(0.2, 0.7, 0.2, 1),
+            width 0.28s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.2s;
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        .atlas-navcta {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .atlas-btn {
+          font-family: 'Inter', sans-serif;
+          font-size: 14.5px;
+          font-weight: 600;
+          padding: 8px 18px;
+          border-radius: 10px;
+          border: 1px solid var(--atlas-line-strong);
+          cursor: pointer;
+          transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s, background 0.2s;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          line-height: 1.4;
+        }
+
+        .atlas-btn-ghost {
+          color: var(--atlas-text-hi);
+          background: transparent;
+        }
+
+        .atlas-btn-ghost:hover {
+          border-color: var(--atlas-violet);
+          background: rgba(139, 92, 246, 0.12);
+        }
+
+        .atlas-btn-brand {
+          background: var(--atlas-grad-brand);
+          color: #fff;
+          border: none;
+          box-shadow: 0 4px 18px rgba(168, 60, 220, 0.35);
+        }
+
+        .atlas-btn-brand:hover {
+          box-shadow: 0 8px 26px rgba(168, 60, 220, 0.55);
+          transform: translateY(-1px);
+        }
+
+        .atlas-btn-demo {
+          color: #fce7f3;
+          background: rgba(217, 70, 239, 0.14);
+          border: 1px solid rgba(217, 70, 239, 0.4);
+        }
+
+        .atlas-btn-demo:hover {
+          background: rgba(217, 70, 239, 0.25);
+          border-color: rgba(217, 70, 239, 0.7);
+          box-shadow: 0 0 14px rgba(217, 70, 239, 0.4);
+        }
+
+        @media (max-width: 960px) {
+          .atlas-navlinks {
+            display: none;
+          }
+        }
+      `}</style>
+
+      {/* Top Scroll Progress bar */}
+      <div className="fixed top-0 left-0 z-50 h-[3px] w-full bg-transparent pointer-events-none">
+        <div
+          className="h-full bg-gradient-to-r from-purple-500 via-fuchsia-500 to-amber-400 transition-all duration-100 ease-out shadow-[0_0_8px_rgba(217,70,239,0.8)]"
+          style={{ width: `${scrollProgress}%` }}
+        />
+      </div>
+
+      {/* Main Navbar */}
+      <nav className="atlas-nav">
+        {/* Brand */}
+        <Link href="/" className="flex items-center cursor-pointer py-0 overflow-visible" onClick={() => setMobileMenuOpen(false)}>
+          <Image
+            src="/LOGO.png?v=4"
+            alt="ATLAS"
+            width={280}
+            height={80}
+            className="h-14 sm:h-15 md:h-16 w-auto object-contain scale-[1.25] sm:scale-[1.32] md:scale-[1.38] origin-left transition-transform duration-200 hover:scale-[1.42]"
+            priority
+            unoptimized
+          />
+        </Link>
+
+        {/* Desktop Navlinks with interactive indicator */}
+        <div
+          className="atlas-navlinks"
+          ref={linksContainerRef}
+          onMouseLeave={resetIndicatorToActive}
+        >
+          {navItems.map((item) => {
+            const active = isActiveLink(item.href);
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                data-nav
+                data-active={active ? 'true' : 'false'}
+                onMouseEnter={(e) => moveIndicatorTo(e.currentTarget)}
+              >
+                {item.name}
+              </Link>
+            );
+          })}
+          <span className="atlas-nav-indicator" ref={indicatorRef} />
+        </div>
+
+        {/* Desktop CTAs */}
+        <div className="hidden lg:flex atlas-navcta">
+          <Link href="/login" className="atlas-btn atlas-btn-ghost">
+            Login
+          </Link>
+          <Link href="/signup" className="atlas-btn atlas-btn-brand">
+            Get Started
+          </Link>
+          <button
+            type="button"
+            onClick={openDemoModal}
+            className="atlas-btn atlas-btn-demo"
+          >
+            Book A Demo
+          </button>
+        </div>
+
+        {/* Mobile Hamburger Button */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <button
+            type="button"
+            onClick={openDemoModal}
+            className="atlas-btn atlas-btn-demo !text-xs !py-1.5 !px-3"
+          >
+            Book Demo
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 text-[#b6afd6] hover:text-[#f4f1ff] transition rounded-lg border border-[rgba(155,120,255,0.2)] bg-[rgba(18,10,40,0.6)]"
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Drawer Menu */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed inset-x-0 top-[calc(54px+0.3in)] z-30 bg-[#0c061d]/95 backdrop-blur-2xl border-b border-[rgba(155,120,255,0.25)] px-6 py-6 shadow-2xl animate-in slide-in-from-top-2 duration-200">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2 pb-4 border-b border-[rgba(155,120,255,0.16)]">
+              {navItems.map((item) => {
+                const active = isActiveLink(item.href);
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`py-2 px-3 rounded-lg text-base font-medium transition ${
+                      active
+                        ? 'bg-purple-600/20 text-[#f4f1ff] font-semibold border-l-2 border-fuchsia-400'
+                        : 'text-[#b6afd6] hover:text-[#f4f1ff] hover:bg-white/5'
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                );
+              })}
             </div>
-            <nav
-                data-state={menuState && 'active'}
-                className="fixed z-20 w-full px-1">
-                <div className={cn('mx-auto mt-2 max-w-6xl px-6 transition-colors duration-300 rounded-2xl border lg:px-8', isScrolled ? 'bg-background/80 backdrop-blur-lg' : 'bg-background/40 backdrop-blur-md')}>
-                    <div className="flex flex-wrap items-center justify-between gap-6 py-2.5 lg:gap-0 lg:py-3">
-                        <div className="flex w-full shrink-0 justify-between lg:w-auto">
-                            <Link
-                                href="/"
-                                aria-label="home"
-                                className="flex items-center">
-                                <Logo className="shrink-0 h-9 w-auto sm:h-10" />
-                            </Link>
-
-                            <button
-                                onClick={() => setMenuState(!menuState)}
-                                aria-label={menuState ? 'Close Menu' : 'Open Menu'}
-                                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden text-foreground hover:text-primary transition duration-150">
-                                <div className="size-6 flex items-center justify-center">
-                                    {menuState ? (
-                                        <X className="size-6 transition-transform duration-200 rotate-90 scale-100" />
-                                    ) : (
-                                        <Menu className="size-6 transition-transform duration-200 rotate-0 scale-100" />
-                                    )}
-                                </div>
-                            </button>
-                        </div>
-
-                        <div className="hidden lg:flex lg:flex-1 lg:justify-center">
-                            <ul className="flex gap-6 whitespace-nowrap text-sm xl:gap-8">
-                                {menuItems.map((item, index) => (
-                                    <li key={index}>
-                                        <Link
-                                            href={item.href}
-                                            aria-current={isActiveLink(item.href) ? 'page' : undefined}
-                                            className={cn(
-                                                'block duration-150',
-                                                isActiveLink(item.href)
-                                                    ? 'text-primary font-semibold'
-                                                    : 'text-muted-foreground hover:text-accent-foreground'
-                                            )}>
-                                            <span>{item.name}</span>
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        <div className="bg-background in-data-[state=active]:block lg:in-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:shrink-0 lg:flex-1 lg:gap-4 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none xl:gap-6 dark:shadow-none dark:lg:bg-transparent">
-                            <div className="lg:hidden">
-                                <ul className="space-y-6 text-base">
-                                    {menuItems.map((item, index) => (
-                                        <li key={index}>
-                                            <Link
-                                                href={item.href}
-                                                onClick={() => setMenuState(false)}
-                                                aria-current={isActiveLink(item.href) ? 'page' : undefined}
-                                                className={cn(
-                                                    'block duration-150',
-                                                    isActiveLink(item.href)
-                                                        ? 'text-primary font-semibold'
-                                                        : 'text-muted-foreground hover:text-accent-foreground'
-                                                )}>
-                                                <span>{item.name}</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold transition-all duration-100 border-none">
-                                    <Link href="/login" onClick={() => setMenuState(false)}>
-                                         <span>Login</span>
-                                    </Link>
-                                </Button>
-                                <ThemeToggleButton/>
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold transition-all duration-100 border-none">
-                                    <Link href="/signup" onClick={() => setMenuState(false)}>
-                                         <span>Get Started</span>
-                                    </Link>
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-        </header>
-    )
-}
+            <div className="flex flex-col gap-2.5 pt-2">
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="atlas-btn atlas-btn-ghost w-full justify-center !py-2.5"
+              >
+                Login
+              </Link>
+              <Link
+                href="/signup"
+                onClick={() => setMobileMenuOpen(false)}
+                className="atlas-btn atlas-btn-brand w-full justify-center !py-2.5"
+              >
+                Get Started
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  openDemoModal();
+                }}
+                className="atlas-btn atlas-btn-demo w-full justify-center !py-2.5"
+              >
+                Book A Demo
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+};

@@ -24,7 +24,7 @@ export function AutomatedStrategyNav({ strategyId, active }: AutomatedStrategyNa
     <div className="flex flex-wrap items-center gap-2">
       <Link
         href="/dashboard"
-        className="rounded-full border border-[#242D37] bg-[#0D1218] px-3 py-2 text-sm text-[#9BFF00] transition hover:border-[#9BFF00]/50"
+        className="rounded-full border border-[#242D37] bg-[#0D1218] px-3 py-2 text-sm text-purple-400 transition hover:border-purple-500/50"
       >
         ← Home
       </Link>
@@ -34,7 +34,7 @@ export function AutomatedStrategyNav({ strategyId, active }: AutomatedStrategyNa
           href={link.href}
           className={`rounded-full border px-3 py-2 text-sm transition ${
             active === link.key
-              ? "border-[#9BFF00] bg-[#10150E] text-[#DFFFAB]"
+              ? "border-purple-500 bg-purple-950/30 text-purple-200"
               : "border-[#242D37] bg-[#0D1218] text-[#B7C2CF] hover:border-[#33404D] hover:text-[#E8EEF5]"
           }`}
         >

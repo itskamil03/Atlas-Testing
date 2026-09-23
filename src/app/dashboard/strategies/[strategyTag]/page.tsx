@@ -36,7 +36,7 @@ function formatPercent(value: number) {
 
 function MetricCell({ label, value, tone }: { label: string; value: string; tone?: "green" | "red" | "neutral" }) {
   const color =
-    tone === "green" ? "text-[#9BFF00]" : tone === "red" ? "text-[#FB7185]" : "text-[#F3F7FB]";
+    tone === "green" ? "text-emerald-400" : tone === "red" ? "text-[#FB7185]" : "text-[#F3F7FB]";
   return (
     <div>
       <p className="text-xs text-[#6B7785]">{label}</p>
@@ -170,7 +170,7 @@ export default function StrategyDetailPage() {
   return (
     <div className="relative">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-16 top-0 h-64 w-64 rounded-full bg-[#9BFF00]/10 blur-[90px]" />
+        <div className="absolute -left-16 top-0 h-64 w-64 rounded-full bg-purple-600/15 blur-[90px]" />
         <div className="absolute right-0 top-24 h-72 w-72 rounded-full bg-[#3B82F6]/10 blur-[110px]" />
       </div>
 
@@ -208,14 +208,14 @@ export default function StrategyDetailPage() {
                     unoptimized
                   />
                 ) : (
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[#26303A] bg-[#0B1118] text-sm font-bold text-[#9BFF00]">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[#26303A] bg-[#0B1118] text-sm font-bold text-purple-400">
                     {strategy.name.slice(0, 2).toUpperCase()}
                   </div>
                 )}
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
                     <h1 className="text-[28px] font-semibold text-[#F3F7FB] sm:text-[34px]">{strategy.name}</h1>
-                    <span className="rounded-full border border-[#9BFF00]/30 bg-[#9BFF00]/10 px-2.5 py-0.5 text-[11px] text-[#9BFF00]">
+                    <span className="rounded-full border border-purple-500/30 bg-purple-500/10 px-2.5 py-0.5 text-[11px] text-purple-400 font-medium">
                       active
                     </span>
                   </div>
@@ -242,7 +242,7 @@ export default function StrategyDetailPage() {
             <section className="mb-6 grid gap-4 sm:grid-cols-3">
               <article className="rounded-2xl border border-[#1F2833] bg-[#0A0A0A]/90 p-5">
                 <p className="text-sm text-[#8E9AAA]">PnL (range)</p>
-                <p className={`mt-2 text-[28px] font-semibold ${pnlPositive ? "text-[#9BFF00]" : "text-[#FB7185]"}`}>
+                <p className={`mt-2 text-[28px] font-semibold ${pnlPositive ? "text-emerald-400" : "text-[#FB7185]"}`}>
                   {formatMoney(summary.live_pnl)}
                 </p>
               </article>
@@ -299,14 +299,14 @@ export default function StrategyDetailPage() {
                 <section className="grid gap-4 sm:grid-cols-2">
                   <article className="rounded-2xl border border-[#1A212A] bg-[#0A0A0A] p-5">
                     <p className="text-sm text-[#8E9AAA]">ROI</p>
-                    <p className={`mt-1 text-2xl font-semibold ${summary.roi_percent >= 0 ? "text-[#9BFF00]" : "text-[#FB7185]"}`}>
+                    <p className={`mt-1 text-2xl font-semibold ${summary.roi_percent >= 0 ? "text-emerald-400" : "text-[#FB7185]"}`}>
                       {formatMoney(summary.live_pnl)}
                     </p>
-                    <p className={`text-sm ${summary.roi_percent >= 0 ? "text-[#9BFF00]" : "text-[#FB7185]"}`}>
+                    <p className={`text-sm ${summary.roi_percent >= 0 ? "text-emerald-400" : "text-[#FB7185]"}`}>
                       {formatPercent(summary.roi_percent)} in selected range
                     </p>
                     <div className="mt-4 flex gap-4 text-xs">
-                      <span className="text-[#9BFF00]">Profitable {summary.winning_trades}</span>
+                      <span className="text-emerald-400">Profitable {summary.winning_trades}</span>
                       <span className="text-[#FB7185]">Losing {summary.losing_trades}</span>
                     </div>
                   </article>
@@ -314,7 +314,7 @@ export default function StrategyDetailPage() {
                     <p className="text-sm text-[#8E9AAA]">Win rate (%)</p>
                     <div className="mt-3 h-2 rounded-full bg-[#17202A]">
                       <div
-                        className="h-full rounded-full bg-[#9BFF00]"
+                        className="h-full rounded-full bg-emerald-500"
                         style={{ width: `${Math.min(summary.win_rate_percent, 100)}%` }}
                       />
                     </div>
@@ -359,7 +359,7 @@ export default function StrategyDetailPage() {
                         step="10"
                         value={multiplier}
                         onChange={(event) => setMultiplier(event.target.value)}
-                        className="w-full rounded-xl border border-[#26303A] bg-[#0E141B] px-3 py-2.5 text-[#F3F7FB] focus:border-[#9BFF00]/40 focus:outline-none"
+                        className="w-full rounded-xl border border-[#26303A] bg-[#0E141B] px-3 py-2.5 text-[#F3F7FB] focus:border-purple-500/50 focus:outline-none"
                       />
                       <span className="text-sm text-[#C9D4E0]">%</span>
                     </div>
@@ -375,7 +375,7 @@ export default function StrategyDetailPage() {
                               openSignalModal("BUY"),
                             )
                           }
-                          className="rounded-xl border border-[#9BFF00]/30 bg-[#9BFF00]/10 px-3 py-3 text-sm font-semibold text-[#DFFFAB] hover:bg-[#9BFF00]/15"
+                          className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-3 text-sm font-semibold text-emerald-400 hover:bg-emerald-500/15"
                         >
                           Buy
                         </button>
@@ -393,7 +393,7 @@ export default function StrategyDetailPage() {
                       </div>
                       <Link
                         href={`/dashboard/automated-strategies/${deployedStrategy.id}/dashboard`}
-                        className="block w-full rounded-xl border border-[#26303A] px-4 py-2.5 text-center text-sm text-[#C9D4E0] hover:border-[#9BFF00]/30"
+                        className="block w-full rounded-xl border border-[#26303A] px-4 py-2.5 text-center text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-300 transition"
                       >
                         Manage deployment →
                       </Link>
@@ -420,7 +420,7 @@ export default function StrategyDetailPage() {
                           setShowDeployModal(true),
                         )
                       }
-                      className="mt-5 w-full rounded-xl bg-[#9BFF00] px-4 py-3 text-sm font-semibold text-[#11140D] hover:bg-[#B7FF45]"
+                      className="mt-5 w-full rounded-xl bg-purple-600 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-purple-600/25 hover:bg-purple-700 active:scale-95 transition"
                     >
                       Deploy Strategy
                     </button>

@@ -78,6 +78,9 @@ function normalizeRawMessage(raw: string, httpStatus?: number): string {
   const cleaned = sanitizeErrorText(raw, httpStatus);
 
   const lower = cleaned.toLowerCase();
+  if (lower.includes("invalid phone number format") || lower.includes("e.164 format")) {
+    return "Please enter a valid Email address (e.g. you@example.com) or Mobile Number with country code (e.g. +91 98765 43210).";
+  }
   if (lower.includes("ip_not_whitelisted") || lower.includes("ip whitelist")) {
     return cleaned.includes("Add")
       ? cleaned

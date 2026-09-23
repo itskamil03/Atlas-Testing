@@ -69,13 +69,13 @@ export default function AcademyPage() {
             <h1 className="mt-1 text-2xl font-semibold text-gray-900 dark:text-[#F6FAFF]">Learning Resources</h1>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => router.push("/dashboard")} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Dashboard</button>
-            <button onClick={onLogout} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-[#9BFF00]/40 hover:text-[#9BFF00] hover:bg-[#9BFF00]/5 transition duration-150 active:scale-95">Sign Out</button>
+            <button onClick={() => router.push("/dashboard")} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Dashboard</button>
+            <button onClick={onLogout} className="rounded-lg border border-[#242D37] px-3 py-2 text-sm text-[#C9D4E0] hover:border-purple-500/40 hover:text-purple-400 hover:bg-purple-500/5 transition duration-150 active:scale-95">Sign Out</button>
           </div>
         </header>
 
         {error ? <p className="mb-3 rounded-lg border border-red-300 dark:border-[#4F2A2A] bg-red-50 dark:bg-[#2A1414] px-3 py-2 text-sm text-red-600 dark:text-[#FFB4B4]">{error}</p> : null}
-        {message ? <p className="mb-3 rounded-lg border border-green-300 dark:border-[#31503A] bg-green-50 dark:bg-[#142419] px-3 py-2 text-sm text-green-700 dark:text-[#AEE7B8]">{message}</p> : null}
+        {message ? <p className="mb-3 rounded-lg border border-purple-300 dark:border-purple-900/50 bg-purple-50 dark:bg-purple-950/20 px-3 py-2 text-sm text-purple-700 dark:text-purple-300">{message}</p> : null}
 
         <section className="rounded-2xl border border-gray-200 dark:border-[#1A1E23] bg-white dark:bg-[#0A0D13] p-5">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-[#F3F7FB]">Published Articles</h2>

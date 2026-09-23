@@ -5,7 +5,7 @@ type AllocationSlice = {
   percentage: number;
 };
 
-const COLORS = ["#9BFF00", "#4ADE80", "#22C55E", "#16A34A", "#15803D"];
+const COLORS = ["#7C3AED", "#6366F1", "#A855F7", "#3B82F6", "#C084FC"];
 
 type AssetAllocationChartProps = {
   slices: AllocationSlice[];
