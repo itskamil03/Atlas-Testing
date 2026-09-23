@@ -25,12 +25,13 @@ export const metadata: Metadata = {
     "AI-powered algo trading for Forex and Crypto with institutional-grade automation, predictive analytics, and execution algorithms.",
   icons: {
     icon: [
-      { url: "/favicon.png?v=20260923", type: "image/png", sizes: "32x32" },
-      { url: "/favicon.png?v=20260923", type: "image/png", sizes: "192x192" },
-      { url: "/favicon.ico?v=20260923", sizes: "any" },
+      { url: "/favicon.png?v=v3_latest", type: "image/png", sizes: "32x32" },
+      { url: "/favicon.png?v=v3_latest", type: "image/png", sizes: "192x192" },
+      { url: "/favicon.icon.png?v=v3_latest", type: "image/png" },
+      { url: "/favicon.ico?v=v3_latest", sizes: "any" },
     ],
-    shortcut: "/favicon.png?v=20260923",
-    apple: [{ url: "/apple-touch-icon.png?v=20260923", sizes: "180x180" }],
+    shortcut: "/favicon.png?v=v3_latest",
+    apple: [{ url: "/apple-touch-icon.png?v=v3_latest", sizes: "180x180" }],
   },
 };
 
