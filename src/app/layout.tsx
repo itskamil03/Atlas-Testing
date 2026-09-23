@@ -25,13 +25,14 @@ export const metadata: Metadata = {
     "AI-powered algo trading for Forex and Crypto with institutional-grade automation, predictive analytics, and execution algorithms.",
   icons: {
     icon: [
-      { url: "/favicon.png?v=2", type: "image/png", sizes: "32x32" },
-      { url: "/favicon.png?v=2", type: "image/png", sizes: "192x192" },
+      { url: "/favicon.png?v=20260923", type: "image/png", sizes: "32x32" },
+      { url: "/favicon.png?v=20260923", type: "image/png", sizes: "192x192" },
+      { url: "/favicon.ico?v=20260923", sizes: "any" },
     ],
-    shortcut: "/favicon.png?v=2",
-    apple: [{ url: "/apple-touch-icon.png?v=2", sizes: "180x180" }],
+    shortcut: "/favicon.png?v=20260923",
+    apple: [{ url: "/apple-touch-icon.png?v=20260923", sizes: "180x180" }],
   },
- };
+};
 
 export default function RootLayout({
   children,
