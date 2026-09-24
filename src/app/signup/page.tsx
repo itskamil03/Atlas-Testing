@@ -238,7 +238,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background">
+    <div className="relative min-h-0 lg:min-h-screen overflow-hidden bg-background">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -left-30 top-6 h-88 w-88 rounded-full bg-primary/30 blur-3xl" />
         <div className="absolute -right-24 top-1/4 h-72 w-72 rounded-full bg-accent/40 blur-3xl" />
@@ -247,7 +247,7 @@ export default function SignupPage() {
 
       <main 
         style={{ zoom: 0.90 }}
-        className="relative mx-auto grid min-h-screen max-w-6xl grid-cols-1 items-center gap-10 px-6 py-12 lg:grid-cols-2 lg:px-10"
+        className="relative mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-6 px-4 pt-0 pb-8 -mt-6 sm:-mt-2 sm:px-6 sm:py-8 lg:mt-0 lg:min-h-screen lg:grid-cols-2 lg:gap-10 lg:px-10 lg:py-12"
       >
         <section className="hidden rounded-3xl border border-border/60 bg-card/85 p-10 shadow-2xl backdrop-blur md:block">
           <p className="inline-flex rounded-full border border-primary/40 bg-primary/15 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80">
@@ -271,8 +271,8 @@ export default function SignupPage() {
           </div>
         </section>
 
-        <section className="rounded-3xl border border-border/70 bg-card/90 p-6 shadow-2xl backdrop-blur sm:p-8">
-          <h2 className="text-3xl font-semibold">
+        <section className="rounded-2xl sm:rounded-3xl border border-border/70 bg-card/90 p-5 sm:p-8 shadow-2xl backdrop-blur">
+          <h2 className="text-2xl sm:text-3xl font-semibold">
             {emailChallengeId ? 'Complete Signup' : 'Create Account'}
           </h2>
           <p className="mt-2 text-sm text-foreground/75">
