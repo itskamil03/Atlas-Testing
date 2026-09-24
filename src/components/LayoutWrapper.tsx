@@ -21,7 +21,7 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
   const isAdminPage = pathname?.startsWith('/dashboard/admin');
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-0 lg:min-h-screen">
       {/* Conditionally render the Header - hidden on admin page */}
       {isDashboard && !isAdminPage ? <Header /> : isAdminPage ? null : <HeroHeader />}
       

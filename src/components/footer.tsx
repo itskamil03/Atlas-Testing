@@ -34,7 +34,7 @@ const links = [
 
 export default function FooterSection() {
     return (
-        <footer className="relative bg-[#07030f] border-t border-purple-900/20 py-16 md:py-28 overflow-hidden">
+        <footer className="relative bg-[#07030f] border-t border-purple-900/20 py-10 md:py-28 overflow-hidden">
             {/* Ambient Background Glow */}
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[250px] bg-purple-900/15 rounded-full blur-[140px]" />
@@ -42,7 +42,7 @@ export default function FooterSection() {
 
             <div className="relative z-10 mx-auto max-w-5xl px-6">
                 {/* Logo Section with seamless dark blending */}
-                <div className="flex justify-center mb-8">
+                <div className="flex justify-center mb-6 md:mb-8">
                     <Link
                         href="/"
                         aria-label="go home"

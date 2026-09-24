@@ -196,14 +196,14 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="relative min-h-screen overflow-hidden bg-background">
+        <div className="relative min-h-0 lg:min-h-screen overflow-hidden bg-background">
             <div className="pointer-events-none absolute inset-0">
                 <div className="absolute -left-28 top-10 h-80 w-80 rounded-full bg-primary/30 blur-3xl" />
                 <div className="absolute -right-30 top-1/3 h-88 w-88 rounded-full bg-accent/40 blur-3xl" />
                 <div className="absolute -bottom-30 left-1/3 h-80 w-80 rounded-full bg-secondary/30 blur-3xl" />
             </div>
 
-            <main className="relative mx-auto grid min-h-screen max-w-6xl grid-cols-1 items-center gap-10 px-6 py-12 lg:grid-cols-2 lg:px-10">
+            <main className="relative mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-6 px-4 pt-2 pb-6 sm:px-6 sm:py-8 lg:min-h-screen lg:grid-cols-2 lg:gap-10 lg:px-10 lg:py-12">
                 <section className="hidden rounded-3xl border border-border/60 bg-card/80 p-10 shadow-2xl backdrop-blur md:block">
                     <p className="inline-flex rounded-full border border-primary/40 bg-primary/15 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-foreground/80">
                         Atlas Access
@@ -228,14 +228,14 @@ export default function LoginPage() {
                     </div>
                 </section>
 
-                <section className="rounded-3xl border border-border/70 bg-card/90 p-6 shadow-2xl backdrop-blur sm:p-8">
-                    <h2 className="text-3xl font-semibold">Login</h2>
-                    <p className="mt-2 text-sm text-foreground/75">
+                <section className="rounded-2xl sm:rounded-3xl border border-border/70 bg-card/90 p-5 sm:p-8 shadow-2xl backdrop-blur">
+                    <h2 className="text-2xl sm:text-3xl font-semibold">Login</h2>
+                    <p className="mt-1.5 sm:mt-2 text-sm text-foreground/75">
                         {challengeId ? 'Enter the OTP sent to your account.' : 'Use your email or mobile number and password.'}
                     </p>
 
-                    <form onSubmit={handleSubmit} className="mt-7 space-y-5">
-                        <div className="space-y-2">
+                    <form onSubmit={handleSubmit} className="mt-5 sm:mt-7 space-y-4 sm:space-y-5">
+                        <div className="space-y-1.5 sm:space-y-2">
                             <label htmlFor="identity" className="text-sm font-medium">
                                 Email or Mobile Number
                             </label>
@@ -259,7 +259,7 @@ export default function LoginPage() {
                         </div>
 
                         {challengeId ? (
-                            <div className="space-y-2">
+                            <div className="space-y-1.5 sm:space-y-2">
                                 <label htmlFor="otp" className="text-sm font-medium">
                                     OTP
                                 </label>
@@ -281,17 +281,17 @@ export default function LoginPage() {
                                 ) : null}
                             </div>
                         ) : (
-                            <div className="space-y-2">
+                            <div className="space-y-1.5 sm:space-y-2">
                                 <div className="flex items-center justify-between">
                                     <label htmlFor="password" className="text-sm font-medium">
                                         Password
                                     </label>
-                                   <Link
-                                       href="/forgot-password"
-                                      className="text-xs font-medium text-foreground/70 transition hover:text-foreground"
-                                                      >
-                                          Forgot password?
-                                                   </Link>
+                                    <Link
+                                        href="/forgot-password"
+                                        className="text-xs font-medium text-foreground/70 transition hover:text-foreground"
+                                    >
+                                        Forgot password?
+                                    </Link>
                                 </div>
                                 <input
                                     id="password"
@@ -339,7 +339,7 @@ export default function LoginPage() {
                         </div>
                     ) : null}
 
-                    <p className="mt-7 text-sm text-foreground/75">
+                    <p className="mt-5 sm:mt-7 text-sm text-foreground/75">
                         New to Atlas?{' '}
                         <Link href="/signup" className="font-semibold text-foreground hover:underline">
                             Create your account
