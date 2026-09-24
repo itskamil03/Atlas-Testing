@@ -284,9 +284,7 @@ export default function Features() {
                         What ATLAS Does
                     </h2>
                     <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-slate-600 dark:text-slate-300">
-                        A next-generation algorithmic trading platform for Forex, Crypto, and Indices. We combine
-                        quantitative models, AI-driven signals, and automated execution with a sleek, real-time
-                        market experience.
+                        One Intelligent Platform. Complete Market Intelligence. ATLAS brings AI-powered analysis, market intelligence, technical tools, backtesting and risk insights into one unified trading platform. Markets: Forex • Crypto • Equities
                     </p>
                 </motion.div>
 
