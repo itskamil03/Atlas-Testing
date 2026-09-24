@@ -54,7 +54,18 @@ export default function WhyChooseAtlas() {
   const pauseTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const halfWidthRef = useRef(0)
 
-  // Motion value for continuous GPU-accelerated translateX
+  // Mobile Manual Gallery State
+  const [mobileIndex, setMobileIndex] = useState(0)
+
+  const handleMobileNext = () => {
+    setMobileIndex((prev) => (prev + 1) % PILLARS.length)
+  }
+
+  const handleMobilePrev = () => {
+    setMobileIndex((prev) => (prev === 0 ? PILLARS.length - 1 : prev - 1))
+  }
+
+  // Motion value for continuous GPU-accelerated translateX (Desktop)
   const x = useMotionValue(0)
 
   // 4 sets of pillars (20 cards total) for seamless looping
@@ -102,7 +113,7 @@ export default function WhyChooseAtlas() {
     }
   })
 
-  // Manual button navigation with smooth spring/ease transition
+  // Manual button navigation with smooth spring/ease transition (Desktop)
   const handleManualClick = (direction: 'next' | 'prev') => {
     measureTrack()
     const halfWidth = halfWidthRef.current
@@ -161,19 +172,19 @@ export default function WhyChooseAtlas() {
   }
 
   return (
-    <section id="why-choose-atlas" className="relative py-16 md:py-24 border-t border-border/40 bg-background overflow-hidden">
-      <div className="mx-auto max-w-6xl px-6">
+    <section id="why-choose-atlas" className="relative py-12 md:py-24 border-t border-border/40 bg-background overflow-hidden">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Header */}
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
           variants={containerVariants}
-          className="text-center mb-12 md:mb-16"
+          className="text-center mb-8 sm:mb-12 md:mb-16"
         >
           <motion.div
             variants={itemVariants}
-            className="inline-flex items-center gap-2 rounded-full border border-purple-500/20 bg-purple-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.25em] text-purple-400 mb-6"
+            className="inline-flex items-center gap-2 rounded-full border border-purple-500/20 bg-purple-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.25em] text-purple-400 mb-4 sm:mb-6"
           >
             <Sparkles className="size-3.5 text-purple-400" />
             <span>The ATLAS Advantage</span>
@@ -181,42 +192,140 @@ export default function WhyChooseAtlas() {
 
           <motion.h2
             variants={itemVariants}
-            className="text-3xl font-semibold sm:text-4xl lg:text-5xl text-foreground tracking-tight"
+            className="text-2xl font-semibold sm:text-4xl lg:text-5xl text-foreground tracking-tight"
           >
             Why Choose ATLAS
           </motion.h2>
 
           <motion.p
             variants={itemVariants}
-            className="mx-auto mt-4 max-w-2xl text-base sm:text-lg font-medium text-muted-foreground"
+            className="mx-auto mt-3 sm:mt-4 max-w-2xl text-sm sm:text-lg font-medium text-muted-foreground"
           >
             Built for the Way Modern Traders Trade.
           </motion.p>
         </motion.div>
       </div>
 
-      {/* Expanded Animation & Scroll Area with Left/Right Buttons */}
-      <div className="mx-auto max-w-[1400px] px-4 sm:px-8 xl:px-12 relative group">
-        {/* Side Gradient Fade Masks */}
-        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-12 sm:w-20 bg-gradient-to-r from-background to-transparent z-20" />
-        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-12 sm:w-20 bg-gradient-to-l from-background to-transparent z-20" />
+      {/* ─── Mobile Manual Gallery (Visible on Mobile Only) ─── */}
+      <div className="block md:hidden px-4">
+        <div className="relative overflow-hidden rounded-3xl border border-purple-500/30 bg-gradient-to-b from-[#160d30] to-[#0d0720] p-6 shadow-2xl backdrop-blur-md">
+          {/* Card counter header */}
+          <div className="flex items-center justify-between border-b border-white/10 pb-4">
+            <span className="font-mono text-xs font-semibold tracking-wider text-purple-400">
+              FEATURE {String(mobileIndex + 1).padStart(2, '0')} / {String(PILLARS.length).padStart(2, '0')}
+            </span>
+            <span className="text-[11px] text-slate-400 uppercase tracking-wider">Swipe or Tap</span>
+          </div>
 
-        {/* Manual Scroll Button - Left (Shifted 0.5in left) */}
+          {/* Swipeable animated slide area */}
+          <div className="py-6 min-h-[220px] flex flex-col justify-between">
+            <motion.div
+              key={mobileIndex}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(_, info) => {
+                if (info.offset.x < -40 || info.velocity.x < -300) {
+                  handleMobileNext()
+                } else if (info.offset.x > 40 || info.velocity.x > 300) {
+                  handleMobilePrev()
+                }
+              }}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="cursor-grab active:cursor-grabbing"
+            >
+              {(() => {
+                const currentPillar = PILLARS[mobileIndex]
+                const Icon = currentPillar.icon
+                return (
+                  <div>
+                    <div className={`flex size-12 items-center justify-center rounded-xl border ${currentPillar.badgeColor} mb-4 shadow-lg`}>
+                      <Icon className="size-6" />
+                    </div>
+
+                    <h3 className="text-xl font-bold text-white tracking-tight">
+                      {currentPillar.title}
+                    </h3>
+
+                    <p className="mt-2.5 text-sm text-slate-300 leading-relaxed">
+                      {currentPillar.description}
+                    </p>
+
+                    <div className="mt-5 flex items-center gap-2 text-xs font-medium text-emerald-400">
+                      <CheckCircle2 className="size-4" />
+                      <span>Included in ATLAS</span>
+                    </div>
+                  </div>
+                )
+              })()}
+            </motion.div>
+          </div>
+
+          {/* Navigation Controls: Prev Button, Indicators, Next Button */}
+          <div className="flex items-center justify-between border-t border-white/10 pt-4">
+            <button
+              type="button"
+              onClick={handleMobilePrev}
+              aria-label="Previous advantage"
+              className="flex size-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10 active:scale-95 transition-all"
+            >
+              <ChevronLeft className="size-5" />
+            </button>
+
+            {/* Glowing Dot Indicators */}
+            <div className="flex items-center gap-2">
+              {PILLARS.map((_, dotIdx) => (
+                <button
+                  key={dotIdx}
+                  type="button"
+                  onClick={() => setMobileIndex(dotIdx)}
+                  aria-label={`Go to slide ${dotIdx + 1}`}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    mobileIndex === dotIdx
+                      ? 'w-6 bg-gradient-to-r from-purple-500 to-fuchsia-500 shadow-sm shadow-purple-500/50'
+                      : 'w-2 bg-white/20 hover:bg-white/40'
+                  }`}
+                />
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={handleMobileNext}
+              aria-label="Next advantage"
+              className="flex size-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10 active:scale-95 transition-all"
+            >
+              <ChevronRight className="size-5" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ─── Desktop Hardware-Accelerated Sliding Track (Visible on Desktop Only) ─── */}
+      <div className="hidden md:block mx-auto max-w-[1400px] px-3 sm:px-8 xl:px-12 relative group">
+        {/* Side Gradient Fade Masks */}
+        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 sm:w-20 bg-gradient-to-r from-background to-transparent z-20" />
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-20 bg-gradient-to-l from-background to-transparent z-20" />
+
+        {/* Manual Scroll Button - Left (Shifted 0.5in left on large desktop) */}
         <button
           type="button"
           onClick={() => handleManualClick('prev')}
           aria-label="Scroll cards left"
-          className="absolute left-2 sm:left-4 xl:left-6 top-1/2 -translate-y-1/2 -translate-x-[0.5in] z-40 flex size-11 items-center justify-center rounded-full border border-border/80 bg-card/95 text-foreground backdrop-blur-md shadow-2xl transition-all duration-200 hover:border-purple-500 hover:bg-card hover:scale-110 active:scale-95 cursor-pointer"
+          className="flex absolute left-2 lg:left-4 xl:left-6 top-1/2 -translate-y-1/2 xl:-translate-x-[0.5in] z-40 size-11 items-center justify-center rounded-full border border-border/80 bg-card/95 text-foreground backdrop-blur-md shadow-2xl transition-all duration-200 hover:border-purple-500 hover:bg-card hover:scale-110 active:scale-95 cursor-pointer"
         >
           <ChevronLeft className="size-5" />
         </button>
 
-        {/* Manual Scroll Button - Right (Shifted 0.5in right) */}
+        {/* Manual Scroll Button - Right (Shifted 0.5in right on large desktop) */}
         <button
           type="button"
           onClick={() => handleManualClick('next')}
           aria-label="Scroll cards right"
-          className="absolute right-2 sm:right-4 xl:right-6 top-1/2 -translate-y-1/2 translate-x-[0.5in] z-40 flex size-11 items-center justify-center rounded-full border border-border/80 bg-card/95 text-foreground backdrop-blur-md shadow-2xl transition-all duration-200 hover:border-purple-500 hover:bg-card hover:scale-110 active:scale-95 cursor-pointer"
+          className="flex absolute right-2 lg:right-4 xl:right-6 top-1/2 -translate-y-1/2 xl:translate-x-[0.5in] z-40 size-11 items-center justify-center rounded-full border border-border/80 bg-card/95 text-foreground backdrop-blur-md shadow-2xl transition-all duration-200 hover:border-purple-500 hover:bg-card hover:scale-110 active:scale-95 cursor-pointer"
         >
           <ChevronRight className="size-5" />
         </button>
@@ -225,24 +334,19 @@ export default function WhyChooseAtlas() {
         <div
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
-          onTouchStart={() => setIsPaused(true)}
-          onTouchEnd={() => {
-            if (pauseTimeoutRef.current) clearTimeout(pauseTimeoutRef.current)
-            pauseTimeoutRef.current = setTimeout(() => setIsPaused(false), 2000)
-          }}
-          className="overflow-hidden rounded-2xl py-3 select-none cursor-grab active:cursor-grabbing"
+          className="overflow-hidden rounded-2xl py-2 sm:py-3 select-none cursor-grab active:cursor-grabbing"
         >
           <motion.div
             ref={trackRef}
             style={{ x }}
-            className="flex w-max gap-5 sm:gap-6 will-change-transform"
+            className="flex w-max gap-4 sm:gap-6 will-change-transform"
           >
             {duplicatedPillars.map((pillar, index) => {
               const Icon = pillar.icon
               return (
                 <div
                   key={`${pillar.title}-${index}`}
-                  className={`flex w-[300px] sm:w-[330px] shrink-0 flex-col justify-between rounded-2xl border border-border/80 bg-card/60 p-6 backdrop-blur-sm transition-all duration-200 hover:-translate-y-1 hover:bg-card/90 ${pillar.borderHover}`}
+                  className={`flex w-[270px] sm:w-[330px] shrink-0 flex-col justify-between rounded-2xl border border-border/80 bg-card/60 p-5 sm:p-6 backdrop-blur-sm transition-all duration-200 hover:-translate-y-1 hover:bg-card/90 ${pillar.borderHover}`}
                 >
                   <div>
                     <div className={`flex size-11 items-center justify-center rounded-xl border ${pillar.badgeColor} transition-transform duration-200 group-hover:scale-105`}>
