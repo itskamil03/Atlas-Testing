@@ -613,7 +613,7 @@ export default function HeroSection() {
         .atlas-hero-cta {
           display: flex;
           align-items: center;
-          gap: 22px;
+          gap: 28px;
           margin-bottom: 32px;
           flex-wrap: wrap;
         }
@@ -636,6 +636,7 @@ export default function HeroSection() {
           border: none;
           cursor: pointer;
           padding: 0;
+          margin-left: 2px;
         }
 
         .atlas-link-secondary .playdot {
@@ -672,6 +673,70 @@ export default function HeroSection() {
           font-size: 14px;
           color: #7c7599;
           margin-top: 3px;
+        }
+
+        @media (max-width: 640px) {
+          .atlas-hero {
+            padding: 24px 16px 36px;
+            gap: 36px;
+          }
+
+          .atlas-hero-cta {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: nowrap;
+            width: 100%;
+          }
+
+          .atlas-btn-lg {
+            padding: 10px clamp(10px, 2.5vw, 15px);
+            font-size: clamp(12px, 3.1vw, 13.5px);
+            border-radius: 10px;
+            white-space: nowrap;
+            text-align: center;
+          }
+
+          .atlas-link-secondary {
+            gap: 8px;
+            font-size: clamp(12px, 3.1vw, 13.5px);
+            white-space: nowrap;
+            margin-left: 6px;
+          }
+
+          .atlas-link-secondary .playdot {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+          }
+
+          .atlas-link-secondary .playdot svg {
+            width: 9px;
+            height: 9px;
+          }
+
+          .atlas-trust-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding-top: 18px;
+          }
+
+          .atlas-trust-item .num {
+            font-size: 18px;
+          }
+
+          .atlas-trust-item .lbl {
+            font-size: 11px;
+            line-height: 1.25;
+            margin-top: 2px;
+          }
+
+          .atlas-engine {
+            padding: 16px;
+          }
         }
 
         /* ---------- Engine Panel ---------- */
